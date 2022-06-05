@@ -14,11 +14,12 @@ const generateLittleBox = (x, y) => {
     // get 2 colors
     const { foreground, background } = getTwoColors();
 
-    // const blockStyleOptions = [drawDisc];
-    const blockStyleOptions = [drawRect, drawFacingCircles, drawSemiCircle, drawCircle, drawOppositeCircles, drawDisc, drawOppositeTriangles];
+    const blockStyleOptions = [drawOppositeCircles];
+    // const blockStyleOptions = [drawRect, drawFacingCircles, drawSemiCircle, drawCircle, drawOppositeCircles, drawDisc, drawOppositeTriangles];
     // const blockStyleOptions = [drawFacingCircles, drawSemiCircle, drawCircle, drawDisc];
     const blockStyle = random(blockStyleOptions);
-    blockStyle(x * squareSize, y * squareSize, foreground, background);
+    const group = draw.group();
+    blockStyle(group, x * squareSize, y * squareSize, squareSize, foreground, background);
 }
 
 const getTwoColors = () => {
@@ -33,111 +34,91 @@ const getTwoColors = () => {
 
 // Primitives functions
 
-const drawRect = (x, y, foreground, background) => {
+const drawRect = (group, x, y, w, foreground, background) => {
     // Create group element
-    const group = draw.group().addClass('draw-block');
+    group.addClass('draw-block');
     // Draw block
-    group.rect(squareSize, squareSize).fill(background).stroke('none').move(x, y);
+    group.rect(w, w).fill(background).stroke('none').move(x, y);
 }
 
-const drawCircle = (x, y, foreground, background) => {
-    const group = draw.group().addClass('draw-circle');
+const drawCircle = (group, x, y, w, foreground, background) => {
+    group.addClass('draw-circle');
     // draw background
-    group.rect(squareSize, squareSize).fill(background).move(x, y);
+    group.rect(w, w).fill(background).move(x, y);
     // foreground
-    group.circle(squareSize).fill(foreground).move(x, y);
+    group.circle(w).fill(foreground).move(x, y);
 }
 
-const drawOppositeCircles = (x, y, foreground, background) => {
-    const group = draw.group().addClass('opposite-circles');
-    // group for the circles
-    const circleGroup = draw.group();
-    group.rect(squareSize, squareSize).fill(background).move(x, y);
+const drawOppositeCircles = (group, x, y, w, foreground, background) => {
+    group.addClass('opposite-circles');
+    group.rect(w, w).fill(background).move(x, y);
     // mask
-    const mask = draw.rect(squareSize, squareSize).fill('#fff').move(x, y);
-    const offsets = random([
-        // top-left, bottom-right
-        [0, 0, squareSize, squareSize],
-        // top-right, bottom-left
-        [0, squareSize, squareSize, 0]
-    ]);
-    //circles
-    circleGroup.circle(squareSize).fill(foreground).center(x + offsets[0], y + offsets[1]); //Bottom left
-    circleGroup.circle(squareSize).fill(foreground).center(x + offsets[2], y + offsets[3]); // top right
+    const mask = group.rect(w, w).fill('#fff').move(x, y);
+    // group for the circles
+    const circleGroup = group.group();
+    circleGroup.circle(w).fill(foreground).center(x, y); //Bottom left
+    circleGroup.circle(w).fill(foreground).center(x + w, y + w); // top right
     // assign mask
-    circleGroup.maskWith(mask);
-    group.add(circleGroup);
-}
-
-const drawFacingCircles = (x, y, foreground, background) => {
-    const group = draw.group().addClass('opposite-circles');
-    // group for the circles
-    const circleGroup = draw.group();
-    group.rect(squareSize, squareSize).fill(background).move(x, y);
-    // mask
-    const mask = draw.rect(squareSize, squareSize).fill('#fff').move(x, y);
-    circleGroup.circle(squareSize).fill(foreground).center(x, y + squareSize / 2);
-    circleGroup.circle(squareSize).fill(foreground).center(x + squareSize, y + squareSize / 2);
     circleGroup.maskWith(mask);
     if (random(0, 1, true)) circleGroup.rotate(90)
     group.add(circleGroup);
 }
 
-const drawSemiCircle = (x, y, foreground, background) => {
-    const group = draw.group().addClass('semi-circles');
-    group.rect(squareSize, squareSize).fill(background).move(x, y);
+const drawFacingCircles = (group, x, y, w, foreground, background) => {
+    group.addClass('opposite-circles');
+    group.rect(w, w).fill(background).move(x, y);
+    // mask
+    const mask = group.rect(w, w).fill('#fff').move(x, y);
+    // group for the circles
+    const circleGroup = group.group();
+    circleGroup.circle(w).fill(foreground).center(x, y + w / 2);
+    circleGroup.circle(w).fill(foreground).center(x + w, y + w / 2);
+    circleGroup.maskWith(mask);
+    if (random(0, 1, true)) circleGroup.rotate(90)
+    group.add(circleGroup);
+}
+
+const drawSemiCircle = (group, x, y, w, foreground, background) => {
+    group.addClass('semi-circles');
+    group.rect(w, w).fill(background).move(x, y);
     // group for the circles
     const circleGroup = draw.group();
-    circleGroup.path(`M${x} ${y} a ${squareSize / 2} ${squareSize / 2} 0 0 1 0 ${squareSize} z`).fill(foreground);
-    circleGroup.path(`M${x + squareSize / 2} ${y} a ${squareSize / 2} ${squareSize / 2} 0 0 1 0 ${squareSize} z`).fill(foreground);
+    circleGroup.path(`M${x} ${y} a ${w / 2} ${w / 2} 0 0 1 0 ${w} z`).fill(foreground);
+    circleGroup.path(`M${x + w / 2} ${y} a ${w / 2} ${w / 2} 0 0 1 0 ${w} z`).fill(foreground);
     const dir = random(0, 3, true);
     circleGroup.rotate(dir * 90);
     group.add(circleGroup);
 }
 
-const drawDisc = (x, y, foreground, background) => {
-    const group = draw.group().addClass('disc');
+const drawDisc = (group, x, y, w, foreground, background) => {
+    group.addClass('disc');
     // group for the circles
-    const circleGroup = draw.group();
-    group.rect(squareSize, squareSize).fill(background).move(x, y);
-    circleGroup.circle(squareSize).fill(foreground).move(x, y)
+    const circleGroup = group.group();
+    group.rect(w, w).fill(background).move(x, y);
+    circleGroup.circle(w).fill(foreground).move(x, y)
     // mask
-    const bg = draw.rect(squareSize, squareSize).fill('#fff').move(x, y);
-    const hole = draw.circle(squareSize / 2).fill('black').center(x + squareSize / 2, y + squareSize / 2);
-    const mask = draw.mask().add(bg).add(hole);
+    const bg = group.rect(w, w).fill('#fff').move(x, y);
+    const hole = group.circle(w / 2).fill('black').center(x + w / 2, y + w / 2);
+    const mask = group.mask().add(bg).add(hole);
     circleGroup.maskWith(mask);
     group.add(circleGroup);
 }
 
-const drawOppositeTriangles = (x, y, foreground, background) => {
-    const group = draw.group().addClass('opposite-triangles');
-    // group for the triangles
-    const triangleGroup = draw.group();
-    group.rect(squareSize, squareSize).fill(background).move(x, y);
+const drawOppositeTriangles = (group, x, y, w, foreground, background) => {
+    group.addClass('opposite-triangles');
+    group.rect(w, w).fill(background).move(x, y);
     const points = [
-        [
-            // top-left
-            [x, y, x + (squareSize / 2), y, x, y + (squareSize / 2)],
-            //bottom-right
-            [x + squareSize, y + squareSize, x + (squareSize / 2), y + squareSize, x + squareSize, y + (squareSize / 2)]
-        ], [
-            // top-right
-            [x + (squareSize / 2), y, x + squareSize, y, x + squareSize, y + (squareSize / 2)],
-            // bottom-left
-            [x, y + (squareSize / 2), x, y + squareSize, x + (squareSize / 2), y + squareSize]
-
-        ]
+        // top-left
+        [x, y, x + (w / 2), y, x, y + (w / 2)],
+        //bottom-right
+        [x + w, y + w, x + (w / 2), y + w, x + w, y + (w / 2)]
     ];
-    const offsets = [
-        // top-left, bottom-right
-        [0, 0, squareSize, squareSize],
-        // top-right, bottom-left
-        [0, squareSize, squareSize, 0]
-    ];
-    const idx = random(0, 1, true);
+    // group for the triangles
+    const triangleGroup = group.group();
     //triangles
-    triangleGroup.polygon(points[idx][0]).fill(foreground).move(x + offsets[0], y + offsets[1]); //Bottom left
-    triangleGroup.polygon(points[idx][1]).fill(foreground).move(x + offsets[2], y + offsets[3]); // top right
+    triangleGroup.polygon(points[0]).fill(foreground).move(x, y); //Bottom left
+    triangleGroup.polygon(points[1]).fill(foreground); //.move(x, y); // top right
+    if (random(0, 1, true)) group.flip('x');
     group.add(triangleGroup);
 }
 
