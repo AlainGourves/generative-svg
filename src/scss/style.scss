@@ -27,6 +27,12 @@ main{
   width: 85vw;
 }
 
+aside {
+  display: flex;
+  flex-direction: column;
+  gap: .5em;
+}
+
 img {
   display: block;
   max-width: 100%;
@@ -47,4 +53,9 @@ svg{
   aspect-ratio: 1;
   /*    Removes little gaps between the shapes */
   shape-rendering: crispEdges;
+}
+
+button {
+  padding: .25em .5em;
+  margin: 0 auto;
 }

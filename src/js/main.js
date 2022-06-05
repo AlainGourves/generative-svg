@@ -24,10 +24,9 @@ export const drawSVG = () => {
         for (let j = 0; j < numCols; j++) {
             generateLittleBox(draw, i, j);
         }
-
     }
 }
-window.drawSVG = drawSVG;
+// window.drawSVG = drawSVG;
 
 const generateLittleBox = (root, x, y) => {
     // get 2 colors
@@ -35,7 +34,6 @@ const generateLittleBox = (root, x, y) => {
 
     const blockStyleOptions = [blockFn.drawOppositeCircles, blockFn.drawFacingCircles, blockFn.drawSemiCircle, blockFn.drawCircle, blockFn.drawDisc];
     // const blockStyleOptions = [blockFn.drawRect, blockFn.drawFacingCircles, blockFn.drawSemiCircle, blockFn.drawCircle, blockFn.drawOppositeCircles, blockFn.drawDisc, blockFn.drawOppositeTriangles];
-    // const blockStyleOptions = [blockFn.drawFacingCircles, blockFn.drawSemiCircle, blockFn.drawCircle, blockFn.drawDisc];
     const blockStyle = random(blockStyleOptions);
     const group = root.group();
     blockStyle(group, x * squareSize, y * squareSize, squareSize, foreground, background);
@@ -82,29 +80,18 @@ window.addEventListener("load", async e => {
 
     setPageBackground();
 
-    // const draw = SVG() // create the svg
-    //     .addTo('main')
-    //     .size('100%', '100%')
-    //     .viewbox(`0 0 ${numRows * squareSize} ${numCols * squareSize}`);
-
-    // for (let i = 0; i < numRows; i++) {
-    //     for (let j = 0; j < numCols; j++) {
-    //         generateLittleBox(draw, i, j);
-    //     }
-
-    // }
     drawSVG();
 
     btnExport.addEventListener('click', e => {
-        const toSave = draw.svg();
+        const mySvg = document.querySelector('main svg').outerHTML;
         const fileDowloadUrl = URL.createObjectURL(
-            new Blob([toSave], { type: 'image/svg+xml;charset=utf-8;' })
+            new Blob([mySvg], { type: 'image/svg+xml;charset=utf-8;' })
         );
         const link = document.createElement('a');
         link.href = fileDowloadUrl;
         link.setAttribute(
             'download',
-            `image.svg`
+            'image.svg'
         );
         document.body.appendChild(link);
         link.click();
