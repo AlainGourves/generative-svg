@@ -20,3 +20,4 @@ npm start
 - [TinyColor](https://github.com/bgrins/TinyColor)
 - [GSAP](https://greensock.com/)
 - [Generative Utils](https://github.com/georgedoescode/generative-utils)
+- [Weighted Random](https://github.com/trekhleb/javascript-algorithms/tree/master/src/algorithms/statistics/weighted-random) to choose the blocks style depending on their given weight.

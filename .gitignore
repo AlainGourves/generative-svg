@@ -4,3 +4,4 @@ node_modules/
 public/
 test.html
 test.js
+test.scss

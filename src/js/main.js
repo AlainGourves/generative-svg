@@ -1,5 +1,6 @@
 import { random } from "https://cdn.skypack.dev/@georgedoescode/generative-utils@1.0.38";
 import * as blockFn from './blocks.js';
+import weightedRandom from './weightedRandom.js';
 
 const numRows = random(8, 10, true); // true: gives an integer
 const numCols = random(6, 8, true);
@@ -34,6 +35,7 @@ const generateLittleBox = (root, x, y) => {
 
     const blockStyleOptions = [blockFn.drawOppositeCircles, blockFn.drawFacingCircles, blockFn.drawSemiCircle, blockFn.drawCircle, blockFn.drawDisc];
     // const blockStyleOptions = [blockFn.drawRect, blockFn.drawFacingCircles, blockFn.drawSemiCircle, blockFn.drawCircle, blockFn.drawOppositeCircles, blockFn.drawDisc, blockFn.drawOppositeTriangles];
+    const blockStyleWeights = [0, 0.5, 0.3, 0.1, 0.1]; // weights must add up to 1
     const blockStyle = random(blockStyleOptions);
     const group = root.group();
     blockStyle(group, x * squareSize, y * squareSize, squareSize, foreground, background);
