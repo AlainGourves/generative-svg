@@ -1,16 +1,24 @@
 import { random } from "https://cdn.skypack.dev/@georgedoescode/generative-utils@1.0.38";
+import { setPageBackground, btnMenuOpen, btnMenuClose } from './animations.js';
 import * as blockFn from './blocks.js';
 import weightedRandom from './weightedRandom.js';
+
+// Array des noms des fonctions du module Blocks
+const drawFunctions = Object.keys(blockFn);
 
 const numRows = random(8, 10, true); // true: gives an integer
 const numCols = random(6, 8, true);
 const squareSize = 40;
 
+const btnMenu = document.querySelector('#btnMenu');
 const btnExport = document.querySelector('#exportSVG');
 const btnRedraw = document.querySelector('#redrawSVG');
 
+const typesContainer = document.querySelector('.select-block-type');
+
 let colorPalette;
 
+// TODO mettre dans un fichier
 export const drawSVG = () => {
     // if a previous SVG exists, remove it
     const svg = document.querySelector('main svg');
@@ -36,7 +44,7 @@ const generateLittleBox = (root, x, y) => {
     const blockStyleOptions = [blockFn.drawOppositeCircles, blockFn.drawFacingCircles, blockFn.drawSemiCircle, blockFn.drawCircle, blockFn.drawDisc];
     // const blockStyleOptions = [blockFn.drawRect, blockFn.drawFacingCircles, blockFn.drawSemiCircle, blockFn.drawCircle, blockFn.drawOppositeCircles, blockFn.drawDisc, blockFn.drawOppositeTriangles];
     const blockStyleWeights = [0, 0.5, 0.3, 0.1, 0.1]; // weights must add up to 1
-    const blockStyle = random(blockStyleOptions);
+    const blockStyle = weightedRandom(blockStyleOptions, blockStyleWeights);
     const group = root.group();
     blockStyle(group, x * squareSize, y * squareSize, squareSize, foreground, background);
 }
@@ -51,28 +59,44 @@ const getTwoColors = () => {
     return { foreground, background };
 }
 
-const setPageBackground = () => {
-    // Sets page's background gradient
-    const bg = tinycolor
-        .mix(colorPalette[0], colorPalette[1], 50)
-        .desaturate(10)
-        .toString();
-    // lighter version
-    const bgInner = tinycolor(bg)
-        .lighten(10)
-        .toString();
-    // darker version
-    const bgOuter = tinycolor(bg)
-        .darken(10)
-        .toString();
-    gsap.to('body', {
-        '--bg-inner': bgInner,
-        '--bg-outer': bgOuter,
-        duration: 0.5
-    });
+// Create a SVG with defs for all blocks types
+const getBlockId = (str) => {
+    return str.substring(4, 5).toLowerCase() + str.substring(5);
 }
 
 window.addEventListener("load", async e => {
+    const library = SVG()
+        .addTo('body');
+        // .viewbox(`0 0 40 40`);
+
+    const defs = library.defs()
+    for (let i = 0; i < drawFunctions.length; i++) {
+        const group = defs.group();
+        let id = getBlockId(drawFunctions[i]); // renvoie le nom de la fonction sans 'draw' & initiale bdc
+        group.attr('id', id);
+        group.element('desc').words(id);
+        blockFn[drawFunctions[i]](group, 0, 0, 40, '#333', '#ccc');
+    }
+
+    // Afficher les différents type de bloc
+    const blockTemplate = document.querySelector('#bloc-type__tmpl');
+    drawFunctions.forEach((obj, idx) => {
+        const clone = blockTemplate.content.cloneNode(true);
+        const check = clone.querySelector('input[type=checkbox]');
+        const label = clone.querySelector('label');
+        const block = clone.querySelector('.block-type');
+        const name = `type${idx}`
+        check.id = name;
+        check.dataset.function = drawFunctions[idx];
+        label.htmlFor = name;
+        const draw = SVG().addTo(block).viewbox('0 0 40 40');
+        draw.use(getBlockId(drawFunctions[idx]));
+        typesContainer.appendChild(clone);
+    });
+    // event listener for clicks on checkboxes
+    typesContainer.addEventListener('input', (ev) => {
+        console.log(ev.target.dataset.function, ev.target.checked)
+    })
     // Color palette
     const colors = await fetch("https://unpkg.com/nice-color-palettes@3.0.0/100.json")
         .then(response => response.json())
@@ -80,9 +104,20 @@ window.addEventListener("load", async e => {
             colorPalette = random(c);
         });
 
-    setPageBackground();
+    setPageBackground(colorPalette);
 
     drawSVG();
+
+    btnMenu.addEventListener('click', e => {
+        const as = document.querySelector('aside');
+        if (as.classList.contains('open')) {
+            btnMenuClose()
+            as.classList.remove('open')
+        } else {
+            btnMenuOpen()
+            as.classList.add('open')
+        }
+    });
 
     btnExport.addEventListener('click', e => {
         const mySvg = document.querySelector('main svg').outerHTML;

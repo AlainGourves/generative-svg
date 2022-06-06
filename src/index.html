@@ -12,9 +12,41 @@
 </head>
 <body>
     <main></main>
-    <aside>
-        <button class="btn" id="redrawSVG">Regenerate SVG</button>
-        <button class="btn" id="exportSVG">Export SVG</button>
+    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:svgjs="http://svgjs.dev/svgjs" width="100%" height="100%" viewBox="0 0 24 24" id="btnMenu">
+        <g>
+            <rect width="24" height="24" fill="transparent"></rect>
+            <line x1="2" y1="2" x2="22" y2="2"></line>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <line x1="2" y1="22" x2="22" y2="22"></line>
+        </g>
+    </svg>
+    <aside class="open">
+        <header>Settings</header>
+        <article class="btns">
+            <button class="btn" id="redrawSVG">Regenerate SVG</button>
+            <button class="btn" id="exportSVG">Export SVG</button>
+        </article>
+        <article class="types">
+            <header>Blocks Types</header>
+            <div class="select-block-type">
+                <template id="bloc-type__tmpl">
+                    <div class="block-type__cont">
+                        <input type="checkbox">
+                        <div class="block-type"></div>
+                        <label for="type1"></label>
+                    </div>
+                </template>
+            </div>
+        </article>
+        <article class=""weights>
+            <header>Blocks Weights</header>
+            <label>
+                <output></output>
+                <input type="range"  class="slider" min="0" max="1" step="0.01">
+            </label>
+
+        </article>
     </aside>
 
     <script src="./js/main.js" type="module"></script>

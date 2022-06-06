@@ -28,11 +28,70 @@ main{
 }
 
 aside {
+  position: fixed;
+  top: 0;
+  left: 100%;
+  width: 100vw;
+  min-height: 100vh;
+  padding: 4rem;
   display: flex;
   flex-direction: column;
   gap: .5em;
+  background-color: deepskyblue;
+  transition: left .5s ease-in-out;
+
+  &.open{
+    left: 0;
+  }
+
+  & article {
+    border: 1px solid red;
+  }
 }
 
+.select-block-type{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+
+.block-type__cont{
+  position: relative;
+  width: 50px;
+  height: 75px;
+  border-radius: .25rem;
+  background-color: yellowgreen;
+
+  & label {
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
+  }
+}
+ .block-type{
+   width: 40px;
+   & svg{
+    shape-rendering: geometricPrecision;
+   }
+ }
+
+#btnMenu{
+  width: 1.5rem;
+  height: 1.5rem;
+  shape-rendering: geometricPrecision;
+  cursor: pointer;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1;
+
+  & line {
+    stroke: #333;
+    stroke-width: 3;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke; // keeps stroke-weight while scaling
+  }
+}
 img {
   display: block;
   max-width: 100%;

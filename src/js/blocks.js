@@ -3,7 +3,7 @@ import { random } from "https://cdn.skypack.dev/@georgedoescode/generative-utils
 
 export const drawRect = (group, x, y, w, foreground, background) => {
     // Create group element
-    group.addClass('draw-block');
+    group.addClass('draw-rect');
     // Draw block
     group.rect(w, w).fill(background).stroke('none').move(x, y);
 }
@@ -32,7 +32,7 @@ export const drawOppositeCircles = (group, x, y, w, foreground, background) => {
 }
 
 export const drawFacingCircles = (group, x, y, w, foreground, background) => {
-    group.addClass('opposite-circles');
+    group.addClass('facing-circles');
     group.rect(w, w).fill(background).move(x, y);
     // mask
     const mask = group.rect(w, w).fill('#fff').move(x, y);

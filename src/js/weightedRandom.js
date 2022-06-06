@@ -44,10 +44,12 @@ export default function weightedRandom(items, weights) {
     // The items with higher weight will be picked more often.
     for (let itemIndex = 0; itemIndex < items.length; itemIndex += 1) {
       if (cumulativeWeights[itemIndex] >= randomNumber) {
-        return {
-          item: items[itemIndex],
-          index: itemIndex,
-        };
+        // return {
+        //   item: items[itemIndex],
+        //   index: itemIndex,
+        // };
+        // modifié : ne renvoit que la fonction choisie
+        return items[itemIndex];
       }
     }
   }
