@@ -80,8 +80,8 @@ aside {
     border-radius: .25rem;
 
     & svg {
-      width: 35px;
-      height: 35px;
+      width: 3rem;
+      height: 3rem;
       shape-rendering: geometricPrecision;
     }
   }
@@ -96,8 +96,9 @@ aside {
   }
 
   & svg {
-    width: 30px;
-    aspect-ratio: 1 / 1;
+    width: 2rem;
+    height: 2rem;
+    shape-rendering: geometricPrecision;
   }
 }
 

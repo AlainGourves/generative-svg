@@ -23,6 +23,9 @@ const typesContainer = document.querySelector('.select-block-type');
 const blockWeightTemplate = document.querySelector('#bloc-weight__tmpl');
 const weightsContainer = document.querySelector('.block-weight__cont');
 
+let weigthSliders = [];
+let result; // TODO virer ça !
+
 // TODO mettre dans un fichier
 export const drawSVG = () => {
     // if a previous SVG exists, remove it
@@ -46,12 +49,12 @@ const generateLittleBox = (root, x, y) => {
     // get 2 colors
     const { foreground, background } = getTwoColors();
 
-    const blockStyleOptions = [blockFn.drawOppositeCircles, blockFn.drawFacingCircles, blockFn.drawSemiCircle, blockFn.drawCircle, blockFn.drawDisc];
-    // const blockStyleOptions = [blockFn.drawRect, blockFn.drawFacingCircles, blockFn.drawSemiCircle, blockFn.drawCircle, blockFn.drawOppositeCircles, blockFn.drawDisc, blockFn.drawOppositeTriangles];
+    const blockStyleFunctions = [blockFn.drawOppositeCircles, blockFn.drawFacingCircles, blockFn.drawSemiCircle, blockFn.drawCircle, blockFn.drawDisc];
+    // const blockStyleFunctions = [blockFn.drawRect, blockFn.drawFacingCircles, blockFn.drawSemiCircle, blockFn.drawCircle, blockFn.drawOppositeCircles, blockFn.drawDisc, blockFn.drawOppositeTriangles];
     const blockStyleWeights = [0, 0.5, 0.3, 0.1, 0.1]; // weights must add up to 1
-    const blockStyle = weightedRandom(blockStyleOptions, blockStyleWeights);
+    const blockStyle = weightedRandom(blockStyleFunctions, blockStyleWeights);
     const group = root.group();
-    blockStyle(group, x * squareSize, y * squareSize, squareSize, foreground, background);
+    blockStyle(group, x * squareSize, y * squareSize, squareSize, foreground, background, true);
 }
 
 const getTwoColors = () => {
@@ -64,7 +67,6 @@ const getTwoColors = () => {
     return { foreground, background };
 }
 
-// Create a SVG with defs for all blocks types
 const getBlockId = (str) => {
     return str.substring(4, 5).toLowerCase() + str.substring(5);
 }
@@ -80,10 +82,13 @@ const updateActiveBocks = (fn, isActive) => {
         const input = clone.querySelector('input[type=range]');
         const block = clone.querySelector('.block-type');
         const output = clone.querySelector('output');
+        const name = `${getBlockId(fn)}Slider`;
+        label.htmlFor = name;
+        input.id = name;
         input.dataset.function = fn;
         input.value = 0;
         output.textContent = 0;
-        const draw = SVG().addTo(block).viewbox('0 0 30 30');
+        const draw = SVG().addTo(block).viewbox('0 0 20 20');
         draw.use(getBlockId(fn));
         weightsContainer.appendChild(clone);
     } else {
@@ -95,12 +100,70 @@ const updateActiveBocks = (fn, isActive) => {
         activeBlocksTypes.splice(idx, 1);
         activeBlocksWeigths.splice(idx, 1);
     }
+    // update le array des sliders
+    weigthSliders = weightsContainer?.querySelectorAll('input[type=range]');
 }
 
+
+const sumArray = (arr) => {
+    return arr.reduce((prev, curr) => prev + curr);
+};
+
+const printVals = () => {
+    activeBlocksWeigths.forEach((v, i) => {
+        weigthSliders[i].nextElementSibling.value = v.toFixed(2);
+    });
+};
+
+const updateWeights = (ev) => {
+    const newVal = parseFloat(ev.target.value);
+    const idx = Array.from(weigthSliders).findIndex((s) => s === ev.target);
+    let diff = newVal - activeBlocksWeigths[idx];
+    activeBlocksWeigths[idx] = newVal;
+
+    if (sumArray(activeBlocksWeigths) > 1) {
+        if (diff > 0) {
+            let n = activeBlocksWeigths.filter((v) => v > 0).length - 1;
+            result = activeBlocksWeigths.map((v, i) => {
+                if (i === idx || v === 0) return v;
+                let res = v - diff / n;
+                if (res < 0) {
+                    diff += Math.abs(res);
+                    res = 0;
+                }
+                return res;
+            });
+        } else {
+            let n = activeBlocksWeigths.length - 1;
+            result = activeBlocksWeigths.map((v, i) => {
+                if (i === idx || v === 0) return v;
+                let res = v - diff / n;
+                if (res < 0) {
+                    diff += Math.abs(res);
+                    res = 0;
+                }
+                return res;
+            });
+        }
+        // nettoyage
+        result.forEach((v, i) => {
+            if (v < 0) result[i] = 0;
+            if (v > 1) result[i] = 1;
+        });
+        weigthSliders.forEach((s, i) => (s.value = result[i]));
+        activeBlocksWeigths = result;
+    }
+    printVals();
+};
+
 window.addEventListener("load", async e => {
+    // Create a SVG with defs for all blocks types
     const library = SVG()
-        .addTo('body');
-    // .viewbox(`0 0 40 40`);
+        .addTo('body')
+        .width(20)
+        .height(20)
+        .attr('preserveAspectRatio', 'xMidYMid meet')
+        .viewbox(`0 0 20 20`);
 
     const defs = library.defs()
     for (let i = 0; i < drawFunctions.length; i++) {
@@ -108,11 +171,10 @@ window.addEventListener("load", async e => {
         let id = getBlockId(drawFunctions[i]); // renvoie le nom de la fonction sans 'draw' & initiale bdc
         group.attr('id', id);
         group.element('desc').words(id);
-        blockFn[drawFunctions[i]](group, 0, 0, 40, '#333', '#ccc');
+        blockFn[drawFunctions[i]](group, 0, 0, 20, '#333', '#ccc');
     }
 
     // Afficher les différents type de bloc
-
     drawFunctions.forEach((obj, idx) => {
         const clone = blockTypeTemplate.content.cloneNode(true);
         const check = clone.querySelector('input[type=checkbox]');
@@ -122,13 +184,23 @@ window.addEventListener("load", async e => {
         check.id = name;
         check.dataset.function = drawFunctions[idx];
         label.htmlFor = name;
-        const draw = SVG().addTo(block).viewbox('0 0 40 40');
+        const draw = SVG().addTo(block).viewbox('0 0 20 20');
         draw.use(getBlockId(drawFunctions[idx]));
         typesContainer.appendChild(clone);
     });
     // event listener for clicks on checkboxes
     typesContainer?.addEventListener('input', (ev) => {
-        updateActiveBocks(ev.target.dataset.function, ev.target.checked)
+        if (ev.target.dataset.function) {
+            updateActiveBocks(ev.target.dataset.function, ev.target.checked)
+        }
+    });
+
+    // event listener for weights change
+    weightsContainer.addEventListener('input', (ev) => {
+        if (ev.target.dataset.function) {
+            console.log(activeBlocksWeigths)
+            updateWeights(ev);
+        }
     })
     // Color palette
     const colors = await fetch("https://unpkg.com/nice-color-palettes@3.0.0/100.json")
