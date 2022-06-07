@@ -14,9 +14,14 @@ const btnMenu = document.querySelector('#btnMenu');
 const btnExport = document.querySelector('#exportSVG');
 const btnRedraw = document.querySelector('#redrawSVG');
 
-const typesContainer = document.querySelector('.select-block-type');
 
 let colorPalette;
+let activeBlocksTypes = [];
+let activeBlocksWeigths = [];
+const blockTypeTemplate = document.querySelector('#bloc-type__tmpl');
+const typesContainer = document.querySelector('.select-block-type');
+const blockWeightTemplate = document.querySelector('#bloc-weight__tmpl');
+const weightsContainer = document.querySelector('.block-weight__cont');
 
 // TODO mettre dans un fichier
 export const drawSVG = () => {
@@ -64,10 +69,38 @@ const getBlockId = (str) => {
     return str.substring(4, 5).toLowerCase() + str.substring(5);
 }
 
+const updateActiveBocks = (fn, isActive) => {
+    if (isActive) {
+        // Ajoute fn à activeBlocksTypes (et activeBlocksWeigths)
+        activeBlocksTypes.push(blockFn[fn]);
+        activeBlocksWeigths.push(0);
+        // et génère le HTML correspondant
+        const clone = blockWeightTemplate.content.cloneNode(true);
+        const label = clone.querySelector('label');
+        const input = clone.querySelector('input[type=range]');
+        const block = clone.querySelector('.block-type');
+        const output = clone.querySelector('output');
+        input.dataset.function = fn;
+        input.value = 0;
+        output.textContent = 0;
+        const draw = SVG().addTo(block).viewbox('0 0 30 30');
+        draw.use(getBlockId(fn));
+        weightsContainer.appendChild(clone);
+    } else {
+        // Supprime le HTML correspondant
+        const label = weightsContainer?.querySelector(`[data-function='${fn}']`).parentElement;
+        if (label) label.remove();
+        // Enlève fn de activeBlocksTypes (et activeBlocksWeigths)
+        const idx = activeBlocksTypes.findIndex(f => f.name === fn);
+        activeBlocksTypes.splice(idx, 1);
+        activeBlocksWeigths.splice(idx, 1);
+    }
+}
+
 window.addEventListener("load", async e => {
     const library = SVG()
         .addTo('body');
-        // .viewbox(`0 0 40 40`);
+    // .viewbox(`0 0 40 40`);
 
     const defs = library.defs()
     for (let i = 0; i < drawFunctions.length; i++) {
@@ -79,9 +112,9 @@ window.addEventListener("load", async e => {
     }
 
     // Afficher les différents type de bloc
-    const blockTemplate = document.querySelector('#bloc-type__tmpl');
+
     drawFunctions.forEach((obj, idx) => {
-        const clone = blockTemplate.content.cloneNode(true);
+        const clone = blockTypeTemplate.content.cloneNode(true);
         const check = clone.querySelector('input[type=checkbox]');
         const label = clone.querySelector('label');
         const block = clone.querySelector('.block-type');
@@ -94,8 +127,8 @@ window.addEventListener("load", async e => {
         typesContainer.appendChild(clone);
     });
     // event listener for clicks on checkboxes
-    typesContainer.addEventListener('input', (ev) => {
-        console.log(ev.target.dataset.function, ev.target.checked)
+    typesContainer?.addEventListener('input', (ev) => {
+        updateActiveBocks(ev.target.dataset.function, ev.target.checked)
     })
     // Color palette
     const colors = await fetch("https://unpkg.com/nice-color-palettes@3.0.0/100.json")
@@ -108,7 +141,7 @@ window.addEventListener("load", async e => {
 
     drawSVG();
 
-    btnMenu.addEventListener('click', e => {
+    btnMenu?.addEventListener('click', e => {
         const as = document.querySelector('aside');
         if (as.classList.contains('open')) {
             btnMenuClose()
@@ -119,7 +152,7 @@ window.addEventListener("load", async e => {
         }
     });
 
-    btnExport.addEventListener('click', e => {
+    btnExport?.addEventListener('click', e => {
         const mySvg = document.querySelector('main svg').outerHTML;
         const fileDowloadUrl = URL.createObjectURL(
             new Blob([mySvg], { type: 'image/svg+xml;charset=utf-8;' })
@@ -135,5 +168,5 @@ window.addEventListener("load", async e => {
         link.parentNode.removeChild(link);
     });
 
-    btnRedraw.addEventListener('click', e => drawSVG());
+    btnRedraw?.addEventListener('click', e => drawSVG());
 });
