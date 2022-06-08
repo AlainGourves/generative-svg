@@ -164,3 +164,17 @@ button {
   padding: .25em .5em;
   margin: 0 auto;
 }
+
+.block-weight__total{
+  transition: height .2s linear, opacity .2s linear;
+  
+  &[data-display=true] {
+    opacity: 1;
+    height: 2rem;
+  }
+  &[data-display=false] {
+    opacity: 0;
+    height: 0;
+  }
+
+}

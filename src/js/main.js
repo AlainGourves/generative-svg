@@ -5,6 +5,8 @@ import * as blockFn from './blocks.js';
 import { getBlockId, init } from "./init.js";
 import weightedRandom from './weightedRandom.js';
 
+window.random = random; // TODO enlever ça
+
 const numRows = random(8, 10, true); // true: gives an integer
 const numCols = random(6, 8, true);
 const squareSize = 40;
@@ -82,6 +84,12 @@ const updateActiveBocks = (fn, isActive) => {
         activeBlocksTypes.splice(idx, 1);
         activeBlocksWeigths.splice(idx, 1);
     }
+    // Affiche le total des poids
+    if (activeBlocksTypes.length) {
+        weightsTotal.dataset.display = true;
+    } else {
+        weightsTotal.dataset.display = false;
+    }
     // update le array des sliders
     weigthSliders = weightsContainer?.querySelectorAll('input[type=range]');
 }
@@ -131,6 +139,7 @@ const updateWeights = (ev) => {
         total += v;
         weigthSliders[i].nextElementSibling.value = `${v}%`;
     });
+    // TODO: distinguer quand le total < 100%
     weightsTotal.querySelector('output').value = `${total}%`;
 };
 
@@ -159,4 +168,8 @@ window.addEventListener("load", async e => {
     btnMenu?.addEventListener('click', toggleMenu);
     btnExport?.addEventListener('click', saveSVGFile);
     btnRefresh?.addEventListener('click', drawSVG);
+
+    updateActiveBocks('drawRect', true);
+    activeBlocksWeigths = [1]; // TODO: faire en sorte que le slider reflète la valeur
+    drawSVG();
 });
