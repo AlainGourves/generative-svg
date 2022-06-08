@@ -21,12 +21,12 @@ let activeBlocksWeigths = [];
 
 const typesContainer = document.querySelector('.select-block-type');
 const weightsContainer = document.querySelector('.block-weight__cont');
+const weightsTotal = weightsContainer.querySelector('.block-weight__total');
 
 const blockTypeTemplate = document.querySelector('#bloc-type__tmpl');
 const blockWeightTemplate = document.querySelector('#bloc-weight__tmpl');
 
-let weigthSliders = [];
-let result; // TODO virer ça !
+let weigthSliders = []; // stores the sliders values
 
 const drawSVG = () => {
     // if a previous SVG exists, remove it
@@ -72,7 +72,7 @@ const updateActiveBocks = (fn, isActive) => {
         output.textContent = '0%';
         const draw = SVG().addTo(block).viewbox('0 0 20 20');
         draw.use(getBlockId(fn));
-        weightsContainer.appendChild(clone);
+        weightsContainer.insertBefore(clone, weightsTotal);
     } else {
         // Supprime le HTML correspondant
         const label = weightsContainer?.querySelector(`[data-function='${fn}']`).parentElement;
@@ -86,12 +86,6 @@ const updateActiveBocks = (fn, isActive) => {
     weigthSliders = weightsContainer?.querySelectorAll('input[type=range]');
 }
 
-const printVals = () => {
-    activeBlocksWeigths.forEach((v, i) => {
-        weigthSliders[i].nextElementSibling.value = `${Math.round(v * 100)}%`; //v.toFixed(2);
-    });
-};
-
 const updateWeights = (ev) => {
     const newVal = parseFloat(ev.target.value);
     const idx = Array.from(weigthSliders).findIndex((s) => s === ev.target);
@@ -99,9 +93,10 @@ const updateWeights = (ev) => {
     activeBlocksWeigths[idx] = newVal;
 
     if (sumArray(activeBlocksWeigths) > 1) {
+        let newWeights = [];
         if (diff > 0) {
             let n = activeBlocksWeigths.filter((v) => v > 0).length - 1;
-            result = activeBlocksWeigths.map((v, i) => {
+            newWeights = activeBlocksWeigths.map((v, i) => {
                 if (i === idx || v === 0) return v;
                 let res = v - diff / n;
                 if (res < 0) {
@@ -112,7 +107,7 @@ const updateWeights = (ev) => {
             });
         } else {
             let n = activeBlocksWeigths.length - 1;
-            result = activeBlocksWeigths.map((v, i) => {
+            newWeights = activeBlocksWeigths.map((v, i) => {
                 if (i === idx || v === 0) return v;
                 let res = v - diff / n;
                 if (res < 0) {
@@ -123,14 +118,20 @@ const updateWeights = (ev) => {
             });
         }
         // nettoyage
-        result.forEach((v, i) => {
-            if (v < 0) result[i] = 0;
-            if (v > 1) result[i] = 1;
+        newWeights.forEach((v, i) => {
+            if (v < 0) newWeights[i] = 0;
+            if (v > 1) newWeights[i] = 1;
         });
-        weigthSliders.forEach((s, i) => (s.value = result[i]));
-        activeBlocksWeigths = result;
+        weigthSliders.forEach((s, i) => (s.value = newWeights[i]));
+        activeBlocksWeigths = newWeights;
     }
-    printVals();
+    let total = 0;
+    activeBlocksWeigths.forEach((val, i) => {
+        const v = Math.round(val * 100);
+        total += v;
+        weigthSliders[i].nextElementSibling.value = `${v}%`;
+    });
+    weightsTotal.querySelector('output').value = `${total}%`;
 };
 
 window.addEventListener("load", async e => {
@@ -140,7 +141,7 @@ window.addEventListener("load", async e => {
 
     init();
 
-    // event listener for clicks on checkboxes
+    // event listener for clicks on checkboxes -> select block type
     typesContainer?.addEventListener('input', (ev) => {
         if (ev.target.dataset.function) {
             updateActiveBocks(ev.target.dataset.function, ev.target.checked)
@@ -150,7 +151,6 @@ window.addEventListener("load", async e => {
     // event listener for weights change
     weightsContainer.addEventListener('input', (ev) => {
         if (ev.target.dataset.function) {
-            console.log(activeBlocksWeigths, sumArray(activeBlocksWeigths))
             updateWeights(ev);
         }
     })
