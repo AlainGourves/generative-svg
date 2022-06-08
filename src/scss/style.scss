@@ -57,13 +57,19 @@ aside {
 
 .block-type__cont {
   position: relative;
-  width: 50px;
+  width: 3.5rem;
   height: 75px;
   border-radius: .25rem;
   background-color: yellowgreen;
 
-  & input[type=checkbox]:checked~.block-type {
-    background: red;
+  & input[type=checkbox] {
+    position: absolute;
+    right: -200vw;
+
+    &:checked~.block-type {
+      border: 3px solid red;
+      background: hsl(0deg 0% 100% / 50%);
+    }
   }
 
   & label {
@@ -87,7 +93,7 @@ aside {
   }
 }
 
-.block-weight__cont{
+.block-weight__cont {
   & label {
     display: flex;
     flex-direction: row;
@@ -103,26 +109,45 @@ aside {
 }
 
 #btnMenu {
-  width: 1.5rem;
-  height: 1.5rem;
-  shape-rendering: geometricPrecision;
-  cursor: pointer;
   position: absolute;
   top: 1rem;
   right: 1rem;
   z-index: 1;
-
-  & line {
-    stroke: #333;
-    stroke-width: 3;
-    stroke-linecap: round;
-    vector-effect: non-scaling-stroke; // keeps stroke-weight while scaling
-  }
+  filter: invert(1);
 }
 
-img {
+.svg-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: none;
+  stroke: #333;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke; // keeps stroke-weight while scaling
+  shape-rendering: geometricPrecision;
+  cursor: pointer;
+}
+
+.btn {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: .5rem;
+}
+
+
+img,
+svg {
   display: block;
   max-width: 100%;
+  aspect-ratio: 1 /1;
+  /*    Removes little gaps between the shapes */
+  shape-rendering: crispEdges;
+}
+.block circle,
+.block path{
+  shape-rendering: geometricPrecision;
 }
 
 ul,
@@ -133,13 +158,6 @@ nav ul {
 ul a {
   text-decoration: none;
   display: inline-block;
-}
-
-svg {
-  width: 100%;
-  aspect-ratio: 1;
-  /*    Removes little gaps between the shapes */
-  shape-rendering: crispEdges;
 }
 
 button {

@@ -12,13 +12,13 @@ import { random } from "https://cdn.skypack.dev/@georgedoescode/generative-utils
 
 export const drawRect = (group, x, y, w, foreground, background, randomize = false) => {
     // Create group element
-    group.addClass('draw-rect');
+    group.addClass('block draw-rect');
     // Draw block
-    group.rect(w, w).fill(background).stroke('none').move(x, y);
+    group.rect(w, w).fill(foreground).stroke('none').move(x, y);
 }
 
 export const drawCircle = (group, x, y, w, foreground, background, randomize = false) => {
-    group.addClass('draw-circle');
+    group.addClass('block draw-circle');
     // draw background
     group.rect(w, w).fill(background).move(x, y);
     // foreground
@@ -26,7 +26,7 @@ export const drawCircle = (group, x, y, w, foreground, background, randomize = f
 }
 
 export const drawOppositeCircles = (group, x, y, w, foreground, background, randomize = false) => {
-    group.addClass('opposite-circles');
+    group.addClass('block opposite-circles');
     group.rect(w, w).fill(background).move(x, y);
     // mask
     const mask = group.rect(w, w).fill('#fff').move(x, y);
@@ -41,7 +41,7 @@ export const drawOppositeCircles = (group, x, y, w, foreground, background, rand
 }
 
 export const drawFacingCircles = (group, x, y, w, foreground, background, randomize = false) => {
-    group.addClass('facing-circles');
+    group.addClass('block facing-circles');
     group.rect(w, w).fill(background).move(x, y);
     // mask
     const mask = group.rect(w, w).fill('#fff').move(x, y);
@@ -55,7 +55,7 @@ export const drawFacingCircles = (group, x, y, w, foreground, background, random
 }
 
 export const drawSemiCircle = (group, x, y, w, foreground, background, randomize = false) => {
-    group.addClass('semi-circles');
+    group.addClass('block semi-circles');
     group.rect(w, w).fill(background).move(x, y);
     // group for the circles
     const circleGroup = group.group();
@@ -69,21 +69,17 @@ export const drawSemiCircle = (group, x, y, w, foreground, background, randomize
 }
 
 export const drawDisc = (group, x, y, w, foreground, background, randomize = false) => {
-    group.addClass('disc');
+    group.addClass('block disc');
     // group for the circles
     const circleGroup = group.group();
     group.rect(w, w).fill(background).move(x, y);
     circleGroup.circle(w).fill(foreground).move(x, y)
-    // mask
-    const bg = group.rect(w, w).fill('#fff').move(x, y);
-    const hole = group.circle(w / 2).fill('black').center(x + w / 2, y + w / 2);
-    const mask = group.mask().add(bg).add(hole);
-    circleGroup.maskWith(mask);
+    circleGroup.circle(w / 2).fill(background).center(x + w / 2, y + w / 2);
     group.add(circleGroup);
 }
 
 export const drawOppositeTriangles = (group, x, y, w, foreground, background, randomize = false) => {
-    group.addClass('opposite-triangles');
+    group.addClass('block opposite-triangles');
     group.rect(w, w).fill(background).move(x, y);
     const points = [
         // top-left

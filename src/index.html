@@ -18,20 +18,34 @@
 
 <body>
     <main></main>
-    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"
-        xmlns:svgjs="http://svgjs.dev/svgjs" width="100%" height="100%" viewBox="0 0 24 24" id="btnMenu">
+    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" id="btnMenu"
+        class="svg-icon">
         <g>
-            <rect width="24" height="24" fill="transparent"></rect>
+            <rect width="24" height="24" stroke="none"></rect>
             <line x1="2" y1="2" x2="22" y2="2"></line>
             <line x1="2" y1="12" x2="22" y2="12"></line>
             <line x1="2" y1="22" x2="22" y2="22"></line>
         </g>
     </svg>
-    <aside class="open">
+    <aside class="">
         <header>Settings</header>
         <article class="btns">
-            <button class="btn" id="redrawSVG">Regenerate SVG</button>
-            <button class="btn" id="exportSVG">Export SVG</button>
+            <button class="btn" id="redrawSVG">
+                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" class="svg-icon">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <polyline points="1 20 1 14 7 14"></polyline>
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                </svg>
+                <span class="btn__text">Regenerate SVG</span>
+            </button>
+            <button class="btn" id="exportSVG">
+                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" class="svg-icon">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span class="btn__text">Export SVG</span>
+            </button>
         </article>
         <article class="types">
             <header>Blocks Types</header>
@@ -55,10 +69,21 @@
                         <output></output>
                     </label>
                 </template>
+                <div class="block-weight__total">Total: <output></output></div>
             </div>
         </article>
+        <div>
+            <button id="drawSVG" class="btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" class="svg-icon">
+                    <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                    <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                    <path d="M2 2l7.586 7.586"></path>
+                    <circle cx="11" cy="11" r="2"></circle>
+                </svg>
+                <span class="btn__text">Draw !</span>
+            </button>
+        </div>
     </aside>
-
     <script src="./js/main.js" type="module"></script>
 </body>
 

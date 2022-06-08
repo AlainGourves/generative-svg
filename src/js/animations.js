@@ -19,7 +19,7 @@ export const setPageBackground = (palette) => {
     });
 }
 
-export const btnMenuOpen = () => {
+const btnMenuOpen = () => {
     const lines = document.querySelectorAll('#btnMenu line');
     const tl = gsap.timeline({
         repeatRefresh: true,
@@ -28,25 +28,25 @@ export const btnMenuOpen = () => {
             ease: 'power2.out'
         }
     })
-    .to('#btnMenu', {rotate: 180})
-    .to(lines[0], {
-        svgOrigin: '2px 2px',
-        rotate: 45,
-        scale : Math.sqrt(2)
-    }, 0)
-    .to(lines[1], {
-        svgOrigin: '12px 12px',
-        scale : 0,
-        ease: 'back.out(1.5)'
-    }, 0)
-    .to(lines[2], {
-        svgOrigin: '2px 22px',
-        rotate: -45,
-        scale : Math.sqrt(2)
-    }, 0)
+        .to('#btnMenu', { rotate: 180 })
+        .to(lines[0], {
+            svgOrigin: '2px 2px',
+            rotate: 45,
+            scale: Math.sqrt(2)
+        }, 0)
+        .to(lines[1], {
+            svgOrigin: '12px 12px',
+            scale: 0,
+            ease: 'back.out(1.5)'
+        }, 0)
+        .to(lines[2], {
+            svgOrigin: '2px 22px',
+            rotate: -45,
+            scale: Math.sqrt(2)
+        }, 0)
     return tl;
 }
-export const btnMenuClose = () => {
+const btnMenuClose = () => {
     const lines = document.querySelectorAll('#btnMenu line');
     const tl = gsap.timeline({
         repeatRefresh: true,
@@ -55,18 +55,29 @@ export const btnMenuClose = () => {
             ease: 'power2.in'
         }
     })
-    .to('#btnMenu', {rotate: 0})
-    .to(lines[0], {
-        rotate: 0,
-        scale : 1
-    }, 0)
-    .to(lines[1], {
-        scale : 1,
-        ease: 'back.in(1.5)'
-    }, 0)
-    .to(lines[2], {
-        rotate: 0,
-        scale : 1
-    }, 0)
+        .to('#btnMenu', { rotate: 0 })
+        .to(lines[0], {
+            rotate: 0,
+            scale: 1
+        }, 0)
+        .to(lines[1], {
+            scale: 1,
+            ease: 'back.in(1.5)'
+        }, 0)
+        .to(lines[2], {
+            rotate: 0,
+            scale: 1
+        }, 0)
     return tl;
+}
+
+export const toggleMenu = () => {
+    const as = document.querySelector('aside');
+    if (as.classList.contains('open')) {
+        btnMenuClose()
+        as.classList.remove('open')
+    } else {
+        btnMenuOpen()
+        as.classList.add('open')
+    }
 }
