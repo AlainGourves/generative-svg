@@ -33,14 +33,21 @@ aside {
   top: 0;
   left: 100%;
   width: 100vw;
-  min-height: 100vh;
-  padding: 3.5rem 3.5rem 7rem 3.5rem;
+  height: 100vh;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: .5em;
   background-color: deepskyblue;
   transition: left .5s ease-in-out;
-  overflow-y: auto;
+
+  & .aside__cont {
+    position: relative;
+    inset: 0;
+    overflow-y: scroll;
+    padding-bottom: 6rem;
+    margin-right: 1rem;
+  }
 
   &.open {
     left: 0;
@@ -81,7 +88,7 @@ aside {
     display: block;
     position: absolute;
     inset: 0;
-    cursor: pointer;
+    cursor: cursor;
   }
 
   & .block-type {
@@ -118,6 +125,7 @@ aside {
     & input {
       flex-grow: 1;
       margin-inline: 1rem;
+      cursor: ew-resize;
     }
 
   }
@@ -190,7 +198,6 @@ aside {
   stroke-linejoin: round;
   vector-effect: non-scaling-stroke; // keeps stroke-weight while scaling
   shape-rendering: geometricPrecision;
-  cursor: pointer;
 }
 
 .btn {
@@ -228,4 +235,5 @@ ul a {
 button {
   padding: .25em .5em;
   margin: 0 auto;
+  cursor: pointer;
 }
