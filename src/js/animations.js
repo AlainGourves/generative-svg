@@ -32,7 +32,7 @@ const btnMenuOpen = () => {
         .to(lines[0], {
             svgOrigin: '2px 2px',
             rotate: 45,
-            scale: Math.sqrt(2)
+            scaleX: Math.sqrt(2)
         }, 0)
         .to(lines[1], {
             svgOrigin: '12px 12px',
@@ -42,7 +42,7 @@ const btnMenuOpen = () => {
         .to(lines[2], {
             svgOrigin: '2px 22px',
             rotate: -45,
-            scale: Math.sqrt(2)
+            scaleX: Math.sqrt(2)
         }, 0)
     return tl;
 }

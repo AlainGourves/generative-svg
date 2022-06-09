@@ -18,8 +18,8 @@
 
 <body>
     <main></main>
-    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" id="btnMenu"
-        class="svg-icon">
+    <button id="btnMenu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" class="svg-icon">
         <g>
             <rect width="24" height="24" stroke="none"></rect>
             <line x1="2" y1="2" x2="22" y2="2"></line>
@@ -27,6 +27,7 @@
             <line x1="2" y1="22" x2="22" y2="22"></line>
         </g>
     </svg>
+</button>
     <aside class="">
         <header>Settings</header>
         <article class="btns">
@@ -69,7 +70,10 @@
                         <output></output>
                     </label>
                 </template>
-                <div class="block-weight__total" data-display="false">Total: <output></output></div>
+                <div class="block-weight__total" data-display="false">
+                    <span>Total:</span>
+                    <output></output>
+                </div>
             </div>
         </article>
         <div>

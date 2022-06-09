@@ -21,6 +21,7 @@ body {
   min-height: 100vh;
   @include grid-center;
   background-image: radial-gradient(var(--bg-inner) 0%, var(--bg-outer) 100%);
+  font-family: system-ui, sans-serif;
 }
 
 main {
@@ -33,12 +34,13 @@ aside {
   left: 100%;
   width: 100vw;
   min-height: 100vh;
-  padding: 4rem;
+  padding: 3.5rem 3.5rem 7rem 3.5rem;
   display: flex;
   flex-direction: column;
   gap: .5em;
   background-color: deepskyblue;
   transition: left .5s ease-in-out;
+  overflow-y: auto;
 
   &.open {
     left: 0;
@@ -51,6 +53,7 @@ aside {
 
 .select-block-type {
   display: flex;
+  justify-content: space-around;
   flex-wrap: wrap;
   gap: 1em;
 }
@@ -61,10 +64,12 @@ aside {
   height: 75px;
   border-radius: .25rem;
   background-color: yellowgreen;
+  overflow: hidden;
 
   & input[type=checkbox] {
     position: absolute;
     right: -200vw;
+    visibility: hidden;
 
     &:checked~.block-type {
       border: 3px solid red;
@@ -73,6 +78,7 @@ aside {
   }
 
   & label {
+    display: block;
     position: absolute;
     inset: 0;
     cursor: pointer;
@@ -94,11 +100,31 @@ aside {
 }
 
 .block-weight__cont {
+  &>* {
+    padding: .75rem 1rem;
+  }
+
   & label {
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+    flex-wrap: nowrap;
     align-items: center;
+    border-radius: .5rem;
+
+    &:hover {
+      background: hsl(0deg 0% 100% / 25%);
+    }
+
+
+    & input {
+      flex-grow: 1;
+      margin-inline: 1rem;
+    }
+
+  }
+
+  & output {
+    width: 6ch;
+    text-align: left;
   }
 
   & svg {
@@ -108,12 +134,50 @@ aside {
   }
 }
 
+.block-weight__total {
+  display: flex;
+  font-weight: 600;
+  transition: height .2s linear, opacity .2s linear;
+
+  & span {
+    flex-grow: 1;
+    text-align: right;
+    margin-right: 1rem;
+  }
+
+  &[data-display=true] {
+    opacity: 1;
+    height: 2rem;
+  }
+
+  &[data-display=false] {
+    opacity: 0;
+    height: 0;
+  }
+}
+
 #btnMenu {
   position: absolute;
   top: 1rem;
   right: 1rem;
   z-index: 1;
-  filter: invert(1);
+  padding: 0;
+  appearance: none;
+  border: none;
+  background-color: transparent;
+  display: grid;
+  place-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+
+  &:after {
+    position: absolute;
+    content: '';
+    inset: 0;
+    border-radius: 50%;
+    z-index: -1;
+    background: hsl(0deg 0% 100% / 50%);
+  }
 }
 
 .svg-icon {
@@ -145,8 +209,9 @@ svg {
   /*    Removes little gaps between the shapes */
   shape-rendering: crispEdges;
 }
+
 .block circle,
-.block path{
+.block path {
   shape-rendering: geometricPrecision;
 }
 
@@ -163,18 +228,4 @@ ul a {
 button {
   padding: .25em .5em;
   margin: 0 auto;
-}
-
-.block-weight__total{
-  transition: height .2s linear, opacity .2s linear;
-  
-  &[data-display=true] {
-    opacity: 1;
-    height: 2rem;
-  }
-  &[data-display=false] {
-    opacity: 0;
-    height: 0;
-  }
-
 }

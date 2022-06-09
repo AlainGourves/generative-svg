@@ -55,7 +55,7 @@ const generateLittleBox = (root, x, y) => {
     blockFunction(group, x * squareSize, y * squareSize, squareSize, foreground, background, true);
 }
 
-const updateActiveBocks = (fn, isActive) => {
+const updateActiveBlocks = (fn, isActive) => {
     if (isActive) {
         // Ajoute fn à activeBlocksTypes (et activeBlocksWeigths)
         activeBlocksTypes.push(blockFn[fn]);
@@ -83,6 +83,8 @@ const updateActiveBocks = (fn, isActive) => {
         const idx = activeBlocksTypes.findIndex(f => f.name === fn);
         activeBlocksTypes.splice(idx, 1);
         activeBlocksWeigths.splice(idx, 1);
+        // MàJ total poids
+        updateTotalWeight();
     }
     // Affiche le total des poids
     if (activeBlocksTypes.length) {
@@ -100,7 +102,7 @@ const updateWeights = (ev) => {
     let diff = newVal - activeBlocksWeigths[idx];
     activeBlocksWeigths[idx] = newVal;
 
-    if (sumArray(activeBlocksWeigths) > 1) {
+    if (activeBlocksWeigths.length > 1 && sumArray(activeBlocksWeigths) > 1) {
         let newWeights = [];
         if (diff > 0) {
             let n = activeBlocksWeigths.filter((v) => v > 0).length - 1;
@@ -133,6 +135,10 @@ const updateWeights = (ev) => {
         weigthSliders.forEach((s, i) => (s.value = newWeights[i]));
         activeBlocksWeigths = newWeights;
     }
+    updateTotalWeight();
+};
+
+const updateTotalWeight = () => {
     let total = 0;
     activeBlocksWeigths.forEach((val, i) => {
         const v = Math.round(val * 100);
@@ -141,7 +147,7 @@ const updateWeights = (ev) => {
     });
     // TODO: distinguer quand le total < 100%
     weightsTotal.querySelector('output').value = `${total}%`;
-};
+}
 
 window.addEventListener("load", async e => {
     // Color palette
@@ -151,9 +157,9 @@ window.addEventListener("load", async e => {
     init();
 
     // event listener for clicks on checkboxes -> select block type
-    typesContainer?.addEventListener('input', (ev) => {
+    typesContainer?.addEventListener('change', (ev) => {
         if (ev.target.dataset.function) {
-            updateActiveBocks(ev.target.dataset.function, ev.target.checked)
+            updateActiveBlocks(ev.target.dataset.function, ev.target.checked)
         }
     });
 
@@ -169,7 +175,14 @@ window.addEventListener("load", async e => {
     btnExport?.addEventListener('click', saveSVGFile);
     btnRefresh?.addEventListener('click', drawSVG);
 
-    updateActiveBocks('drawRect', true);
-    activeBlocksWeigths = [1]; // TODO: faire en sorte que le slider reflète la valeur
+    // By default, select 'drawRect' type with a weight of 1
+    const defaultType = 'drawRect';
+    const checkbox = typesContainer.querySelector(`[data-function='${defaultType}']`);
+    checkbox.checked = true;
+    checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+    const slider = weightsContainer.querySelector(`[data-function='${defaultType}']`);
+    slider.value = 1;
+    slider.dispatchEvent(new Event('input', { bubbles: true }));
+
     drawSVG();
 });

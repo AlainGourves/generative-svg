@@ -95,3 +95,14 @@ export const drawOppositeTriangles = (group, x, y, w, foreground, background, ra
     if (randomize && random(0, 1, true)) group.flip('x');
     group.add(triangleGroup);
 }
+
+export const drawLeaf = (group, x, y, w, foreground, background, randomize = false) => {
+    group.addClass('block leaf');
+    group.rect(w, w).fill(background).move(x, y);
+    // group for the leaf
+    const leafGroup = group.group();
+    leafGroup.path(`m${x} ${y} h${w/2} a${w/2} ${w/2} 0 0 1 ${w/2} ${w/2} v${w/2} h${-w/2} a${w/2} ${w/2} 0 0 1 ${-w/2} ${-w/2} v${-w/2}  z`).fill(foreground);
+    if (randomize && random(0, 1, true)) leafGroup.rotate(90)
+
+    group.add(leafGroup);
+}
