@@ -44,9 +44,9 @@ aside {
   & .aside__cont {
     position: relative;
     inset: 0;
-    overflow-y: scroll;
+    overflow-y: auto;
     padding-bottom: 6rem;
-    margin-right: 1rem;
+    padding-right: 1rem;
   }
 
   &.open {
@@ -54,7 +54,7 @@ aside {
   }
 
   & article {
-    border: 1px solid red;
+    border: 1px dashed red;
   }
 }
 
@@ -79,7 +79,7 @@ aside {
     visibility: hidden;
 
     &:checked~.block-type {
-      border: 3px solid red;
+      border: 3px solid #fff;
       background: hsl(0deg 0% 100% / 50%);
     }
   }
@@ -88,7 +88,7 @@ aside {
     display: block;
     position: absolute;
     inset: 0;
-    cursor: cursor;
+    cursor: pointer;
   }
 
   & .block-type {
