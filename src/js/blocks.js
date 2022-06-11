@@ -37,7 +37,7 @@ export const drawOppositeCircles = (group, x, y, w, foreground, background, rand
     // assign mask
     circleGroup.maskWith(mask);
     if (randomize && random(0, 1, true)) circleGroup.rotate(90)
-    group.add(circleGroup);
+    // group.add(circleGroup);
 }
 
 export const drawFacingCircles = (group, x, y, w, foreground, background, randomize = false) => {
@@ -51,7 +51,7 @@ export const drawFacingCircles = (group, x, y, w, foreground, background, random
     circleGroup.circle(w).fill(foreground).center(x + w, y + w / 2);
     circleGroup.maskWith(mask);
     if (randomize && random(0, 1, true)) circleGroup.rotate(90)
-    group.add(circleGroup);
+    // group.add(circleGroup);
 }
 
 export const drawSemiCircle = (group, x, y, w, foreground, background, randomize = false) => {
@@ -65,7 +65,7 @@ export const drawSemiCircle = (group, x, y, w, foreground, background, randomize
         const dir = random(0, 3, true);
         circleGroup.rotate(dir * 90);
     }
-    group.add(circleGroup);
+    // group.add(circleGroup);
 }
 
 export const drawDisc = (group, x, y, w, foreground, background, randomize = false) => {
@@ -93,7 +93,7 @@ export const drawOppositeTriangles = (group, x, y, w, foreground, background, ra
     triangleGroup.polygon(points[0]).fill(foreground).move(x, y); //Bottom left
     triangleGroup.polygon(points[1]).fill(foreground); //.move(x, y); // top right
     if (randomize && random(0, 1, true)) group.flip('x');
-    group.add(triangleGroup);
+    // group.add(triangleGroup);
 }
 
 export const drawLeaf = (group, x, y, w, foreground, background, randomize = false) => {
@@ -104,5 +104,19 @@ export const drawLeaf = (group, x, y, w, foreground, background, randomize = fal
     leafGroup.path(`m${x} ${y} h${w/2} a${w/2} ${w/2} 0 0 1 ${w/2} ${w/2} v${w/2} h${-w/2} a${w/2} ${w/2} 0 0 1 ${-w/2} ${-w/2} v${-w/2}  z`).fill(foreground);
     if (randomize && random(0, 1, true)) leafGroup.rotate(90)
 
-    group.add(leafGroup);
+    // group.add(leafGroup);
+}
+
+export const drawRoundedBar = (group, x, y, w, foreground, background, randomize = false) => {
+    group.addClass('block rounded-bar');
+    group.rect(w, w).fill(background).move(x, y);
+    // group for the leaf
+    const roundedBarGroup = group.group();
+    roundedBarGroup.path(`m${x} ${y} a${w/2} ${w/2} 0 0 1 ${w/2} ${w/2} v${w/2} h${-w/2} v${-w}  z`).fill(foreground);
+    // if (randomize && random(0, 1, true)) roundedBarGroup.rotate(90)
+    if (randomize) {
+        const dir = random(0, 3, true);
+        group.rotate(dir * 90);
+    }
+    // group.add(roundedBarGroup);
 }
