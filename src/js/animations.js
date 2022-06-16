@@ -1,3 +1,5 @@
+import { shuffleArray } from './utils.js';
+
 export const setPageBackground = (palette) => {
     // Sets page's background gradient
     const bg = tinycolor
@@ -30,17 +32,20 @@ const btnMenuOpen = () => {
     })
         .to('#btnMenu', { rotate: 180 })
         .to(lines[0], {
-            svgOrigin: '2px 2px',
+            transformOrigin: '0 0',
+            // svgOrigin: '2px 2px',
             rotate: 45,
             scaleX: Math.sqrt(2)
         }, 0)
         .to(lines[1], {
-            svgOrigin: '12px 12px',
+            transformOrigin: '50% 50%',
+            // svgOrigin: '12px 12px',
             scale: 0,
             ease: 'back.out(1.5)'
         }, 0)
         .to(lines[2], {
-            svgOrigin: '2px 22px',
+            transformOrigin: '0 100%',
+            // svgOrigin: '2px 22px',
             rotate: -45,
             scaleX: Math.sqrt(2)
         }, 0)
@@ -80,4 +85,16 @@ export const toggleMenu = () => {
         btnMenuOpen()
         as.classList.add('open')
     }
+}
+
+export const randomWeightsAnim = () => {
+    let lines = document.querySelectorAll('#random-weights line');
+    const tl = gsap.timeline({ repeat: 2, yoyo: true });
+    let arr = shuffleArray(Array.from(lines));
+    arr.forEach(l => {
+        tl.to(l, {
+            attr: { x2: random(6, 18, true) },
+            ease: "sine.inOut"
+        })
+    });
 }

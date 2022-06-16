@@ -1,4 +1,5 @@
 @import 'mixins';
+@import 'slider';
 
 *,
 *::before,
@@ -11,6 +12,7 @@
 :root {
   --bg-inner: white;
   --bg-outer: white;
+  --bg-aside:hsl(188, 10%, 30%);
 }
 
 html {
@@ -29,32 +31,74 @@ main {
 }
 
 aside {
+  --menu-w: 4rem;
   position: fixed;
   top: 0;
-  left: 100%;
+  left: calc(100% - var(--menu-w));
   width: 100vw;
   height: 100vh;
-  padding: 1.5rem;
   display: flex;
-  flex-direction: column;
-  gap: .5em;
-  background-color: deepskyblue;
-  transition: left .5s ease-in-out;
-
-  & .aside__cont {
-    position: relative;
-    inset: 0;
-    overflow-y: scroll;
-    padding-bottom: 6rem;
-    margin-right: 1rem;
-  }
+  justify-content: center;
+  background-color: var(--bg-aside);
+  transition: left .5s ease-in-out, padding .5s ease-in-out;
 
   &.open {
     left: 0;
+    padding-left: 0;
   }
 
-  & article {
-    border: 1px solid red;
+  & svg {
+    shape-rendering: geometricPrecision;
+    // border-radius: .25rem;
+  }
+
+  &:not(.open) {
+    padding-left: 4rem;
+
+    & .btns {
+    // @media only screen and (max-width: 400px) {
+      flex-direction: column;
+      width: var(--menu-w);
+      position: fixed;
+      right: 0;
+      bottom: 3rem;
+
+      & .btn {
+        background: #fff2;
+        border-radius: 50%;
+        aspect-ratio: 1/1;
+
+        &__text {
+          display: none;
+        }
+      }
+    // }
+    }
+  }
+
+}
+
+.aside__cont {
+  position: relative;
+  inset: 0;
+  overflow: hidden auto;
+  padding-inline: 2rem;
+  padding-bottom: 6rem;
+  color: #fff;
+}
+
+article {
+  margin-block: 1.5rem 3rem;
+
+  & header {
+    margin-bottom: 1rem;
+  }
+
+  &.btns {
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+    position: relative;
   }
 }
 
@@ -70,8 +114,8 @@ aside {
   width: 3.5rem;
   height: 75px;
   border-radius: .25rem;
-  background-color: yellowgreen;
-  overflow: hidden;
+  background-color: hsl(188, 10%, 20%);
+  // overflow: hidden;
 
   & input[type=checkbox] {
     position: absolute;
@@ -79,8 +123,10 @@ aside {
     visibility: hidden;
 
     &:checked~.block-type {
-      border: 3px solid red;
-      background: hsl(0deg 0% 100% / 50%);
+      border-radius: .25rem;
+      border: 3px solid #fff; // TODO #fff en param pour les 3 règles
+      background: hsl(0deg 0% 100% / 40%);
+      box-shadow: 0 0 .25em hsl(0deg 0% 100% / 30%);
     }
   }
 
@@ -88,7 +134,7 @@ aside {
     display: block;
     position: absolute;
     inset: 0;
-    cursor: cursor;
+    cursor: pointer;
   }
 
   & .block-type {
@@ -96,12 +142,11 @@ aside {
     inset: 0;
     display: grid;
     place-content: center;
-    border-radius: .25rem;
+    transition: background .125s linear;
 
     & svg {
       width: 3rem;
       height: 3rem;
-      shape-rendering: geometricPrecision;
     }
   }
 }
@@ -118,7 +163,7 @@ aside {
     border-radius: .5rem;
 
     &:hover {
-      background: hsl(0deg 0% 100% / 25%);
+      background: hsl(0deg 0% 100% / 10%);
     }
 
 
@@ -135,7 +180,7 @@ aside {
     text-align: left;
   }
 
-  & svg {
+  & svg:not(.svg-icon) {
     width: 2rem;
     height: 2rem;
     shape-rendering: geometricPrecision;
@@ -155,7 +200,7 @@ aside {
 
   &[data-display=true] {
     opacity: 1;
-    height: 2rem;
+    height: auto;
   }
 
   &[data-display=false] {
@@ -192,7 +237,7 @@ aside {
   width: 1.5rem;
   height: 1.5rem;
   fill: none;
-  stroke: #333;
+  stroke: #fff;
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -204,7 +249,10 @@ aside {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: .5rem;
+  gap: .75rem;
+  border: 2px solid hsl(0deg 0% 100% / 75%);
+  border-radius: .25rem;
+  padding: .25rem .5rem;
 }
 
 
@@ -236,4 +284,61 @@ button {
   padding: .25em .5em;
   margin: 0 auto;
   cursor: pointer;
+  background: transparent;
+  border: none;
+  color: inherit;
+}
+
+[type='range'] {
+  $track-h: .25em;
+  $thumb-d: 1em;
+
+  &, &::-webkit-slider-thumb {
+		-webkit-appearance: none;
+	}
+
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: $thumb-d;
+  background: transparent;
+  font: 1em/1 sans-serif;
+
+
+  &:focus-visible {
+    outline-offset: .5em;
+    outline: thin solid #fff;
+  }
+
+
+  &::-webkit-slider-runnable-track {
+    @include track($track-h);
+  }
+
+  &::-moz-range-track {
+    @include track($track-h);
+  }
+
+  &::-webkit-slider-thumb {
+		margin-top: .5*($track-h - $thumb-d);
+		@include thumb($thumb-d)
+	}
+	&::-moz-range-thumb { @include thumb($thumb-d) }
+	&::-ms-thumb {
+		margin-top: 0;
+		@include thumb($thumb-d)
+	}
+
+  &:focus-within {
+    &::-webkit-slider-thumb {
+     @include thumb-focus-within($thumb-d);
+    }
+    &::-moz-range-thumb {
+     @include thumb-focus-within($thumb-d);
+    }
+    &::-ms-thumb {
+     @include thumb-focus-within($thumb-d);
+    }
+  }
+
 }

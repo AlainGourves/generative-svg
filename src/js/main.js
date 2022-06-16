@@ -1,6 +1,6 @@
 import { random } from "https://cdn.skypack.dev/@georgedoescode/generative-utils@1.0.38";
-import { getColorPalette, getTwoColors, saveSVGFile, sumArray } from './utils.js';
-import { setPageBackground, toggleMenu } from './animations.js';
+import { getColorPalette, getTwoColors, saveSVGFile, sumArray, shuffleArray } from './utils.js';
+import { setPageBackground, toggleMenu, randomWeightsAnim } from './animations.js';
 import * as blockFn from './blocks.js';
 import { getBlockId, init } from "./init.js";
 import weightedRandom from './weightedRandom.js';
@@ -15,6 +15,7 @@ const btnMenu = document.querySelector('#btnMenu');
 const btnExport = document.querySelector('#exportSVG');
 const btnDraw = document.querySelector('#drawSVG');
 const btnRefresh = document.querySelector('#redrawSVG');
+const btnRandomWeights = document.querySelector('#random-weights');
 
 
 let colorPalette = [];
@@ -102,6 +103,8 @@ const updateWeights = (ev) => {
     let diff = newVal - activeBlocksWeigths[idx];
     activeBlocksWeigths[idx] = newVal;
 
+    // TODO: couille en potage dans l'algo, on peut dépasser les 100% !!!
+    // console.log(sumArray(activeBlocksWeigths))
     if (activeBlocksWeigths.length > 1 && sumArray(activeBlocksWeigths) > 1) {
         let newWeights = [];
         if (diff > 0) {
@@ -110,7 +113,8 @@ const updateWeights = (ev) => {
                 if (i === idx || v === 0) return v;
                 let res = v - diff / n;
                 if (res < 0) {
-                    diff += Math.abs(res);
+                    // diff += Math.abs(res);
+                    diff = diff - v + Math.abs(res);
                     res = 0;
                 }
                 return res;
@@ -149,6 +153,27 @@ const updateTotalWeight = () => {
     weightsTotal.querySelector('output').value = `${total}%`;
 }
 
+const randomizeWeights = () => {
+    let tot = 0;
+    let result = [];
+    activeBlocksWeigths.forEach((f, idx) => {
+        result[idx] = random(0, (1 - tot));
+        tot += result[idx];
+    });
+    const diff = 1 - sumArray(result);
+    result[random(0, result.length - 1, true)] += diff
+    result = shuffleArray(result);
+    activeBlocksWeigths = result;
+    weigthSliders.forEach((s, idx) => {
+        s.value = result[idx];
+    });
+    updateTotalWeight();
+}
+
+const gros = (ev) => {
+    console.log(ev.type)
+}
+
 window.addEventListener("load", async e => {
     // Color palette
     colorPalette = await getColorPalette();
@@ -174,6 +199,11 @@ window.addEventListener("load", async e => {
     btnMenu?.addEventListener('click', toggleMenu);
     btnExport?.addEventListener('click', saveSVGFile);
     btnRefresh?.addEventListener('click', drawSVG);
+    btnRandomWeights?.addEventListener('click', randomizeWeights);
+    btnRandomWeights?.addEventListener('mouseover', randomWeightsAnim);
+    btnRandomWeights?.addEventListener('mouseout', gros);
+    // btnRandomWeights?.addEventListener('focusin', gros);
+    // btnRandomWeights?.addEventListener('focusout', gros);
 
     // By default, select 'drawRect' type with a weight of 1
     const defaultType = 'drawRect';

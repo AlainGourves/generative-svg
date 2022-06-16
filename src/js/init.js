@@ -27,7 +27,7 @@ const createSVGLibrary = () => {
         let id = getBlockId(drawFunctions[i]);
         group.attr('id', id);
         group.element('desc').words(id);
-        blockFn[drawFunctions[i]](group, 0, 0, 20, '#333', '#ccc');
+        blockFn[drawFunctions[i]](group, 0, 0, 20, '#7e3d8f', '#4e8f3d');
     }
 }
 
