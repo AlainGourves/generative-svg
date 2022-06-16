@@ -7,8 +7,8 @@ import weightedRandom from './weightedRandom.js';
 
 window.random = random; // TODO enlever ça
 
-const numRows = random(8, 10, true); // true: gives an integer
-const numCols = random(6, 8, true);
+let numCols = 8; // width
+let numRows = 6; // height
 const squareSize = 40;
 
 const btnMenu = document.querySelector('#btnMenu');
@@ -39,10 +39,10 @@ const drawSVG = () => {
     const draw = SVG() // create the svg
         .addTo('main')
         .size('100%', '100%')
-        .viewbox(`0 0 ${numRows * squareSize} ${numCols * squareSize}`);
+        .viewbox(`0 0 ${numCols * squareSize} ${numRows * squareSize}`);
 
-    for (let i = 0; i < numRows; i++) {
-        for (let j = 0; j < numCols; j++) {
+    for (let i = 0; i < numCols; i++) {
+        for (let j = 0; j < numRows; j++) {
             generateLittleBox(draw, i, j);
         }
     }
@@ -180,6 +180,17 @@ window.addEventListener("load", async e => {
     setPageBackground(colorPalette);
 
     init();
+
+    // Grid dimensions
+    const gridSize = document.querySelector('.grid__size');
+    const inputs = gridSize.querySelectorAll('input[type="number"]');
+    inputs[0].value = numCols;
+    inputs[1].value = numRows;
+    gridSize.addEventListener('change', ev => {
+        const newVal = parseInt(ev.target.value);
+        if (ev.target.dataset.var == 'numCols') numCols = newVal;
+        if (ev.target.dataset.var == 'numRows') numRows = newVal;
+    });
 
     // event listener for clicks on checkboxes -> select block type
     typesContainer?.addEventListener('change', (ev) => {

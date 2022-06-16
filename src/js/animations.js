@@ -78,12 +78,15 @@ const btnMenuClose = () => {
 
 export const toggleMenu = () => {
     const as = document.querySelector('aside');
+    const btns = as.querySelectorAll('.btns button');
     if (as.classList.contains('open')) {
         btnMenuClose()
         as.classList.remove('open')
+        btns.forEach(b => b.classList.add('btn__round'));
     } else {
         btnMenuOpen()
         as.classList.add('open')
+        btns.forEach(b => b.classList.remove('btn__round'));
     }
 }
 

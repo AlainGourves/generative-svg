@@ -44,7 +44,7 @@ export const getColorPalette = async () => {
 
 export const getTwoColors = () => {
     let colorList = [...colorPalette];
-    const colIdx = random(0, colorList.length - 1, true);
+    const colIdx = random(0, colorList.length - 1, true); // true: gives an integer
     const background = colorList[colIdx];
     // remove this color from the list
     colorList.splice(colIdx, 1);
