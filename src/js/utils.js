@@ -34,11 +34,17 @@ export const shuffleArray = (arr) => {
 // Color palette
 let colorPalette = [];
 export const getColorPalette = async () => {
-    await fetch("https://unpkg.com/nice-color-palettes@3.0.0/100.json")
-    .then(response => response.json())
-    .then(c => {
-        colorPalette = random(c);
-    });
+    let palettes = JSON.parse(localStorage.getItem('palettes'));
+    if(!palettes) {
+        await fetch("https://unpkg.com/nice-color-palettes@3.0.0/100.json")
+        .then(response => response.json())
+        .then(c => {
+            localStorage.setItem('palettes', JSON.stringify(c));
+            colorPalette = random(c);
+        });
+    }else{
+        colorPalette = random(palettes);
+    }
     return colorPalette;
 }
 
