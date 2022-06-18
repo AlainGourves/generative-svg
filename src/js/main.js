@@ -181,7 +181,6 @@ window.addEventListener("load", e => {
         const idx = ev.target.dataset.idx;
         const newVal = ev.target.value;
         colorPalette[idx] = newVal;
-        console.log(colorPalette, "post change")
     });
     // paletteContainer.addEventListener('input', ev => {
         //     console.log(ev.target.value)
@@ -225,16 +224,11 @@ window.addEventListener("load", e => {
         // btnRandomWeights?.addEventListener('focusout', gros);
 
         btnNewPalette?.addEventListener('click', ev => {
-            console.log("1", colorPalette);
             getColorPalette()
             .then(result => colorPalette = result)
             .then(colorPalette => {
-                console.log("2", colorPalette);
                 updateSwatches(colorPalette);
             });
-            // update affichage swatches
-            // updateSwatches(colorPalette);
-            console.log("3", colorPalette)
         })
 
         // By default, select 'drawRect' type with a weight of 1
@@ -250,7 +244,6 @@ window.addEventListener("load", e => {
         getColorPalette()
         .then(result => {
             colorPalette = result
-            // console.log("load", colorPalette)
             setPageBackground(colorPalette);
             updateSwatches(colorPalette);
             drawSVG();

@@ -45,8 +45,6 @@ export const getColorPalette = async () => {
             console.error(e);
         }
     } else {
-        // const p = Promise.resolve(random(palettes));
-        // return p;
         const result = await random(palettes);
         return result;
     }

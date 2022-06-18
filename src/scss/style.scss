@@ -15,16 +15,20 @@
   --bg-outer: white;
   --hue-aside: 188deg;
   --bg-aside: hsl(var(--hue-aside), 10%, 30%);
+  --bg-aside-lighter: hsl(var(--hue-aside), 10%, 40%);
   --bg-aside-darker: hsl(var(--hue-aside), 10%, 20%);
   --block-w: 3.5rem; // width of block type
+  --bdr-rad: .25rem;
 }
 
 html {
   font-size: 16px;
+  height: -webkit-fill-available; // cf. https://css-tricks.com/css-fix-for-100vh-in-mobile-webkit/
 }
 
 body {
   min-height: 100vh;
+  min-height: -webkit-fill-available;
   @include grid-center;
   background-image: radial-gradient(var(--bg-inner) 0%, var(--bg-outer) 100%);
   font-family: system-ui, sans-serif;
@@ -129,7 +133,7 @@ article {
   width: var(--block-w);
   aspect-ratio: 1 /1;
   // height: 75px;
-  border-radius: .25rem;
+  border-radius: var(--bdr-rad);
   background-color: var(--bg-aside-darker);
   justify-self: center;
 
@@ -139,7 +143,7 @@ article {
     visibility: hidden;
 
     &:checked~.block-type {
-      border-radius: .25rem;
+      border-radius: var(--bdr-rad);
       border: 3px solid #fff; // TODO #fff en param pour les 3 règles
       background: hsl(0deg 0% 100% / 40%);
       box-shadow: 0 0 .25em hsl(0deg 0% 100% / 30%);
@@ -225,7 +229,7 @@ article {
     opacity: 0;
     transform: translateY(100%);
     transition: transform .1s ease-in,
-    opacity .1s ease-in;
+      opacity .1s ease-in;
   }
 }
 
@@ -298,19 +302,24 @@ ul a {
   display: inline-block;
 }
 
+input,
+button {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
 button {
   padding: .25em .5em;
   margin: 0 auto;
   cursor: pointer;
   background: transparent;
   border: none;
-  color: inherit;
-  font-size: inherit;
 }
 
 input[type="color"] {
   --w: 2rem;
-  --p: .25rem;
+  --p: var(--bdr-rad);
   inline-size: calc(var(--w) + var(--p));
   block-size: calc(var(--w) + var(--p));
   padding: var(--p);
@@ -336,6 +345,24 @@ input[type="color"] {
   &:focus-visible {
     outline: none;
     box-shadow: 0 0 var(--p) calc(var(--p) / 2) #fff inset,
-      0 0 .25rem hsl(0deg 0% 100% / 30%);
+    0 0 .25rem hsl(0deg 0% 100% / 30%);
   }
 }
+
+input[type="number"] {
+  appearance: none;
+  width: 6ch;
+  padding: .375rem .75rem;
+  margin-inline: .75rem;
+  text-align: center;
+  line-height: 1.5;
+  background-color: var(--bg-aside-lighter);
+  border: 1px solid rgb(#fff, 50%);
+  border-radius: var(--bdr-rad);
+  -moz-appearance: textfield;
+  &::-webkit-inner-spin-button{
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
