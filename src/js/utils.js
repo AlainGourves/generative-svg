@@ -32,28 +32,38 @@ export const shuffleArray = (arr) => {
 }
 
 // Color palette
-let colorPalette = [];
 export const getColorPalette = async () => {
     let palettes = JSON.parse(localStorage.getItem('palettes'));
-    if(!palettes) {
-        await fetch("https://unpkg.com/nice-color-palettes@3.0.0/100.json")
-        .then(response => response.json())
-        .then(c => {
-            localStorage.setItem('palettes', JSON.stringify(c));
-            colorPalette = random(c);
-        });
-    }else{
-        colorPalette = random(palettes);
+    if (!palettes) {
+        try {
+            const res = await fetch("https://unpkg.com/nice-color-palettes@3.0.0/100.json");
+            const data = await res.json();
+            localStorage.setItem('palettes', JSON.stringify(data));
+            const result = await random(data);
+            return result;
+        } catch (e) {
+            console.error(e);
+        }
+    } else {
+        // const p = Promise.resolve(random(palettes));
+        // return p;
+        const result = await random(palettes);
+        return result;
     }
-    return colorPalette;
 }
 
-export const getTwoColors = () => {
-    let colorList = [...colorPalette];
+export const getTwoColors = (colors) => {
+    let colorList = [...colors];
     const colIdx = random(0, colorList.length - 1, true); // true: gives an integer
     const background = colorList[colIdx];
     // remove this color from the list
     colorList.splice(colIdx, 1);
     const foreground = random(colorList);
     return { foreground, background };
+}
+
+export const updateSwatches = (clrs) => {
+    const paletteContainer = document.querySelector('article.palette div');
+    const swatches = paletteContainer.querySelectorAll('input[type="color"]');
+    swatches.forEach((s, idx) => s.value = clrs[idx]);
 }

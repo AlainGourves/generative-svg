@@ -1,5 +1,5 @@
 import { random } from "https://cdn.skypack.dev/@georgedoescode/generative-utils@1.0.38";
-import { getColorPalette, getTwoColors, saveSVGFile, sumArray, shuffleArray } from './utils.js';
+import { getColorPalette, getTwoColors, updateSwatches, saveSVGFile, sumArray, shuffleArray } from './utils.js';
 import { setPageBackground, toggleMenu, randomWeightsAnim } from './animations.js';
 import * as blockFn from './blocks.js';
 import { getBlockId, init } from "./init.js";
@@ -16,6 +16,7 @@ const btnExport = document.querySelector('#exportSVG');
 const btnDraw = document.querySelector('#drawSVG');
 const btnRefresh = document.querySelector('#redrawSVG');
 const btnRandomWeights = document.querySelector('#random-weights');
+const btnNewPalette = document.querySelector('#newPalette');
 
 
 let colorPalette = [];
@@ -26,7 +27,6 @@ const typesContainer = document.querySelector('.select-block-type');
 const weightsContainer = document.querySelector('.block-weight__cont');
 const weightsTotal = weightsContainer.querySelector('.block-weight__total');
 
-const blockTypeTemplate = document.querySelector('#bloc-type__tmpl');
 const blockWeightTemplate = document.querySelector('#bloc-weight__tmpl');
 
 let weigthSliders = []; // stores the sliders values
@@ -50,7 +50,7 @@ const drawSVG = () => {
 
 const generateLittleBox = (root, x, y) => {
     // get 2 colors
-    const { foreground, background } = getTwoColors();
+    const { foreground, background } = getTwoColors(colorPalette);
     const blockFunction = weightedRandom(activeBlocksTypes, activeBlocksWeigths);
     const group = root.group();
     blockFunction(group, x * squareSize, y * squareSize, squareSize, foreground, background, true);
@@ -88,7 +88,7 @@ const updateActiveBlocks = (fn, isActive) => {
         updateTotalWeight();
     }
     // Affiche le total des poids
-    if (activeBlocksTypes.length) {
+    if (activeBlocksTypes.length > 1) {
         weightsTotal.dataset.display = true;
     } else {
         weightsTotal.dataset.display = false;
@@ -174,56 +174,86 @@ const gros = (ev) => {
     console.log(ev.type)
 }
 
-window.addEventListener("load", async e => {
-    // Color palette
-    colorPalette = await getColorPalette();
-    setPageBackground(colorPalette);
+window.addEventListener("load", e => {
 
-    init();
-
-    // Grid dimensions
-    const gridSize = document.querySelector('.grid__size');
-    const inputs = gridSize.querySelectorAll('input[type="number"]');
-    inputs[0].value = numCols;
-    inputs[1].value = numRows;
-    gridSize.addEventListener('change', ev => {
-        const newVal = parseInt(ev.target.value);
-        if (ev.target.dataset.var == 'numCols') numCols = newVal;
-        if (ev.target.dataset.var == 'numRows') numRows = newVal;
+    const paletteContainer = document.querySelector('article.palette div');
+    paletteContainer.addEventListener('change', ev => {
+        const idx = ev.target.dataset.idx;
+        const newVal = ev.target.value;
+        colorPalette[idx] = newVal;
+        console.log(colorPalette, "post change")
     });
+    // paletteContainer.addEventListener('input', ev => {
+        //     console.log(ev.target.value)
+        // });
 
-    // event listener for clicks on checkboxes -> select block type
-    typesContainer?.addEventListener('change', (ev) => {
-        if (ev.target.dataset.function) {
-            updateActiveBlocks(ev.target.dataset.function, ev.target.checked)
-        }
+        init();
+
+        // Grid dimensions
+        const gridSize = document.querySelector('.grid__size');
+        const inputs = gridSize.querySelectorAll('input[type="number"]');
+        inputs[0].value = numCols;
+        inputs[1].value = numRows;
+        gridSize.addEventListener('change', ev => {
+            const newVal = parseInt(ev.target.value);
+            if (ev.target.dataset.var == 'numCols') numCols = newVal;
+            if (ev.target.dataset.var == 'numRows') numRows = newVal;
+        });
+
+        // event listener for clicks on checkboxes -> select block type
+        typesContainer?.addEventListener('change', (ev) => {
+            if (ev.target.dataset.function) {
+                updateActiveBlocks(ev.target.dataset.function, ev.target.checked)
+            }
+        });
+
+        // event listener for weights change
+        weightsContainer.addEventListener('input', (ev) => {
+            if (ev.target.dataset.function) {
+                updateWeights(ev);
+            }
+        })
+
+        btnDraw?.addEventListener('click', drawSVG)
+        btnMenu?.addEventListener('click', toggleMenu);
+        btnExport?.addEventListener('click', saveSVGFile);
+        btnRefresh?.addEventListener('click', drawSVG);
+        btnRandomWeights?.addEventListener('click', randomizeWeights);
+        btnRandomWeights?.addEventListener('mouseover', randomWeightsAnim);
+        btnRandomWeights?.addEventListener('mouseout', gros);
+        // btnRandomWeights?.addEventListener('focusin', gros);
+        // btnRandomWeights?.addEventListener('focusout', gros);
+
+        btnNewPalette?.addEventListener('click', ev => {
+            console.log("1", colorPalette);
+            getColorPalette()
+            .then(result => colorPalette = result)
+            .then(colorPalette => {
+                console.log("2", colorPalette);
+                updateSwatches(colorPalette);
+            });
+            // update affichage swatches
+            // updateSwatches(colorPalette);
+            console.log("3", colorPalette)
+        })
+
+        // By default, select 'drawRect' type with a weight of 1
+        const defaultType = 'drawRect';
+        const checkbox = typesContainer.querySelector(`[data-function='${defaultType}']`);
+        checkbox.checked = true;
+        checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+        const slider = weightsContainer.querySelector(`[data-function='${defaultType}']`);
+        slider.value = 1;
+        slider.dispatchEvent(new Event('input', { bubbles: true }));
+
+        // Color palette
+        getColorPalette()
+        .then(result => {
+            colorPalette = result
+            // console.log("load", colorPalette)
+            setPageBackground(colorPalette);
+            updateSwatches(colorPalette);
+            drawSVG();
+        });
+
     });
-
-    // event listener for weights change
-    weightsContainer.addEventListener('input', (ev) => {
-        if (ev.target.dataset.function) {
-            updateWeights(ev);
-        }
-    })
-
-    btnDraw?.addEventListener('click', drawSVG)
-    btnMenu?.addEventListener('click', toggleMenu);
-    btnExport?.addEventListener('click', saveSVGFile);
-    btnRefresh?.addEventListener('click', drawSVG);
-    btnRandomWeights?.addEventListener('click', randomizeWeights);
-    btnRandomWeights?.addEventListener('mouseover', randomWeightsAnim);
-    btnRandomWeights?.addEventListener('mouseout', gros);
-    // btnRandomWeights?.addEventListener('focusin', gros);
-    // btnRandomWeights?.addEventListener('focusout', gros);
-
-    // By default, select 'drawRect' type with a weight of 1
-    const defaultType = 'drawRect';
-    const checkbox = typesContainer.querySelector(`[data-function='${defaultType}']`);
-    checkbox.checked = true;
-    checkbox.dispatchEvent(new Event('change', { bubbles: true }));
-    const slider = weightsContainer.querySelector(`[data-function='${defaultType}']`);
-    slider.value = 1;
-    slider.dispatchEvent(new Event('input', { bubbles: true }));
-
-    drawSVG();
-});

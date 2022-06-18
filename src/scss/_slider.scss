@@ -1,31 +1,113 @@
 @mixin track($track-h) {
-    /* common styles */
-    box-sizing: border-box;
-    border: none;
-    border-radius: .5 * $track-h;
-    width: inherit;
-    height: $track-h;
-    background: #afafaf;
-    box-shadow: 0 0 .25em rgba(0, 0, 0, .45),
-        0 0 .75em rgba(0, 0, 0, .2);
+  /* common styles */
+  box-sizing: border-box;
+  border: none;
+  border-radius: .5 * $track-h;
+  width: inherit;
+  height: $track-h;
+  background: #afafaf;
+  box-shadow: 0 0 .25em rgba(0, 0, 0, .45),
+    0 0 .75em rgba(0, 0, 0, .2);
 
-    &:active {
-        background: #fff;
-    }
+  &:active {
+    background: #fff;
+  }
 }
 
 @mixin thumb($thumb-d) {
-    /* common styles */
-    width: $thumb-d;
-    height: $thumb-d;
-    border-radius: 50%;
-    border: 2px solid var(--bg-aside);
-    background: #fff;
-    transition: all .125s linear;
+  /* common styles */
+  width: $thumb-d;
+  height: $thumb-d;
+  border-radius: 50%;
+  border: 2px solid var(--bg-aside);
+  background: #fff;
+  transition: all .125s linear;
 }
 
-@mixin thumb-focus-within($thumb-d) {
-    transform: scale(1.2);
-    background: deeppink;
-    border-width: 0;
+@mixin thumb-active($thumb-d) {
+  transform: scale(1.2);
+  background: var(--clr-primary);
+  border-width: 0;
+}
+
+
+[type='range'] {
+  $track-h: .25em;
+  $thumb-d: 1em;
+
+  &,
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+  }
+
+  margin: 0;
+  padding: 0;
+  width: auto;
+  height: $thumb-d;
+  background: transparent;
+  font: 1em/1 sans-serif;
+
+
+  &:focus-visible {
+    outline-offset: .5em;
+    outline: thin solid #fff;
+  }
+
+
+  &::-webkit-slider-runnable-track {
+    @include track($track-h);
+  }
+
+  &::-moz-range-track {
+    @include track($track-h);
+  }
+
+  &::-webkit-slider-thumb {
+    margin-top: .5*($track-h - $thumb-d);
+    @include thumb($thumb-d)
+  }
+
+  &::-moz-range-thumb {
+    @include thumb($thumb-d)
+  }
+
+  &::-ms-thumb {
+    margin-top: 0;
+    @include thumb($thumb-d)
+  }
+
+  @media (pointer: coarse) {
+    // Bigger thumb on mobile for convenience
+    $thumb-d: 1.5em;
+    height: $thumb-d;
+
+    &::-webkit-slider-thumb {
+      margin-top: .5*($track-h - $thumb-d);
+      @include thumb($thumb-d)
+    }
+
+    &::-moz-range-thumb {
+      @include thumb($thumb-d)
+    }
+
+    &::-ms-thumb {
+      margin-top: 0;
+      @include thumb($thumb-d)
+    }
+  }
+
+  &:active {
+    &::-webkit-slider-thumb {
+      @include thumb-active($thumb-d);
+    }
+
+    &::-moz-range-thumb {
+      @include thumb-active($thumb-d);
+    }
+
+    &::-ms-thumb {
+      @include thumb-active($thumb-d);
+    }
+  }
+
 }

@@ -10,9 +10,12 @@
 }
 
 :root {
+  --clr-primary: deeppink;
   --bg-inner: white;
   --bg-outer: white;
-  --bg-aside: hsl(188, 10%, 30%);
+  --hue-aside: 188deg;
+  --bg-aside: hsl(var(--hue-aside), 10%, 30%);
+  --bg-aside-darker: hsl(var(--hue-aside), 10%, 20%);
   --block-w: 3.5rem; // width of block type
 }
 
@@ -29,6 +32,7 @@ body {
 
 main {
   width: 85vw;
+  max-height: 85vh;
 }
 
 aside {
@@ -42,13 +46,14 @@ aside {
   display: flex;
   justify-content: center;
   background-color: var(--bg-aside);
+  background-image: radial-gradient(farthest-corner, rgb(0 0 0 / 0), rgb(0 0 0 / 30%));
   transition: transform .25s ease-in-out, padding .5s ease-in-out;
-// drop shadow
+  // drop shadow
   box-shadow:
-  -3.7px 0 3.6px rgba(0, 0, 0, 0.037),
-  -5.3px 0 10px rgba(0, 0, 0, 0.047),
-  -13.7px 0 24.1px rgba(0, 0, 0, 0.053),
-  -42px 0 80px rgba(0, 0, 0, 0.07);
+    -3.7px 0 3.6px rgba(0, 0, 0, 0.037),
+    -5.3px 0 10px rgba(0, 0, 0, 0.047),
+    -13.7px 0 24.1px rgba(0, 0, 0, 0.053),
+    -42px 0 80px rgba(0, 0, 0, 0.07);
 
   &.open {
     transform: translateX(0);
@@ -81,8 +86,8 @@ aside {
       }
     }
 
-    & article.types {
-      margin-top: 7rem;
+    & article:nth-of-type(2) {
+      margin-top: 7rem; // prevent content jump when the btns are displaced
     }
   }
 
@@ -125,7 +130,7 @@ article {
   aspect-ratio: 1 /1;
   // height: 75px;
   border-radius: .25rem;
-  background-color: hsl(188, 10%, 20%);
+  background-color: var(--bg-aside-darker);
   justify-self: center;
 
   & input[type=checkbox] {
@@ -200,9 +205,10 @@ article {
 .block-weight__total {
   display: flex;
   font-weight: 600;
+  will-change: transform;
   transition:
-    height .25s linear,
-    opacity .25s linear;
+    transform .25s ease-out,
+    opacity .25s ease-out;
 
   & span {
     flex-grow: 1;
@@ -212,12 +218,14 @@ article {
 
   &[data-display=true] {
     opacity: 1;
-    height: auto;
+    transform: translateY(0);
   }
 
   &[data-display=false] {
     opacity: 0;
-    height: 0;
+    transform: translateY(100%);
+    transition: transform .1s ease-in,
+    opacity .1s ease-in;
   }
 }
 
@@ -297,65 +305,37 @@ button {
   background: transparent;
   border: none;
   color: inherit;
+  font-size: inherit;
 }
 
-[type='range'] {
-  $track-h: .25em;
-  $thumb-d: 1em;
+input[type="color"] {
+  --w: 2rem;
+  --p: .25rem;
+  inline-size: calc(var(--w) + var(--p));
+  block-size: calc(var(--w) + var(--p));
+  padding: var(--p);
+  background-color: var(--bg-aside-darker);
+  border: none;
+  border-radius: var(--p);
+  cursor: pointer;
 
-  &,
-  &::-webkit-slider-thumb {
-    -webkit-appearance: none;
+  &::-webkit-color-swatch-wrapper {
+    padding: 0;
   }
 
-  margin: 0;
-  padding: 0;
-  width: auto;
-  height: $thumb-d;
-  background: transparent;
-  font: 1em/1 sans-serif;
+  &::-webkit-color-swatch {
+    border: none;
+    border-radius: 0;
+  }
 
+  &::-moz-color-swatch {
+    border: none;
+    border-radius: 0;
+  }
 
   &:focus-visible {
-    outline-offset: .5em;
-    outline: thin solid #fff;
+    outline: none;
+    box-shadow: 0 0 var(--p) calc(var(--p) / 2) #fff inset,
+      0 0 .25rem hsl(0deg 0% 100% / 30%);
   }
-
-
-  &::-webkit-slider-runnable-track {
-    @include track($track-h);
-  }
-
-  &::-moz-range-track {
-    @include track($track-h);
-  }
-
-  &::-webkit-slider-thumb {
-    margin-top: .5*($track-h - $thumb-d);
-    @include thumb($thumb-d)
-  }
-
-  &::-moz-range-thumb {
-    @include thumb($thumb-d)
-  }
-
-  &::-ms-thumb {
-    margin-top: 0;
-    @include thumb($thumb-d)
-  }
-
-  &:focus-within {
-    &::-webkit-slider-thumb {
-      @include thumb-focus-within($thumb-d);
-    }
-
-    &::-moz-range-thumb {
-      @include thumb-focus-within($thumb-d);
-    }
-
-    &::-ms-thumb {
-      @include thumb-focus-within($thumb-d);
-    }
-  }
-
 }

@@ -35,14 +35,6 @@
     <aside class="">
         <div class="aside__cont">
             <header>Settings</header>
-            <article class="grid__size">
-                <div>
-                    <span>Width:</span><input type="number" data-var="numCols">
-                </div>
-                <div>
-                    <span>Height:</span><input type="number" data-var="numRows">
-                </div>
-            </article>
             <article class="btns">
                 <button class="btn" id="redrawSVG">
                     <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"
@@ -64,6 +56,15 @@
                     </svg>
                     <span class="btn__text">Export SVG</span>
                 </button>
+            </article>
+            <article class="grid__size">
+                <header>Grid's Dimension</header>
+                <div>
+                    <label for="numCols">Width:</label><input type="number" data-var="numCols" id="numCols">
+                </div>
+                <div>
+                    <label for="numRows">Height:</label><input type="number" data-var="numRows" id="numRows">
+                </div>
             </article>
             <article class="types">
                 <header>Blocks Types</header>
@@ -103,6 +104,23 @@
                         <output></output>
                     </div>
                 </div>
+            </article>
+            <article class="palette">
+                <header>Color Palette</header>
+                <div>
+                    <input type="color" data-idx="0">
+                    <input type="color" data-idx="1">
+                    <input type="color" data-idx="2">
+                    <input type="color" data-idx="3">
+                    <input type="color" data-idx="4">
+                </div>
+                <button id="newPalette" class="btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="svg-icon">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                    </svg>
+                    New Palette
+                </button>
             </article>
             <div>
                 <button id="drawSVG" class="btn">
