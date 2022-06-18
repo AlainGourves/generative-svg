@@ -122,6 +122,32 @@ article {
   }
 }
 
+article.grid__size{
+  & > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    width: fit-content;
+    margin: 0 auto;
+
+    & > * {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      // background: repeating-linear-gradient(45deg, red 0 10px, transparent 0 20px);
+    }
+  }
+}
+
+article.palette{
+  & > div {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+  }
+}
+
 .select-block-type {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(var(--block-w), 1fr));
@@ -132,7 +158,6 @@ article {
   position: relative;
   width: var(--block-w);
   aspect-ratio: 1 /1;
-  // height: 75px;
   border-radius: var(--bdr-rad);
   background-color: var(--bg-aside-darker);
   justify-self: center;
@@ -246,6 +271,7 @@ article {
 .svg-icon {
   width: 1.5rem;
   height: 1.5rem;
+  max-width: fit-content;
   fill: none;
   stroke: #fff;
   stroke-width: 2;
@@ -265,6 +291,18 @@ article {
   padding: .375rem .75rem;
   font-weight: 600;
   white-space: nowrap;
+  text-overflow: ellipsis;
+
+  &__small{
+    font-size: .8em;
+    font-weight: 400;
+    padding: .25em .5em;
+    gap: .5em;
+
+    & svg {
+      width: 1.125rem;
+    }
+  }
 
   &__round {
     width: 2.5rem;

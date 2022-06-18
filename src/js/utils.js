@@ -61,7 +61,7 @@ export const getTwoColors = (colors) => {
 }
 
 export const updateSwatches = (clrs) => {
-    const paletteContainer = document.querySelector('article.palette div');
+    const paletteContainer = document.querySelector('.clr__inputs');
     const swatches = paletteContainer.querySelectorAll('input[type="color"]');
     swatches.forEach((s, idx) => s.value = clrs[idx]);
 }

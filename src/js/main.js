@@ -176,7 +176,7 @@ const gros = (ev) => {
 
 window.addEventListener("load", e => {
 
-    const paletteContainer = document.querySelector('article.palette div');
+    const paletteContainer = document.querySelector('.clr__inputs');
     paletteContainer.addEventListener('change', ev => {
         const idx = ev.target.dataset.idx;
         const newVal = ev.target.value;
