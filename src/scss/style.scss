@@ -1,4 +1,5 @@
 @import 'mixins';
+@import 'slider';
 
 *,
 *::before,
@@ -9,16 +10,25 @@
 }
 
 :root {
+  --clr-primary: deeppink;
   --bg-inner: white;
   --bg-outer: white;
+  --hue-aside: 188deg;
+  --bg-aside: hsl(var(--hue-aside), 10%, 30%);
+  --bg-aside-lighter: hsl(var(--hue-aside), 10%, 40%);
+  --bg-aside-darker: hsl(var(--hue-aside), 10%, 20%);
+  --block-w: 3.5rem; // width of block type
+  --bdr-rad: .25rem;
 }
 
 html {
   font-size: 16px;
+  height: -webkit-fill-available; // cf. https://css-tricks.com/css-fix-for-100vh-in-mobile-webkit/
 }
 
 body {
   min-height: 100vh;
+  min-height: -webkit-fill-available;
   @include grid-center;
   background-image: radial-gradient(var(--bg-inner) 0%, var(--bg-outer) 100%);
   font-family: system-ui, sans-serif;
@@ -26,52 +36,136 @@ body {
 
 main {
   width: 85vw;
+  max-height: 85vh;
 }
 
 aside {
+  --menu-w: 4rem;
   position: fixed;
   top: 0;
-  left: 100%;
-  width: 100vw;
+  right: 0;
+  transform: translateX(calc(100% - var(--menu-w)));
+  width: min(36rem, 100vw);
   height: 100vh;
-  padding: 1.5rem;
   display: flex;
-  flex-direction: column;
-  gap: .5em;
-  background-color: deepskyblue;
-  transition: left .5s ease-in-out;
-
-  & .aside__cont {
-    position: relative;
-    inset: 0;
-    overflow-y: auto;
-    padding-bottom: 6rem;
-    padding-right: 1rem;
-  }
+  justify-content: center;
+  background-color: var(--bg-aside);
+  background-image: radial-gradient(farthest-corner, rgb(0 0 0 / 0), rgb(0 0 0 / 30%));
+  transition: transform .25s ease-in-out, padding .5s ease-in-out;
+  // drop shadow
+  box-shadow:
+    -3.7px 0 3.6px rgba(0, 0, 0, 0.037),
+    -5.3px 0 10px rgba(0, 0, 0, 0.047),
+    -13.7px 0 24.1px rgba(0, 0, 0, 0.053),
+    -42px 0 80px rgba(0, 0, 0, 0.07);
 
   &.open {
-    left: 0;
+    transform: translateX(0);
+    padding-left: 0;
+
+    & article {
+      padding: 1rem;
+      border-radius: .5rem;
+      background: rgba(0, 0, 0, .1);
+    }
   }
 
-  & article {
-    border: 1px dashed red;
+  & svg {
+    shape-rendering: geometricPrecision;
+  }
+
+  &:not(.open) {
+    padding-left: 4rem;
+
+    & .btns {
+      flex-direction: column;
+      width: var(--menu-w);
+      position: fixed;
+      left: 0;
+      bottom: 3rem;
+
+      & .btn {
+        background: #fff2;
+        border-radius: 50%;
+        aspect-ratio: 1/1;
+
+        &__text {
+          display: none;
+        }
+      }
+    }
+
+    & article:nth-of-type(2) {
+      margin-top: 7rem; // prevent content jump when the btns are displaced
+    }
+  }
+
+}
+
+.aside__cont {
+  position: relative;
+  width: 100%;
+  overflow: hidden auto;
+  padding-inline: 2rem;
+  padding-bottom: 6rem;
+  color: #fff;
+}
+
+article {
+  margin-block: 1.5rem 3rem;
+
+  & header {
+    margin-bottom: 1rem;
+  }
+
+  &.btns {
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+    flex-wrap: wrap;
+    position: relative;
+  }
+}
+
+article.grid__size {
+  & fieldset {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    width: fit-content;
+    border: none;
+
+    &>* {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      // background: repeating-linear-gradient(45deg, red 0 10px, transparent 0 20px);
+    }
+  }
+}
+
+article.palette {
+  &>div {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
   }
 }
 
 .select-block-type {
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--block-w), 1fr));
   gap: 1em;
 }
 
 .block-type__cont {
   position: relative;
-  width: 3.5rem;
-  height: 75px;
-  border-radius: .25rem;
-  background-color: yellowgreen;
-  overflow: hidden;
+  width: var(--block-w);
+  aspect-ratio: 1 /1;
+  border-radius: var(--bdr-rad);
+  background-color: var(--bg-aside-darker);
+  justify-self: center;
 
   & input[type=checkbox] {
     position: absolute;
@@ -79,8 +173,10 @@ aside {
     visibility: hidden;
 
     &:checked~.block-type {
-      border: 3px solid #fff;
-      background: hsl(0deg 0% 100% / 50%);
+      border-radius: var(--bdr-rad);
+      border: 3px solid #fff; // TODO #fff en param pour les 3 règles
+      background: hsl(0deg 0% 100% / 40%);
+      box-shadow: 0 0 .25em hsl(0deg 0% 100% / 30%);
     }
   }
 
@@ -96,12 +192,11 @@ aside {
     inset: 0;
     display: grid;
     place-content: center;
-    border-radius: .25rem;
+    transition: background .125s linear;
 
     & svg {
       width: 3rem;
       height: 3rem;
-      shape-rendering: geometricPrecision;
     }
   }
 }
@@ -118,7 +213,7 @@ aside {
     border-radius: .5rem;
 
     &:hover {
-      background: hsl(0deg 0% 100% / 25%);
+      background: hsl(0deg 0% 100% / 10%);
     }
 
 
@@ -131,21 +226,23 @@ aside {
   }
 
   & output {
-    width: 6ch;
+    width: 3rem;
     text-align: left;
   }
 
-  & svg {
+  & svg:not(.svg-icon) {
     width: 2rem;
     height: 2rem;
-    shape-rendering: geometricPrecision;
   }
 }
 
 .block-weight__total {
   display: flex;
   font-weight: 600;
-  transition: height .2s linear, opacity .2s linear;
+  will-change: transform;
+  transition:
+    transform .25s ease-out,
+    opacity .25s ease-out;
 
   & span {
     flex-grow: 1;
@@ -155,14 +252,17 @@ aside {
 
   &[data-display=true] {
     opacity: 1;
-    height: 2rem;
+    transform: translateY(0);
   }
 
   &[data-display=false] {
     opacity: 0;
-    height: 0;
+    transform: translateY(100%);
+    transition: transform .1s ease-in,
+      opacity .1s ease-in;
   }
 }
+
 
 #btnMenu {
   position: absolute;
@@ -171,28 +271,14 @@ aside {
   z-index: 1;
   padding: 0;
   appearance: none;
-  border: none;
-  background-color: transparent;
-  display: grid;
-  place-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-
-  &:after {
-    position: absolute;
-    content: '';
-    inset: 0;
-    border-radius: 50%;
-    z-index: -1;
-    background: hsl(0deg 0% 100% / 50%);
-  }
 }
 
 .svg-icon {
   width: 1.5rem;
   height: 1.5rem;
+  max-width: fit-content;
   fill: none;
-  stroke: #333;
+  stroke: #fff;
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -204,7 +290,34 @@ aside {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: .5rem;
+  gap: .75rem;
+  border: 1px solid hsl(0deg 0% 100% / 75%);
+  border-radius: .375rem;
+  padding: .375rem .75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  &__small {
+    font-size: .8em;
+    font-weight: 400;
+    padding: .25em .5em;
+    gap: .5em;
+
+    & svg {
+      width: 1.125rem;
+    }
+  }
+
+  &__round {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: grid;
+    place-content: center;
+    border: none;
+    border-radius: 50%;
+    background-color: #fff2;
+  }
 }
 
 
@@ -232,8 +345,72 @@ ul a {
   display: inline-block;
 }
 
+input,
+button {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
 button {
   padding: .25em .5em;
   margin: 0 auto;
   cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+input[type="color"] {
+  --w: 2rem;
+  --p: var(--bdr-rad);
+  inline-size: calc(var(--w) + var(--p));
+  block-size: calc(var(--w) + var(--p));
+  padding: var(--p);
+  background-color: var(--bg-aside-darker);
+  border: none;
+  border-radius: var(--p);
+  cursor: pointer;
+
+  &::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+
+  &::-webkit-color-swatch {
+    border: none;
+    border-radius: 0;
+  }
+
+  &::-moz-color-swatch {
+    border: none;
+    border-radius: 0;
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 var(--p) calc(var(--p) / 2) #fff inset,
+      0 0 .25rem hsl(0deg 0% 100% / 30%);
+  }
+}
+
+input[type="number"] {
+  appearance: none;
+  width: 6ch;
+  padding: .375rem .75rem;
+  margin-inline: .75rem;
+  text-align: center;
+  line-height: 1.5;
+  background-color: var(--bg-aside-lighter);
+  border: 1px solid rgb(#fff, 50%);
+  border-radius: var(--bdr-rad);
+  -moz-appearance: textfield;
+
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+.alert {
+  color: darkorange;
+  transition: color .25s linear;
 }

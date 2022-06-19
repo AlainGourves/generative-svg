@@ -1,20 +1,22 @@
 import { random } from "https://cdn.skypack.dev/@georgedoescode/generative-utils@1.0.38";
-import { getColorPalette, getTwoColors, saveSVGFile, sumArray } from './utils.js';
-import { setPageBackground, toggleMenu } from './animations.js';
+import { getColorPalette, getTwoColors, updateSwatches, saveSVGFile, sumArray, shuffleArray } from './utils.js';
+import { setPageBackground, toggleMenu, randomWeightsAnim } from './animations.js';
 import * as blockFn from './blocks.js';
 import { getBlockId, init } from "./init.js";
 import weightedRandom from './weightedRandom.js';
 
 window.random = random; // TODO enlever ça
 
-const numRows = random(8, 10, true); // true: gives an integer
-const numCols = random(6, 8, true);
+let numCols = 8; // width
+let numRows = 6; // height
 const squareSize = 40;
 
 const btnMenu = document.querySelector('#btnMenu');
 const btnExport = document.querySelector('#exportSVG');
 const btnDraw = document.querySelector('#drawSVG');
 const btnRefresh = document.querySelector('#redrawSVG');
+const btnRandomWeights = document.querySelector('#random-weights');
+const btnNewPalette = document.querySelector('#newPalette');
 
 
 let colorPalette = [];
@@ -25,7 +27,6 @@ const typesContainer = document.querySelector('.select-block-type');
 const weightsContainer = document.querySelector('.block-weight__cont');
 const weightsTotal = weightsContainer.querySelector('.block-weight__total');
 
-const blockTypeTemplate = document.querySelector('#bloc-type__tmpl');
 const blockWeightTemplate = document.querySelector('#bloc-weight__tmpl');
 
 let weigthSliders = []; // stores the sliders values
@@ -38,10 +39,10 @@ const drawSVG = () => {
     const draw = SVG() // create the svg
         .addTo('main')
         .size('100%', '100%')
-        .viewbox(`0 0 ${numRows * squareSize} ${numCols * squareSize}`);
+        .viewbox(`0 0 ${numCols * squareSize} ${numRows * squareSize}`);
 
-    for (let i = 0; i < numRows; i++) {
-        for (let j = 0; j < numCols; j++) {
+    for (let i = 0; i < numCols; i++) {
+        for (let j = 0; j < numRows; j++) {
             generateLittleBox(draw, i, j);
         }
     }
@@ -49,7 +50,7 @@ const drawSVG = () => {
 
 const generateLittleBox = (root, x, y) => {
     // get 2 colors
-    const { foreground, background } = getTwoColors();
+    const { foreground, background } = getTwoColors(colorPalette);
     const blockFunction = weightedRandom(activeBlocksTypes, activeBlocksWeigths);
     const group = root.group();
     blockFunction(group, x * squareSize, y * squareSize, squareSize, foreground, background, true);
@@ -75,6 +76,8 @@ const updateActiveBlocks = (fn, isActive) => {
         const draw = SVG().addTo(block).viewbox('0 0 20 20');
         draw.use(getBlockId(fn));
         weightsContainer.insertBefore(clone, weightsTotal);
+        // update le array des sliders
+        weigthSliders = weightsContainer?.querySelectorAll('input[type=range]');
     } else {
         // Supprime le HTML correspondant
         const label = weightsContainer?.querySelector(`[data-function='${fn}']`).parentElement;
@@ -83,17 +86,24 @@ const updateActiveBlocks = (fn, isActive) => {
         const idx = activeBlocksTypes.findIndex(f => f.name === fn);
         activeBlocksTypes.splice(idx, 1);
         activeBlocksWeigths.splice(idx, 1);
+        // update le array des sliders
+        // NB: il faut que ça soit fait là pour la suite
+        weigthSliders = weightsContainer?.querySelectorAll('input[type=range]');
+        if (activeBlocksTypes.length === 1) {
+            // 1 seul bloc activé => son poids doit être 1 !!
+            const b = weightsContainer.querySelector(`[data-function='${activeBlocksTypes[0].name}']`)
+            b.value = 1;
+            activeBlocksWeigths[0] = 1;
+        }
         // MàJ total poids
         updateTotalWeight();
     }
     // Affiche le total des poids
-    if (activeBlocksTypes.length) {
+    if (activeBlocksTypes.length > 1) {
         weightsTotal.dataset.display = true;
     } else {
         weightsTotal.dataset.display = false;
     }
-    // update le array des sliders
-    weigthSliders = weightsContainer?.querySelectorAll('input[type=range]');
 }
 
 const updateWeights = (ev) => {
@@ -102,6 +112,8 @@ const updateWeights = (ev) => {
     let diff = newVal - activeBlocksWeigths[idx];
     activeBlocksWeigths[idx] = newVal;
 
+    // TODO: couille en potage dans l'algo, on peut dépasser les 100% !!!
+    // console.log(sumArray(activeBlocksWeigths))
     if (activeBlocksWeigths.length > 1 && sumArray(activeBlocksWeigths) > 1) {
         let newWeights = [];
         if (diff > 0) {
@@ -110,7 +122,8 @@ const updateWeights = (ev) => {
                 if (i === idx || v === 0) return v;
                 let res = v - diff / n;
                 if (res < 0) {
-                    diff += Math.abs(res);
+                    // diff += Math.abs(res);
+                    diff = diff - v + Math.abs(res);
                     res = 0;
                 }
                 return res;
@@ -143,18 +156,55 @@ const updateTotalWeight = () => {
     activeBlocksWeigths.forEach((val, i) => {
         const v = Math.round(val * 100);
         total += v;
-        weigthSliders[i].nextElementSibling.value = `${v}%`;
+        weigthSliders[i].nextElementSibling.value = `${v}%`; // update <output> value
     });
-    // TODO: distinguer quand le total < 100%
-    weightsTotal.querySelector('output').value = `${total}%`;
+    const output = weightsTotal.querySelector('output')
+    output.value = `${total}%`;
+    // quand le total != 100%
+    output.classList.toggle('alert', total !== 100)
 }
 
-window.addEventListener("load", async e => {
-    // Color palette
-    colorPalette = await getColorPalette();
-    setPageBackground(colorPalette);
+const randomizeWeights = () => {
+    let tot = 0;
+    let result = [];
+    activeBlocksWeigths.forEach((_, idx) => {
+        result[idx] = random(0, (1 - tot));
+        tot += result[idx];
+    });
+    // Pour que le total soit bien 1, on calcule le reste et on l'attribue à un des poids
+    const diff = 1 - sumArray(result);
+    result[random(0, result.length - 1, true)] += diff
+    result = shuffleArray(result);
+    activeBlocksWeigths = result;
+    weigthSliders.forEach((s, idx) => {
+        s.value = result[idx];
+    });
+    updateTotalWeight();
+}
+
+window.addEventListener("load", e => {
+
+    const paletteContainer = document.querySelector('.clr__inputs');
+    paletteContainer.addEventListener('change', ev => {
+        const idx = ev.target.dataset.idx;
+        const newVal = ev.target.value;
+        colorPalette[idx] = newVal;
+    });
 
     init();
+
+    // Grid dimensions
+    const gridSize = document.querySelector('.grid__size');
+    const inputs = gridSize.querySelectorAll('input[type="number"]');
+    inputs[0].value = numCols;
+    inputs[1].value = numRows;
+    gridSize.addEventListener('change', ev => {
+        // add .alert class if input is not valid
+        ev.target.classList.toggle('alert', ev.target.validity.badInput);
+        const newVal = parseInt(ev.target.value);
+        if (ev.target.dataset.var == 'numCols') numCols = newVal;
+        if (ev.target.dataset.var == 'numRows') numRows = newVal;
+    });
 
     // event listener for clicks on checkboxes -> select block type
     typesContainer?.addEventListener('change', (ev) => {
@@ -174,6 +224,18 @@ window.addEventListener("load", async e => {
     btnMenu?.addEventListener('click', toggleMenu);
     btnExport?.addEventListener('click', saveSVGFile);
     btnRefresh?.addEventListener('click', drawSVG);
+    btnRandomWeights?.addEventListener('click', randomizeWeights);
+    btnRandomWeights?.addEventListener('mouseover', randomWeightsAnim);
+    // btnRandomWeights?.addEventListener('focusin', TODO);
+    // btnRandomWeights?.addEventListener('focusout', TODO);
+
+    btnNewPalette?.addEventListener('click', ev => {
+        getColorPalette()
+            .then(result => colorPalette = result)
+            .then(colorPalette => {
+                updateSwatches(colorPalette);
+            });
+    })
 
     // By default, select 'drawRect' type with a weight of 1
     const defaultType = 'drawRect';
@@ -184,5 +246,13 @@ window.addEventListener("load", async e => {
     slider.value = 1;
     slider.dispatchEvent(new Event('input', { bubbles: true }));
 
-    drawSVG();
+    // Color palette
+    getColorPalette()
+        .then(result => {
+            colorPalette = result
+            setPageBackground(colorPalette);
+            updateSwatches(colorPalette);
+            drawSVG();
+        });
+
 });

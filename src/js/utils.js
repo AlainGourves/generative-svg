@@ -20,23 +20,48 @@ export const sumArray = (arr) => {
     return arr.reduce((prev, curr) => prev + curr);
 };
 
-// Color palette
-let colorPalette = [];
-export const getColorPalette = async () => {
-    await fetch("https://unpkg.com/nice-color-palettes@3.0.0/100.json")
-    .then(response => response.json())
-    .then(c => {
-        colorPalette = random(c);
-    });
-    return colorPalette;
+export const shuffleArray = (arr) => {
+    // Fisher–Yates shuffle (plus efficace que d'utiliser simplement la fonction random())
+    // ref : https://dev.to/codebubb/how-to-shuffle-an-array-in-javascript-2ikj
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        // Array destructuring
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
 }
 
-export const getTwoColors = () => {
-    let colorList = [...colorPalette];
-    const colIdx = random(0, colorList.length - 1, true);
+// Color palette
+export const getColorPalette = async () => {
+    let palettes = JSON.parse(localStorage.getItem('palettes'));
+    if (!palettes) {
+        try {
+            const res = await fetch("https://unpkg.com/nice-color-palettes@3.0.0/100.json");
+            const data = await res.json();
+            localStorage.setItem('palettes', JSON.stringify(data));
+            const result = await random(data);
+            return result;
+        } catch (e) {
+            console.error(e);
+        }
+    } else {
+        const result = await random(palettes);
+        return result;
+    }
+}
+
+export const getTwoColors = (colors) => {
+    let colorList = [...colors];
+    const colIdx = random(0, colorList.length - 1, true); // true: gives an integer
     const background = colorList[colIdx];
     // remove this color from the list
     colorList.splice(colIdx, 1);
     const foreground = random(colorList);
     return { foreground, background };
+}
+
+export const updateSwatches = (clrs) => {
+    const paletteContainer = document.querySelector('.clr__inputs');
+    const swatches = paletteContainer.querySelectorAll('input[type="color"]');
+    swatches.forEach((s, idx) => s.value = clrs[idx]);
 }

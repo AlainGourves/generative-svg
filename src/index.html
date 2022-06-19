@@ -6,19 +6,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <title>Document</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.1.2/svg.min.js"
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.1.2/svg.min.js"
         integrity="sha512-I+rKw3hArzZIHzrkdELbKqrXfkSvw/h0lW/GgB8FThaBVz2e5ZUlSW8kY8v3q6wq37eybIwyufkEZxe4qSlGcg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tinycolor/1.4.2/tinycolor.min.js"
         integrity="sha512-+aXA9mgbUvFe0ToTlbt8/3vT7+nOgUmFw29wfFCsGoh8AZMRSU0p4WtOvC1vkF2JBrndPN2TuNZsHPAKPPxe8Q=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script> -->
+    <script src="./js/lib/gsap.min.js"></script>
+    <script src="./js/lib/svg.min.js"></script>
+    <script src="./js/lib/tinycolor.min.js"></script>
 </head>
 
 <body>
     <main></main>
-    <button id="btnMenu">
+    <button id="btnMenu" class="btn__round">
         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" class="svg-icon">
             <g>
                 <rect width="24" height="24" stroke="none"></rect>
@@ -35,9 +39,11 @@
                 <button class="btn" id="redrawSVG">
                     <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"
                         class="svg-icon">
-                        <polyline points="23 4 23 10 17 10"></polyline>
-                        <polyline points="1 20 1 14 7 14"></polyline>
-                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                        <g>
+                            <polyline points="23 4 23 10 17 10"></polyline>
+                            <polyline points="1 20 1 14 7 14"></polyline>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                        </g>
                     </svg>
                     <span class="btn__text">Regenerate SVG</span>
                 </button>
@@ -50,6 +56,17 @@
                     </svg>
                     <span class="btn__text">Export SVG</span>
                 </button>
+            </article>
+            <article class="grid__size">
+                <header>Grid's Dimensions</header>
+                <fieldset>
+                    <div>
+                        <label for="numCols">Width:</label><input type="number" data-var="numCols" id="numCols">
+                    </div>
+                    <div>
+                        <label for="numRows">Height:</label><input type="number" data-var="numRows" id="numRows">
+                    </div>
+                </fieldset>
             </article>
             <article class="types">
                 <header>Blocks Types</header>
@@ -74,8 +91,41 @@
                         </label>
                     </template>
                     <div class="block-weight__total" data-display="false">
+                        <button id="random-weights" class="btn btn__small">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                class="svg-icon">
+                                <rect width="24" height="24" stroke="none"></rect>
+                                <line x1="2" y1="6" x2="16" y2="6"></line>
+                                <line x1="2" y1="10" x2="6" y2="10"></line>
+                                <line x1="2" y1="14" x2="12" y2="14"></line>
+                                <line x1="2" y1="18" x2="18" y2="18"></line>
+                            </svg>
+                            <span class="btn__text">Randomize</span>
+                        </button>
                         <span>Total:</span>
                         <output></output>
+                    </div>
+                </div>
+            </article>
+            <article class="palette">
+                <header>Color Palette</header>
+                <div>
+                    <div class="clr__inputs">
+                        <input type="color" data-idx="0">
+                        <input type="color" data-idx="1">
+                        <input type="color" data-idx="2">
+                        <input type="color" data-idx="3">
+                        <input type="color" data-idx="4">
+                    </div>
+                    <div>
+                        <button id="newPalette" class="btn btn__small">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                class="svg-icon">
+                                <polyline points="23 4 23 10 17 10"></polyline>
+                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                            </svg>
+                            New Palette
+                        </button>
                     </div>
                 </div>
             </article>
