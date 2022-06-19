@@ -76,6 +76,8 @@ const updateActiveBlocks = (fn, isActive) => {
         const draw = SVG().addTo(block).viewbox('0 0 20 20');
         draw.use(getBlockId(fn));
         weightsContainer.insertBefore(clone, weightsTotal);
+        // update le array des sliders
+        weigthSliders = weightsContainer?.querySelectorAll('input[type=range]');
     } else {
         // Supprime le HTML correspondant
         const label = weightsContainer?.querySelector(`[data-function='${fn}']`).parentElement;
@@ -84,6 +86,15 @@ const updateActiveBlocks = (fn, isActive) => {
         const idx = activeBlocksTypes.findIndex(f => f.name === fn);
         activeBlocksTypes.splice(idx, 1);
         activeBlocksWeigths.splice(idx, 1);
+        // update le array des sliders
+        // NB: il faut que ça soit fait là pour la suite
+        weigthSliders = weightsContainer?.querySelectorAll('input[type=range]');
+        if (activeBlocksTypes.length === 1) {
+            // 1 seul bloc activé => son poids doit être 1 !!
+            const b = weightsContainer.querySelector(`[data-function='${activeBlocksTypes[0].name}']`)
+            b.value = 1;
+            activeBlocksWeigths[0] = 1;
+        }
         // MàJ total poids
         updateTotalWeight();
     }
@@ -93,8 +104,6 @@ const updateActiveBlocks = (fn, isActive) => {
     } else {
         weightsTotal.dataset.display = false;
     }
-    // update le array des sliders
-    weigthSliders = weightsContainer?.querySelectorAll('input[type=range]');
 }
 
 const updateWeights = (ev) => {
@@ -147,19 +156,22 @@ const updateTotalWeight = () => {
     activeBlocksWeigths.forEach((val, i) => {
         const v = Math.round(val * 100);
         total += v;
-        weigthSliders[i].nextElementSibling.value = `${v}%`;
+        weigthSliders[i].nextElementSibling.value = `${v}%`; // update <output> value
     });
-    // TODO: distinguer quand le total < 100%
-    weightsTotal.querySelector('output').value = `${total}%`;
+    const output = weightsTotal.querySelector('output')
+    output.value = `${total}%`;
+    // quand le total != 100%
+    output.classList.toggle('alert', total !== 100)
 }
 
 const randomizeWeights = () => {
     let tot = 0;
     let result = [];
-    activeBlocksWeigths.forEach((f, idx) => {
+    activeBlocksWeigths.forEach((_, idx) => {
         result[idx] = random(0, (1 - tot));
         tot += result[idx];
     });
+    // Pour que le total soit bien 1, on calcule le reste et on l'attribue à un des poids
     const diff = 1 - sumArray(result);
     result[random(0, result.length - 1, true)] += diff
     result = shuffleArray(result);
@@ -170,10 +182,6 @@ const randomizeWeights = () => {
     updateTotalWeight();
 }
 
-const gros = (ev) => {
-    console.log(ev.type)
-}
-
 window.addEventListener("load", e => {
 
     const paletteContainer = document.querySelector('.clr__inputs');
@@ -182,66 +190,64 @@ window.addEventListener("load", e => {
         const newVal = ev.target.value;
         colorPalette[idx] = newVal;
     });
-    // paletteContainer.addEventListener('input', ev => {
-        //     console.log(ev.target.value)
-        // });
 
-        init();
+    init();
 
-        // Grid dimensions
-        const gridSize = document.querySelector('.grid__size');
-        const inputs = gridSize.querySelectorAll('input[type="number"]');
-        inputs[0].value = numCols;
-        inputs[1].value = numRows;
-        gridSize.addEventListener('change', ev => {
-            const newVal = parseInt(ev.target.value);
-            if (ev.target.dataset.var == 'numCols') numCols = newVal;
-            if (ev.target.dataset.var == 'numRows') numRows = newVal;
-        });
+    // Grid dimensions
+    const gridSize = document.querySelector('.grid__size');
+    const inputs = gridSize.querySelectorAll('input[type="number"]');
+    inputs[0].value = numCols;
+    inputs[1].value = numRows;
+    gridSize.addEventListener('change', ev => {
+        // add .alert class if input is not valid
+        ev.target.classList.toggle('alert', ev.target.validity.badInput);
+        const newVal = parseInt(ev.target.value);
+        if (ev.target.dataset.var == 'numCols') numCols = newVal;
+        if (ev.target.dataset.var == 'numRows') numRows = newVal;
+    });
 
-        // event listener for clicks on checkboxes -> select block type
-        typesContainer?.addEventListener('change', (ev) => {
-            if (ev.target.dataset.function) {
-                updateActiveBlocks(ev.target.dataset.function, ev.target.checked)
-            }
-        });
+    // event listener for clicks on checkboxes -> select block type
+    typesContainer?.addEventListener('change', (ev) => {
+        if (ev.target.dataset.function) {
+            updateActiveBlocks(ev.target.dataset.function, ev.target.checked)
+        }
+    });
 
-        // event listener for weights change
-        weightsContainer.addEventListener('input', (ev) => {
-            if (ev.target.dataset.function) {
-                updateWeights(ev);
-            }
-        })
+    // event listener for weights change
+    weightsContainer.addEventListener('input', (ev) => {
+        if (ev.target.dataset.function) {
+            updateWeights(ev);
+        }
+    })
 
-        btnDraw?.addEventListener('click', drawSVG)
-        btnMenu?.addEventListener('click', toggleMenu);
-        btnExport?.addEventListener('click', saveSVGFile);
-        btnRefresh?.addEventListener('click', drawSVG);
-        btnRandomWeights?.addEventListener('click', randomizeWeights);
-        btnRandomWeights?.addEventListener('mouseover', randomWeightsAnim);
-        btnRandomWeights?.addEventListener('mouseout', gros);
-        // btnRandomWeights?.addEventListener('focusin', gros);
-        // btnRandomWeights?.addEventListener('focusout', gros);
+    btnDraw?.addEventListener('click', drawSVG)
+    btnMenu?.addEventListener('click', toggleMenu);
+    btnExport?.addEventListener('click', saveSVGFile);
+    btnRefresh?.addEventListener('click', drawSVG);
+    btnRandomWeights?.addEventListener('click', randomizeWeights);
+    btnRandomWeights?.addEventListener('mouseover', randomWeightsAnim);
+    // btnRandomWeights?.addEventListener('focusin', TODO);
+    // btnRandomWeights?.addEventListener('focusout', TODO);
 
-        btnNewPalette?.addEventListener('click', ev => {
-            getColorPalette()
+    btnNewPalette?.addEventListener('click', ev => {
+        getColorPalette()
             .then(result => colorPalette = result)
             .then(colorPalette => {
                 updateSwatches(colorPalette);
             });
-        })
+    })
 
-        // By default, select 'drawRect' type with a weight of 1
-        const defaultType = 'drawRect';
-        const checkbox = typesContainer.querySelector(`[data-function='${defaultType}']`);
-        checkbox.checked = true;
-        checkbox.dispatchEvent(new Event('change', { bubbles: true }));
-        const slider = weightsContainer.querySelector(`[data-function='${defaultType}']`);
-        slider.value = 1;
-        slider.dispatchEvent(new Event('input', { bubbles: true }));
+    // By default, select 'drawRect' type with a weight of 1
+    const defaultType = 'drawRect';
+    const checkbox = typesContainer.querySelector(`[data-function='${defaultType}']`);
+    checkbox.checked = true;
+    checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+    const slider = weightsContainer.querySelector(`[data-function='${defaultType}']`);
+    slider.value = 1;
+    slider.dispatchEvent(new Event('input', { bubbles: true }));
 
-        // Color palette
-        getColorPalette()
+    // Color palette
+    getColorPalette()
         .then(result => {
             colorPalette = result
             setPageBackground(colorPalette);
@@ -249,4 +255,4 @@ window.addEventListener("load", e => {
             drawSVG();
         });
 
-    });
+});

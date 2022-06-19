@@ -76,6 +76,19 @@ const btnMenuClose = () => {
     return tl;
 }
 
+export const articleSlideIn = () => {
+    const tl = gsap.timeline()
+    tl.fromTo('aside article', {
+        autoAlpha: 0,
+        x: "100%"
+    }, {
+        autoAlpha: 1,
+        x: 0,
+        stagger: 0.1,
+        ease: "power2.out"
+    });
+}
+
 export const toggleMenu = () => {
     const as = document.querySelector('aside');
     const btns = as.querySelectorAll('.btns button');
@@ -85,6 +98,7 @@ export const toggleMenu = () => {
         btns.forEach(b => b.classList.add('btn__round'));
     } else {
         btnMenuOpen()
+        articleSlideIn()
         as.classList.add('open')
         btns.forEach(b => b.classList.remove('btn__round'));
     }
