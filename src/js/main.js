@@ -1,11 +1,26 @@
 import { random } from "https://cdn.skypack.dev/@georgedoescode/generative-utils@1.0.38";
-import { getColorPalette, getTwoColors, updateSwatches, saveSVGFile, sumArray, shuffleArray } from './utils.js';
-import { setPageBackground, btnMenuOpen, btnMenuClose, randomWeightsAnim, articleSlideIn } from './animations.js';
+import { getColorPalette, getTwoColors, setBgColors, updateSwatches, saveSVGFile, sumArray, shuffleArray } from './utils.js';
+import { animBgColors, btnMenuOpen, btnMenuClose, randomWeightsAnim, articleSlideIn, animBlockWeight } from './animations.js';
 import * as blockFn from './blocks.js';
 import { getBlockId, init } from "./init.js";
 import weightedRandom from './weightedRandom.js';
 
+/*
+Functions :
+- drawSVG
+- generateLittleBox
+- updateActiveBlocks
+- updateWeights
+- updateTotalWeight
+- randomizeWeights
+- newPalette
+- addNewPaletteBtn
+- toggleMenu
+*/
+
 window.random = random; // TODO enlever ça
+
+let prefersReducedMotion = true; // @media(prefers-reduced-motion: reduce) => animations disabled by default
 
 let numCols = 8; // width
 let numRows = 6; // height
@@ -75,6 +90,13 @@ const updateActiveBlocks = (fn, isActive) => {
         output.textContent = '0%';
         const draw = SVG().addTo(block).viewbox('0 0 20 20');
         draw.use(getBlockId(fn));
+        if (!prefersReducedMotion && activeBlocksTypes.length > 1) {
+            // Pas d'animation pour le premier block type (qui est masqué au moment de sa création)
+            label.style.height = 0;
+            label.style.opacity = 0;
+            label.style.transform = 'translateX(100%)';
+            animBlockWeight(label)
+        }
         weightsContainer.insertBefore(clone, weightsTotal);
         // update le array des sliders
         weigthSliders = weightsContainer?.querySelectorAll('input[type=range]');
@@ -209,23 +231,33 @@ const addNewPaletteBtn = () => {
 const toggleMenu = () => {
     const btns = settings.querySelectorAll('.btns button');
     if (settings.classList.contains('open')) {
-        btnMenuClose()
+        btnMenuClose(prefersReducedMotion)
         addNewPaletteBtn();
         settings.classList.remove('open')
         btns.forEach(b => b.classList.add('btn__round'));
     } else {
-        btnMenuOpen()
+        btnMenuOpen(prefersReducedMotion)
         let paletteBtn = settings.querySelector('#newPalRoundBtn')
         if (paletteBtn) {
             paletteBtn.remove();
         }
-        articleSlideIn()
+        if (!prefersReducedMotion) {
+            articleSlideIn()
+        }
         settings.classList.add('open')
         btns.forEach(b => b.classList.remove('btn__round'));
     }
 }
 
 window.addEventListener("load", e => {
+
+    const mediaQueryMotion = window.matchMedia('(prefers-reduced-motion: no-preference)');
+    prefersReducedMotion = !mediaQueryMotion.matches;
+    mediaQueryMotion.addEventListener('change', ev => {
+        prefersReducedMotion = !ev.target.matches;
+        console.log("prefersReducedMotion change", prefersReducedMotion)
+    });
+    console.log("you", prefersReducedMotion)
 
     const paletteContainer = document.querySelector('.clr__inputs');
     paletteContainer.addEventListener('change', ev => {
@@ -295,8 +327,14 @@ window.addEventListener("load", e => {
     // Color palette
     getColorPalette()
         .then(result => {
-            colorPalette = result
-            setPageBackground(colorPalette);
+            colorPalette = result;
+            let [bgInner, bgOuter] = setBgColors(colorPalette);
+            if (!prefersReducedMotion) {
+                animBgColors(bgInner, bgOuter)
+            } else {
+                document.documentElement.style.setProperty('--bg-inner', bgInner);
+                document.documentElement.style.setProperty('--bg-outer', bgOuter);
+            }
             updateSwatches(colorPalette);
             drawSVG();
         });

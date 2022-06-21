@@ -1,26 +1,3 @@
-import { shuffleArray } from './utils.js';
-
-export const setPageBackground = (palette) => {
-    // Sets page's background gradient
-    const bg = tinycolor
-        .mix(palette[0], palette[1], 50)
-        .desaturate(10)
-        .toString();
-    // lighter version
-    const bgInner = tinycolor(bg)
-        .lighten(10)
-        .toString();
-    // darker version
-    const bgOuter = tinycolor(bg)
-        .darken(10)
-        .toString();
-    gsap.to('body', {
-        '--bg-inner': bgInner,
-        '--bg-outer': bgOuter,
-        duration: 0.5
-    });
-}
-
 export const animBgColors = (bgInner, bgOuter) => {
     gsap.to('body', {
         '--bg-inner': bgInner,
@@ -29,42 +6,44 @@ export const animBgColors = (bgInner, bgOuter) => {
     });
 }
 
-export const btnMenuOpen = () => {
+export const btnMenuOpen = (prefersReducedMotion) => {
+    const duration = (prefersReducedMotion) ? 0 : 0.5;
     const lines = document.querySelectorAll('#btnMenu line');
     const tl = gsap.timeline({
         repeatRefresh: true,
         defaults: {
-            duration: 0.5,
+            duration: duration,
             ease: 'power2.out'
         }
     })
-        .to('#btnMenu', { rotate: 180 })
-        .to(lines[0], {
-            transformOrigin: '0 0',
-            // svgOrigin: '2px 2px',
-            rotate: 45,
-            scaleX: Math.sqrt(2)
-        }, 0)
-        .to(lines[1], {
-            transformOrigin: '50% 50%',
-            // svgOrigin: '12px 12px',
-            scale: 0,
-            ease: 'back.out(1.5)'
-        }, 0)
-        .to(lines[2], {
-            transformOrigin: '0 100%',
-            // svgOrigin: '2px 22px',
-            rotate: -45,
-            scaleX: Math.sqrt(2)
-        }, 0)
+    .to('#btnMenu', { rotate: 180 })
+    .to(lines[0], {
+        transformOrigin: '0 0',
+        // svgOrigin: '2px 2px',
+        rotate: 45,
+        scaleX: Math.sqrt(2)
+    }, 0)
+    .to(lines[1], {
+        transformOrigin: '50% 50%',
+        // svgOrigin: '12px 12px',
+        scale: 0,
+        ease: 'back.out(1.5)'
+    }, 0)
+    .to(lines[2], {
+        transformOrigin: '0 100%',
+        // svgOrigin: '2px 22px',
+        rotate: -45,
+        scaleX: Math.sqrt(2)
+    }, 0)
     return tl;
 }
-export const btnMenuClose = () => {
+export const btnMenuClose = (prefersReducedMotion) => {
+    const duration = (prefersReducedMotion) ? 0 : 0.5;
     const lines = document.querySelectorAll('#btnMenu line');
     const tl = gsap.timeline({
         repeatRefresh: true,
         defaults: {
-            duration: 0.5,
+            duration: duration,
             ease: 'power2.in'
         }
     })
@@ -105,7 +84,7 @@ export const randomWeightsAnim = (ev) => {
     const tl = gsap.timeline({
         ease: "power2.inOut",
         duration: 0.5,
-        repeat: 2,
+        repeat: 1,
         repeatRefresh: true,
         ause: true,
         onStart: () => {
@@ -129,4 +108,20 @@ export const randomWeightsAnim = (ev) => {
     } else if (ev.type === 'mouseleave') {
         tl.pause();
     }
+}
+
+export const animBlockWeight = (el) => {
+    console.log(el)
+    const tl = gsap.timeline({
+        ease: 'power2.out'
+    })
+    .to(el, {
+        duration: 0.25,
+        height: '3.5rem'
+    })
+    .to(el, {
+        duration: 0.5,
+        opacity: 1,
+        xPercent: -100
+    }, '-=0.1')
 }

@@ -65,3 +65,20 @@ export const updateSwatches = (clrs) => {
     const swatches = paletteContainer.querySelectorAll('input[type="color"]');
     swatches.forEach((s, idx) => s.value = clrs[idx]);
 }
+
+export const setBgColors = (palette) => {
+    // Sets page's background gradient
+    const bg = tinycolor
+        .mix(palette[0], palette[1], 50)
+        .desaturate(10)
+        .toString();
+    // lighter version
+    const bgInner = tinycolor(bg)
+        .lighten(10)
+        .toString();
+    // darker version
+    const bgOuter = tinycolor(bg)
+        .darken(10)
+        .toString();
+    return [bgInner, bgOuter];
+}

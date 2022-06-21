@@ -44,14 +44,16 @@ aside {
   position: fixed;
   top: 0;
   right: 0;
-  transform: translateX(calc(100% - var(--menu-w)));
   width: min(36rem, 100vw);
   height: 100vh;
   display: flex;
   justify-content: center;
   background-color: var(--bg-aside);
   background-image: radial-gradient(farthest-corner, rgb(0 0 0 / 0), rgb(0 0 0 / 30%));
-  transition: transform .25s ease-in-out, padding .5s ease-in-out;
+  transform: translateX(calc(100% - var(--menu-w)));
+  // transition: transform .25s ease-in-out, padding .5s ease-in-out;
+  // opacity: 0;
+  transition: opacity .25s linear;
   // drop shadow
   box-shadow:
     -3.7px 0 3.6px rgba(0, 0, 0, 0.037),
@@ -61,6 +63,7 @@ aside {
 
   &.open {
     transform: translateX(0);
+    opacity: 1;
     padding-left: 0;
 
     & article {
@@ -100,6 +103,12 @@ aside {
     }
   }
 
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  aside {
+    transition: transform .25s ease-in-out, padding .5s ease-in-out;
+  }
 }
 
 .aside__cont {
@@ -207,6 +216,7 @@ article.palette {
   }
 
   & label {
+    height: 3.5rem;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
