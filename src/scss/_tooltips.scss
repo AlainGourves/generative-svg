@@ -1,0 +1,26 @@
+$clr-tooltip: hsl(188deg, 10%, 14%);
+
+.tooltip {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    max-width: 12rem;
+    background: $clr-tooltip;
+    color: white;
+    font-weight: 600;
+    font-family: sans-serif;
+    padding: .5rem;
+    border-radius: .25rem;
+    font-size: .75rem;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .arrow {
+      position: absolute;
+      background-color: $clr-tooltip;
+      width: .625rem;
+      height: .625rem;
+      transform: rotate(45deg);
+  }
