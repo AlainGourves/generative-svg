@@ -21,7 +21,15 @@ export const setPageBackground = (palette) => {
     });
 }
 
-const btnMenuOpen = () => {
+export const animBgColors = (bgInner, bgOuter) => {
+    gsap.to('body', {
+        '--bg-inner': bgInner,
+        '--bg-outer': bgOuter,
+        duration: 0.5
+    });
+}
+
+export const btnMenuOpen = () => {
     const lines = document.querySelectorAll('#btnMenu line');
     const tl = gsap.timeline({
         repeatRefresh: true,
@@ -51,7 +59,7 @@ const btnMenuOpen = () => {
         }, 0)
     return tl;
 }
-const btnMenuClose = () => {
+export const btnMenuClose = () => {
     const lines = document.querySelectorAll('#btnMenu line');
     const tl = gsap.timeline({
         repeatRefresh: true,
@@ -89,29 +97,36 @@ export const articleSlideIn = () => {
     });
 }
 
-export const toggleMenu = () => {
-    const as = document.querySelector('aside');
-    const btns = as.querySelectorAll('.btns button');
-    if (as.classList.contains('open')) {
-        btnMenuClose()
-        as.classList.remove('open')
-        btns.forEach(b => b.classList.add('btn__round'));
-    } else {
-        btnMenuOpen()
-        articleSlideIn()
-        as.classList.add('open')
-        btns.forEach(b => b.classList.remove('btn__round'));
+export const randomWeightsAnim = (ev) => {
+    const mySvg = document.querySelector('#random-weights');
+    const circles = mySvg.querySelectorAll('g circle');
+    const circlesMask = mySvg.querySelectorAll('mask circle');
+    let pos = [];
+    const tl = gsap.timeline({
+        ease: "power2.inOut",
+        duration: 0.5,
+        repeat: 2,
+        repeatRefresh: true,
+        ause: true,
+        onStart: () => {
+            for (let i = 0; i < circles.length; i++) {
+                pos[i] = random(4, 20, true);
+            }
+        }
+    })
+    .to(circles, {
+        attr: {
+            cx: (idx) => pos[idx],
+        }
+    })
+        .to(circlesMask, {
+            attr: {
+                cx: (idx) => pos[idx],
+            }
+        }, '<');
+    if (ev.type === 'mouseenter') {
+        tl.play()
+    } else if (ev.type === 'mouseleave') {
+        tl.pause();
     }
-}
-
-export const randomWeightsAnim = () => {
-    let lines = document.querySelectorAll('#random-weights line');
-    const tl = gsap.timeline({ repeat: 2, yoyo: true });
-    let arr = shuffleArray(Array.from(lines));
-    arr.forEach(l => {
-        tl.to(l, {
-            attr: { x2: random(6, 18, true) },
-            ease: "sine.inOut"
-        })
-    });
 }

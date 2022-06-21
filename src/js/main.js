@@ -1,6 +1,6 @@
 import { random } from "https://cdn.skypack.dev/@georgedoescode/generative-utils@1.0.38";
 import { getColorPalette, getTwoColors, updateSwatches, saveSVGFile, sumArray, shuffleArray } from './utils.js';
-import { setPageBackground, toggleMenu, randomWeightsAnim } from './animations.js';
+import { setPageBackground, btnMenuOpen, btnMenuClose, randomWeightsAnim, articleSlideIn } from './animations.js';
 import * as blockFn from './blocks.js';
 import { getBlockId, init } from "./init.js";
 import weightedRandom from './weightedRandom.js';
@@ -12,22 +12,22 @@ let numRows = 6; // height
 const squareSize = 40;
 
 const btnMenu = document.querySelector('#btnMenu');
-const btnExport = document.querySelector('#exportSVG');
-const btnDraw = document.querySelector('#drawSVG');
-const btnRefresh = document.querySelector('#redrawSVG');
-const btnRandomWeights = document.querySelector('#random-weights');
-const btnNewPalette = document.querySelector('#newPalette');
+const settings = document.querySelector('aside');
+const btnExport = settings.querySelector('#exportSVG');
+const btnDraw = settings.querySelector('#drawSVG');
+const btnRandomWeights = settings.querySelector('#random-weights');
+const btnNewPalette = settings.querySelector('#newPalette');
 
 
 let colorPalette = [];
 let activeBlocksTypes = [];
 let activeBlocksWeigths = [];
 
-const typesContainer = document.querySelector('.select-block-type');
-const weightsContainer = document.querySelector('.block-weight__cont');
+const typesContainer = settings.querySelector('.select-block-type');
+const weightsContainer = settings.querySelector('.block-weight__cont');
 const weightsTotal = weightsContainer.querySelector('.block-weight__total');
 
-const blockWeightTemplate = document.querySelector('#bloc-weight__tmpl');
+const blockWeightTemplate = settings.querySelector('#bloc-weight__tmpl');
 
 let weigthSliders = []; // stores the sliders values
 
@@ -182,6 +182,49 @@ const randomizeWeights = () => {
     updateTotalWeight();
 }
 
+const newPalette = (ev, redraw = false) => {
+    getColorPalette()
+        .then(result => colorPalette = result)
+        .then(colorPalette => {
+            updateSwatches(colorPalette);
+            if (redraw) {
+                drawSVG();
+            }
+        });
+}
+
+const addNewPaletteBtn = () => {
+    const newBtn = btnNewPalette.cloneNode(true);
+    newBtn.id = 'newPalRoundBtn';
+    newBtn.title = "Create a new image with a random palette.";
+    newBtn.classList.remove('btn__small');
+    newBtn.classList.add('btn__round');
+    newBtn.addEventListener('click', ev => {
+        newPalette(ev, true);
+    });
+    const parent = btnExport.parentNode;
+    parent.insertBefore(newBtn, btnExport);
+}
+
+const toggleMenu = () => {
+    const btns = settings.querySelectorAll('.btns button');
+    if (settings.classList.contains('open')) {
+        btnMenuClose()
+        addNewPaletteBtn();
+        settings.classList.remove('open')
+        btns.forEach(b => b.classList.add('btn__round'));
+    } else {
+        btnMenuOpen()
+        let paletteBtn = settings.querySelector('#newPalRoundBtn')
+        if (paletteBtn) {
+            paletteBtn.remove();
+        }
+        articleSlideIn()
+        settings.classList.add('open')
+        btns.forEach(b => b.classList.remove('btn__round'));
+    }
+}
+
 window.addEventListener("load", e => {
 
     const paletteContainer = document.querySelector('.clr__inputs');
@@ -218,24 +261,27 @@ window.addEventListener("load", e => {
         if (ev.target.dataset.function) {
             updateWeights(ev);
         }
-    })
+    });
 
-    btnDraw?.addEventListener('click', drawSVG)
-    btnMenu?.addEventListener('click', toggleMenu);
-    btnExport?.addEventListener('click', saveSVGFile);
-    btnRefresh?.addEventListener('click', drawSVG);
-    btnRandomWeights?.addEventListener('click', randomizeWeights);
-    btnRandomWeights?.addEventListener('mouseover', randomWeightsAnim);
-    // btnRandomWeights?.addEventListener('focusin', TODO);
+    // Event listener for ESC key
+    window.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Escape' && settings.classList.contains('open')) {
+            toggleMenu();
+        }
+    });
+
+    [
+        [btnDraw, drawSVG],
+        [btnMenu, toggleMenu],
+        [btnExport, saveSVGFile],
+        [btnNewPalette, newPalette],
+        [btnRandomWeights, randomizeWeights]
+    ].forEach(([btn, fn]) => btn?.addEventListener('click', fn));
+
+    btnRandomWeights?.addEventListener('mouseenter', randomWeightsAnim);
+    btnRandomWeights?.addEventListener('mouseleave', randomWeightsAnim);
     // btnRandomWeights?.addEventListener('focusout', TODO);
 
-    btnNewPalette?.addEventListener('click', ev => {
-        getColorPalette()
-            .then(result => colorPalette = result)
-            .then(colorPalette => {
-                updateSwatches(colorPalette);
-            });
-    })
 
     // By default, select 'drawRect' type with a weight of 1
     const defaultType = 'drawRect';
