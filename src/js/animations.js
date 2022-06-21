@@ -111,7 +111,6 @@ export const randomWeightsAnim = (ev) => {
 }
 
 export const animBlockWeight = (el) => {
-    console.log(el)
     const tl = gsap.timeline({
         ease: 'power2.out'
     })

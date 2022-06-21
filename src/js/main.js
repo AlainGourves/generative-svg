@@ -14,7 +14,6 @@ Functions :
 - updateTotalWeight
 - randomizeWeights
 - newPalette
-- addNewPaletteBtn
 - toggleMenu
 */
 
@@ -28,10 +27,13 @@ const squareSize = 40;
 
 const btnMenu = document.querySelector('#btnMenu');
 const settings = document.querySelector('aside');
-const btnExport = settings.querySelector('#exportSVG');
 const btnDraw = settings.querySelector('#drawSVG');
-const btnRandomWeights = settings.querySelector('#random-weights');
+const btnExport = settings.querySelector('#exportSVG');
 const btnNewPalette = settings.querySelector('#newPalette');
+const btnDrawV = settings.querySelector('#drawSVG__v');
+const btnExportV = settings.querySelector('#exportSVG__v');
+const btnNewPaletteV = settings.querySelector('#newPalette__v');
+const btnRandomWeights = settings.querySelector('#random-weights');
 
 
 let colorPalette = [];
@@ -204,48 +206,26 @@ const randomizeWeights = () => {
     updateTotalWeight();
 }
 
-const newPalette = (ev, redraw = false) => {
+const newPalette = (ev) => {
     getColorPalette()
         .then(result => colorPalette = result)
         .then(colorPalette => {
             updateSwatches(colorPalette);
-            if (redraw) {
                 drawSVG();
-            }
         });
-}
-
-const addNewPaletteBtn = () => {
-    const newBtn = btnNewPalette.cloneNode(true);
-    newBtn.id = 'newPalRoundBtn';
-    newBtn.title = "Create a new image with a random palette.";
-    newBtn.classList.remove('btn__small');
-    newBtn.classList.add('btn__round');
-    newBtn.addEventListener('click', ev => {
-        newPalette(ev, true);
-    });
-    const parent = btnExport.parentNode;
-    parent.insertBefore(newBtn, btnExport);
 }
 
 const toggleMenu = () => {
     const btns = settings.querySelectorAll('.btns button');
     if (settings.classList.contains('open')) {
         btnMenuClose(prefersReducedMotion)
-        addNewPaletteBtn();
         settings.classList.remove('open')
-        btns.forEach(b => b.classList.add('btn__round'));
     } else {
         btnMenuOpen(prefersReducedMotion)
-        let paletteBtn = settings.querySelector('#newPalRoundBtn')
-        if (paletteBtn) {
-            paletteBtn.remove();
-        }
         if (!prefersReducedMotion) {
             articleSlideIn()
         }
         settings.classList.add('open')
-        btns.forEach(b => b.classList.remove('btn__round'));
     }
 }
 
@@ -257,7 +237,7 @@ window.addEventListener("load", e => {
         prefersReducedMotion = !ev.target.matches;
         console.log("prefersReducedMotion change", prefersReducedMotion)
     });
-    console.log("you", prefersReducedMotion)
+    console.log("reduced motion", prefersReducedMotion); // TODO: à virer
 
     const paletteContainer = document.querySelector('.clr__inputs');
     paletteContainer.addEventListener('change', ev => {
@@ -304,9 +284,12 @@ window.addEventListener("load", e => {
 
     [
         [btnDraw, drawSVG],
+        [btnDrawV, drawSVG],
         [btnMenu, toggleMenu],
         [btnExport, saveSVGFile],
+        [btnExportV, saveSVGFile],
         [btnNewPalette, newPalette],
+        [btnNewPaletteV, newPalette],
         [btnRandomWeights, randomizeWeights]
     ].forEach(([btn, fn]) => btn?.addEventListener('click', fn));
 

@@ -72,6 +72,10 @@ aside {
       border-radius: .5rem;
       background: rgba(0, 0, 0, .1);
     }
+
+    & .btns__vert {
+      display: none;
+    }
   }
 
   & svg {
@@ -81,8 +85,10 @@ aside {
   &:not(.open) {
     padding-left: 4rem;
 
-    & .btns {
+    & .btns__vert {
+      display: flex;
       flex-direction: column;
+      gap: 1rem;
       width: var(--menu-w);
       position: fixed;
       left: 0;
@@ -90,7 +96,6 @@ aside {
 
       & > div{
         position: relative;
-        // isolation: isolate;
       }
 
       & .btn {
@@ -102,10 +107,6 @@ aside {
           display: none;
         }
       }
-    }
-
-    & article:nth-of-type(2) {
-      margin-top: 7rem; // prevent content jump when the btns are displaced
     }
   }
 
@@ -127,7 +128,7 @@ aside {
 }
 
 article {
-  margin-block: 1.5rem 3rem;
+  margin-block: 2rem;
 
   & header {
     margin-bottom: 1rem;
@@ -138,7 +139,6 @@ article {
     justify-content: space-around;
     gap: 1rem;
     flex-wrap: wrap;
-    position: relative;
   }
 }
 

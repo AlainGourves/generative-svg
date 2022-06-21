@@ -21,7 +21,6 @@ const setupTooltip = (button, tooltip) => {
         ],
         strategy: 'fixed',
     }).then(({ x, y, placement, middlewareData }) => {
-        console.log("coord", x, y)
         Object.assign(tooltip.style, {
             top: '0',
             left: '0',
