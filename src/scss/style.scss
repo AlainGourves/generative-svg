@@ -1,5 +1,6 @@
 @import 'mixins';
 @import 'slider';
+@import 'tooltips';
 
 *,
 *::before,
@@ -86,6 +87,11 @@ aside {
       position: fixed;
       left: 0;
       bottom: 3rem;
+
+      & > div{
+        position: relative;
+        // isolation: isolate;
+      }
 
       & .btn {
         background: #fff2;
@@ -273,13 +279,15 @@ article.palette {
   }
 }
 
-
-#btnMenu {
+#btnMenu__cont{
   position: absolute;
   top: 1rem;
   right: 1rem;
   z-index: 1;
-  appearance: none;
+}
+#btnMenu {
+  padding: 0;
+  // appearance: none;
 }
 
 .svg-icon {
