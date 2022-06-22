@@ -211,7 +211,7 @@ const newPalette = (ev) => {
         .then(result => colorPalette = result)
         .then(colorPalette => {
             updateSwatches(colorPalette);
-                drawSVG();
+            drawSVG();
         });
 }
 

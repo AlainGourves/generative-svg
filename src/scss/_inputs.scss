@@ -1,0 +1,56 @@
+input,
+button {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+}
+
+input[type="color"] {
+    --w: 2rem;
+    --p: var(--bdr-rad);
+    inline-size: calc(var(--w) + var(--p));
+    block-size: calc(var(--w) + var(--p));
+    padding: var(--p);
+    background-color: var(--bg-aside-darker);
+    border: none;
+    border-radius: var(--p);
+    cursor: pointer;
+
+    &::-webkit-color-swatch-wrapper {
+        padding: 0;
+    }
+
+    &::-webkit-color-swatch {
+        border: none;
+        border-radius: 0;
+    }
+
+    &::-moz-color-swatch {
+        border: none;
+        border-radius: 0;
+    }
+
+    &:focus-visible {
+        outline: none;
+        box-shadow: 0 0 var(--p) calc(var(--p) / 2) #fff inset,
+            0 0 .25rem hsl(0deg 0% 100% / 30%);
+    }
+}
+
+input[type="number"] {
+    appearance: none;
+    width: 6ch;
+    padding: .375rem .75rem;
+    margin-inline: .75rem;
+    text-align: center;
+    line-height: 1.5;
+    background-color: var(--bg-aside-lighter);
+    border: 1px solid rgb(#fff, 50%);
+    border-radius: var(--bdr-rad);
+    -moz-appearance: textfield;
+
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+}

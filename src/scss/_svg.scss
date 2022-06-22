@@ -1,0 +1,30 @@
+img,
+svg {
+    display: block;
+    max-width: 100%;
+    aspect-ratio: 1 /1;
+    /*    Removes little gaps between the shapes */
+    shape-rendering: crispEdges;
+}
+
+aside svg {
+    shape-rendering: geometricPrecision;
+}
+
+.svg-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    max-width: fit-content;
+    fill: none;
+    stroke: #fff;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke; // keeps stroke-weight while scaling
+    shape-rendering: geometricPrecision;
+}
+
+#random-weights .tracks rect {
+    stroke: none;
+    fill: #fff;
+}

@@ -1,0 +1,38 @@
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --clr-primary: deeppink;
+    --bg-inner: white;
+    --bg-outer: white;
+    --hue-aside: 188deg;
+    --bg-aside: hsl(var(--hue-aside), 10%, 30%);
+    --bg-aside-lighter: hsl(var(--hue-aside), 10%, 40%);
+    --bg-aside-darker: hsl(var(--hue-aside), 10%, 20%);
+    --block-w: 3.5rem; // width of block type
+    --bdr-rad: .25rem;
+}
+
+html {
+    font-size: 16px;
+    height: -webkit-fill-available; // cf. https://css-tricks.com/css-fix-for-100vh-in-mobile-webkit/
+}
+
+body {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    @include grid-center;
+    background-image: radial-gradient(var(--bg-inner) 0%, var(--bg-outer) 100%);
+    font-family: system-ui, sans-serif;
+}
+
+
+.alert {
+    color: darkorange;
+    transition: color .25s linear;
+}
