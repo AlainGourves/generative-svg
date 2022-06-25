@@ -48,16 +48,24 @@ export const getColorPalette = async () => {
     } else {
         const result = await random(palettes);
         await setRootColors(result);
-        console.log(result)
         return result;
     }
 }
 
-const setRootColors = (colorArray) => {
+const setRootColors = (clrs) => {
     // assign colors to CSS custom properties
-    colorArray.forEach((c, idx) => {
-        document.documentElement.style.setProperty(`--clr${idx + 1}`, colorArray[idx]);
-    });
+    // First color is the one with greatest difference in luminance compared to primary color (as defined in CSS)
+    let primaryColor = window.getComputedStyle(document.documentElement).getPropertyValue('--clr-primary');
+    let primaryLuminance = tinycolor(primaryColor).getLuminance();
+    let clrsLumi = [];
+    clrs.forEach((c, idx) => clrsLumi[idx] = tinycolor(c).getLuminance(c));
+    // difference of luminance with primary color
+    const differences = clrsLumi.map(x => Math.abs(x - primaryLuminance));
+    // array.sort() modify the orignal array => create a copy
+    const sorted = [...differences].sort((a, b) => b - a);
+    sorted.forEach((d, idx) => {
+        document.documentElement.style.setProperty(`--clr${idx + 1}`, clrs[differences.indexOf(d)]);
+    })
 }
 
 export const getTwoColors = (colors) => {

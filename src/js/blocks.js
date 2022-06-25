@@ -8,8 +8,21 @@ import { random } from "https://cdn.skypack.dev/@georgedoescode/generative-utils
 *   - w: width of containing square
 *   - foreground, background : colors
 *   - randomize: bool (default false) to know if we have to randomize the orientation of the block
-template:
+*   template:
 export const fn = (group, x, y, w, foreground, background, randomize = false) => { }
+
+* Functions:
+*   - drawRect
+*   - drawCircle
+*   - drawOppositeCircles
+*   - drawFacingCircles
+*   - drawSemiCircle
+*   - drawDisc
+*   - drawOppositeTriangles
+*   - drawTriangles
+*   - drawLeaf
+*   - drawRoundedBar
+*   - drawArc
 */
 
 export const drawRect = (group, x, y, w, foreground, background, randomize = false) => {
@@ -61,8 +74,8 @@ export const drawSemiCircle = (group, x, y, w, foreground, background, randomize
     group.rect(w, w).fill(background).move(x, y);
     // group for the circles
     const circleGroup = group.group();
-    circleGroup.path(`M${x} ${y} a ${w / 2} ${w / 2} 0 0 1 0 ${w} z`).fill(foreground);
-    circleGroup.path(`M${x + w / 2} ${y} a ${w / 2} ${w / 2} 0 0 1 0 ${w} z`).fill(foreground);
+    circleGroup.path(`M${x} ${y} a${w / 2} ${w / 2} 0 0 1 0 ${w} z`).fill(foreground);
+    circleGroup.path(`M${x + w / 2} ${y} a${w / 2} ${w / 2} 0 0 1 0 ${w} z`).fill(foreground);
     if (randomize) {
         const dir = random(0, 3, true);
         circleGroup.rotate(dir * 90);
@@ -98,15 +111,24 @@ export const drawOppositeTriangles = (group, x, y, w, foreground, background, ra
     // group.add(triangleGroup);
 }
 
+export const drawTriangles = (group, x, y, w, foreground, background, randomize = false) => {
+    group.addClass('block triangles');
+    group.rect(w, w).fill(background).move(x, y);
+    const points = [x, y, x + w, y + w, x, y + w];
+    group.polygon(points).fill(foreground);
+    if (randomize) {
+        const dir = random(0, 3, true);
+        group.rotate(dir * 90);
+    }
+}
+
 export const drawLeaf = (group, x, y, w, foreground, background, randomize = false) => {
     group.addClass('block leaf');
     group.rect(w, w).fill(background).move(x, y);
     // group for the leaf
     const leafGroup = group.group();
-    leafGroup.path(`m${x} ${y} h${w/2} a${w/2} ${w/2} 0 0 1 ${w/2} ${w/2} v${w/2} h${-w/2} a${w/2} ${w/2} 0 0 1 ${-w/2} ${-w/2} v${-w/2}  z`).fill(foreground);
+    leafGroup.path(`m${x} ${y} h${w / 2} a${w / 2} ${w / 2} 0 0 1 ${w / 2} ${w / 2} v${w / 2} h${-w / 2} a${w / 2} ${w / 2} 0 0 1 ${-w / 2} ${-w / 2} v${-w / 2}  z`).fill(foreground);
     if (randomize && random(0, 1, true)) leafGroup.rotate(90)
-
-    // group.add(leafGroup);
 }
 
 export const drawRoundedBar = (group, x, y, w, foreground, background, randomize = false) => {
@@ -114,11 +136,33 @@ export const drawRoundedBar = (group, x, y, w, foreground, background, randomize
     group.rect(w, w).fill(background).move(x, y);
     // group for the leaf
     const roundedBarGroup = group.group();
-    roundedBarGroup.path(`m${x} ${y} a${w/2} ${w/2} 0 0 1 ${w/2} ${w/2} v${w/2} h${-w/2} v${-w}  z`).fill(foreground);
-    // if (randomize && random(0, 1, true)) roundedBarGroup.rotate(90)
+    roundedBarGroup.path(`m${x} ${y} a${w / 2} ${w / 2} 0 0 1 ${w / 2} ${w / 2} v${w / 2} h${-w / 2} v${-w}  z`).fill(foreground);
     if (randomize) {
         const dir = random(0, 3, true);
         group.rotate(dir * 90);
     }
-    // group.add(roundedBarGroup);
+}
+
+export const drawArc = (group, x, y, w, foreground, background, randomize = false) => {
+    group.addClass('block arc');
+    group.rect(w, w).fill(background).move(x, y);
+    group.path(`m${x} ${y} a${w} ${w} 0 0 1 ${w} ${w} v${-w} h${-w}  z`).fill(foreground);
+    if (randomize) {
+        const dir = random(0, 3, true);
+        group.rotate(dir * 90);
+    }
+
+}
+
+export const drawRoundedBarSemiCircle = (group, x, y, w, foreground, background, randomize = false) => {
+    group.addClass('block rounded-bar');
+    group.rect(w, w).fill(background).move(x, y);
+    // group for the leaf
+    const roundedBarGroup = group.group();
+    roundedBarGroup.path(`m${x} ${y} a${w / 2} ${w / 2} 0 0 1 ${w / 2} ${w / 2} v${w / 2} h${-w / 2} v${-w}  z`).fill(foreground);
+    roundedBarGroup.path(`M${x + w} ${y} a${w / 2} ${w / 2} 0 0 0 0 ${w} z`).fill(foreground);
+    if (randomize) {
+        const dir = random(0, 3, true);
+        group.rotate(dir * 90);
+    }
 }

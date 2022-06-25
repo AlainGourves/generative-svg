@@ -30,7 +30,7 @@
     $shadow: ();
 
     @for $i from 1 through length($list-colors) {
-        $current: (math.ceil(math.sin(0deg + $direction) * $length * $i)) math.ceil((math.cos(0deg + $direction) * $length * $i)) 0 var(--clr#{$i}, #{unquote(nth($title-defaults, $i))});
+        $current: (math.sin(0deg + $direction) * $length * $i) (math.cos(0deg + $direction) * $length * $i) 0 var(--clr#{$i}, #{unquote(nth($title-defaults, $i))});
         $shadow: append($shadow, $current, "comma");
     }
 
