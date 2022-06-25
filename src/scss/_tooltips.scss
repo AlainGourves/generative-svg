@@ -7,20 +7,20 @@ $clr-tooltip: hsl(188deg, 10%, 14%);
     left: 0;
     max-width: 12rem;
     background: $clr-tooltip;
-    color: white;
-    font-weight: 600;
-    font-family: sans-serif;
+
     padding: .5rem;
-    border-radius: .25rem;
-    font-size: .75rem;
+    // border-radius: .25rem;
     pointer-events: none;
     z-index: 1;
+    opacity: 0;
+    transition: opacity .5s linear 2s;
+    user-select: none;
   }
 
-  .arrow {
-      position: absolute;
-      background-color: $clr-tooltip;
-      width: .625rem;
-      height: .625rem;
-      transform: rotate(45deg);
-  }
+//   .arrow {
+//       position: absolute;
+//       background-color: $clr-tooltip;
+//       width: .625rem;
+//       height: .625rem;
+//       transform: rotate(45deg);
+//   }

@@ -20,11 +20,16 @@ aside svg {
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
+    stroke-miterlimit: 1;
     vector-effect: non-scaling-stroke; // keeps stroke-weight while scaling
-    shape-rendering: geometricPrecision;
 }
 
 #random-weights .tracks rect {
+    stroke: none;
+    fill: #fff;
+}
+
+#palette .spots{
     stroke: none;
     fill: #fff;
 }

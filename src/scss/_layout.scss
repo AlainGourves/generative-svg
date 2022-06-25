@@ -81,15 +81,16 @@ aside {
     position: relative;
     width: 100%;
     overflow: hidden auto;
-    padding-inline: 2rem;
-    padding-bottom: 6rem;
+    padding: 2rem 2rem 6rem 2rem;
     color: #fff;
 }
 
 article {
     margin-block: 2rem;
 
-    & header {
+    & h2,
+    & h3,
+    & p {
         margin-bottom: 1rem;
     }
 
@@ -213,7 +214,6 @@ article.palette {
 
 .block-weight__total {
     display: flex;
-    font-weight: 600;
     will-change: transform;
     transition:
         transform .25s ease-out,

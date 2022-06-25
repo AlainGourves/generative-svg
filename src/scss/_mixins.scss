@@ -14,17 +14,29 @@
     place-content: center;
 }
 
-/// Center vertically 
+/// Center vertically
 @mixin vert-center {
     left: 50%;
     transform: translateX(-50%);
 }
 
-/// Center horizontally 
+/// Center horizontally
 @mixin horiz-center {
     top: 50%;
     transform: translateY(-50%);
 }
+
+@function shadow($list-colors, $direction, $length) {
+    $shadow: ();
+
+    @for $i from 1 through length($list-colors) {
+        $current: (math.ceil(math.sin(0deg + $direction) * $length * $i)) math.ceil((math.cos(0deg + $direction) * $length * $i)) 0 var(--clr#{$i}, #{unquote(nth($title-defaults, $i))});
+        $shadow: append($shadow, $current, "comma");
+    }
+
+    @return $shadow;
+}
+
 
 ///
 /// Fill text with gradient :
@@ -37,4 +49,4 @@
     background-clip: text;
     -webkit-text-fill-color: transparent; // non-standart, see https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-text-fill-color
     color: transparent;
-  }
+}

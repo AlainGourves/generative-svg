@@ -1,0 +1,47 @@
+body {
+    font-family: Monserrat, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 200;
+    font-style: italic;
+    line-height: 1.5;
+    text-rendering: optimizeLegibility;
+}
+
+main h1,
+h2,
+h3 {
+    font-family: 'Titan One';
+    font-style: normal;
+    color: var(--clr-primary);
+}
+
+h1 {
+    font-size: 6vw;
+    line-height: 1;
+    text-shadow: shadow($title-colors, 315deg, 2px);
+}
+
+input,
+button {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 400;
+    font-style: normal;
+    color: inherit;
+}
+
+.btn,
+.tooltip {
+    font-weight: 400;
+    font-style: normal;
+    color: white;
+}
+
+.btn__small,
+.tooltip {
+    font-size: .75rem;
+}
+
+.block-weight__total {
+    font-weight: 400;
+    font-style: normal;
+}

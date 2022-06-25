@@ -1,3 +1,9 @@
+$title-defaults: ("#1c2130", "#028f76", "#b3e099", "#ffeaad", "#d14334");
+$title-colors: ("#9dc9ac", "#fffec7", "#f56218", "#ff9d2e", "#919167");
+
+@import url('https://fonts.googleapis.com/css2?family=Titan+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;1,100&display=swap');
+
 *,
 *::before,
 *::after {
@@ -7,7 +13,11 @@
 }
 
 :root {
-    --clr-primary: deeppink;
+    @for $i from 1 through length($title-defaults) {
+        --clr#{$i}: #{unquote(nth($title-defaults, $i))};
+      }
+
+    --clr-primary: #eecb11;
     --bg-inner: white;
     --bg-outer: white;
     --hue-aside: 188deg;
@@ -28,9 +38,7 @@ body {
     min-height: -webkit-fill-available;
     @include grid-center;
     background-image: radial-gradient(var(--bg-inner) 0%, var(--bg-outer) 100%);
-    font-family: system-ui, sans-serif;
 }
-
 
 .alert {
     color: darkorange;
