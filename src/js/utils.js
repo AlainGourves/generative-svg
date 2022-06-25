@@ -40,14 +40,24 @@ export const getColorPalette = async () => {
             const data = await res.json();
             localStorage.setItem('palettes', JSON.stringify(data));
             const result = await random(data);
+            await setRootColors(result);
             return result;
         } catch (e) {
             console.error(e);
         }
     } else {
         const result = await random(palettes);
+        await setRootColors(result);
+        console.log(result)
         return result;
     }
+}
+
+const setRootColors = (colorArray) => {
+    // assign colors to CSS custom properties
+    colorArray.forEach((c, idx) => {
+        document.documentElement.style.setProperty(`--clr${idx + 1}`, colorArray[idx]);
+    });
 }
 
 export const getTwoColors = (colors) => {

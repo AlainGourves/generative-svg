@@ -8,6 +8,8 @@ import { random } from "https://cdn.skypack.dev/@georgedoescode/generative-utils
 *   - w: width of containing square
 *   - foreground, background : colors
 *   - randomize: bool (default false) to know if we have to randomize the orientation of the block
+template:
+export const fn = (group, x, y, w, foreground, background, randomize = false) => { }
 */
 
 export const drawRect = (group, x, y, w, foreground, background, randomize = false) => {

@@ -1,6 +1,6 @@
 import { random } from "https://cdn.skypack.dev/@georgedoescode/generative-utils@1.0.38";
 import { getColorPalette, getTwoColors, setBgColors, updateSwatches, saveSVGFile, sumArray, shuffleArray } from './utils.js';
-import { animBgColors, btnMenuOpen, btnMenuClose, randomWeightsAnim, articleSlideIn, animBlockWeight } from './animations.js';
+import { animBgColors, btnMenuOpen, btnMenuClose, randomWeightsAnim, articleSlideIn, blockWeightSlideIn, animPalette } from './animations.js';
 import * as blockFn from './blocks.js';
 import { getBlockId, init } from "./init.js";
 import weightedRandom from './weightedRandom.js';
@@ -97,7 +97,7 @@ const updateActiveBlocks = (fn, isActive) => {
             label.style.height = 0;
             label.style.opacity = 0;
             label.style.transform = 'translateX(100%)';
-            animBlockWeight(label)
+            blockWeightSlideIn(label)
         }
         weightsContainer.insertBefore(clone, weightsTotal);
         // update le array des sliders
@@ -185,7 +185,7 @@ const updateTotalWeight = () => {
     const output = weightsTotal.querySelector('output')
     output.value = `${total}%`;
     // quand le total != 100%
-    output.classList.toggle('alert', total !== 100)
+    output.classList.toggle('alert', total !== 100);
 }
 
 const randomizeWeights = () => {
@@ -204,6 +204,7 @@ const randomizeWeights = () => {
         s.value = result[idx];
     });
     updateTotalWeight();
+    drawSVG();
 }
 
 const newPalette = (ev) => {
@@ -296,6 +297,7 @@ window.addEventListener("load", e => {
     btnRandomWeights?.addEventListener('mouseenter', randomWeightsAnim);
     btnRandomWeights?.addEventListener('mouseleave', randomWeightsAnim);
     // btnRandomWeights?.addEventListener('focusout', TODO);
+    btnNewPaletteV?.addEventListener('mouseenter', ev => animPalette(colorPalette));
 
 
     // By default, select 'drawRect' type with a weight of 1

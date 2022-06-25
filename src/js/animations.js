@@ -110,17 +110,42 @@ export const randomWeightsAnim = (ev) => {
     }
 }
 
-export const animBlockWeight = (el) => {
+export const blockWeightSlideIn = (el) => {
     const tl = gsap.timeline({
         ease: 'power2.out'
     })
     .to(el, {
-        duration: 0.25,
+        duration: 0.2,
         height: '3.5rem'
     })
     .to(el, {
-        duration: 0.5,
-        opacity: 1,
+        duration: 0.35,
         xPercent: -100
     }, '-=0.1')
+    .to(el, {
+        duration: 0.2,
+        opacity: 1,
+        xPercent: -100
+    }, '-=0.25')
+}
+
+export const animPalette = (colorPalette) => {
+    const mySvg = document.querySelector('#palette');
+    const spots = mySvg.querySelectorAll('.spots ellipse');
+
+    const tl = gsap.timeline({
+        ease: "power2.in",
+    })
+        .to(spots, {
+            autoAlpha: 0,
+            ease: "power2.out",
+            duration: 0.5
+        })
+        .to(spots, {
+            autoAlpha: 1,
+            scale: 1.4,
+            stagger: 0.2,
+            fill: idx => colorPalette[idx],
+            duration: 1.5
+        });
 }

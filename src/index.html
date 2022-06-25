@@ -21,7 +21,9 @@
 </head>
 
 <body>
-    <main></main>
+    <main>
+        <h1>Generative art</h1>
+    </main>
     <div id="btnMenu__cont">
         <button id="btnMenu" class="btn__round" aria-describedby="btnMenu-tt">
             <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" class="svg-icon">
@@ -37,7 +39,7 @@
     </div>
     <aside class="">
         <div class="aside__cont">
-            <header>Settings</header>
+            <h2>Settings</h2>
             <article class="btns">
                 <div>
                     <button class="btn" id="drawSVG" aria-describedby="drawSVG-tt">
@@ -50,7 +52,7 @@
                         </svg>
                         <span class="btn__text">Draw SVG</span>
                     </button>
-                    <div id="drawSVG-tt" class="tooltip" role="tooltip">Draw SVG</div>
+                    <div id="drawSVG-tt" class="tooltip" role="tooltip">Generate a new random image</div>
                 </div>
                 <div>
                     <button class="btn" id="exportSVG" aria-describedby="exportSVG-tt">
@@ -62,11 +64,12 @@
                         </svg>
                         <span class="btn__text">Export SVG</span>
                     </button>
-                    <div id="exportSVG-tt" class="tooltip" role="tooltip">Save SVG File</div>
+                    <div id="exportSVG-tt" class="tooltip" role="tooltip">Save to SVG file</div>
                 </div>
             </article>
             <article class="grid__size">
-                <header>Grid's Dimensions</header>
+                <h3>Grid's Dimensions</h3>
+                <p>Set the grid dimensions in blocks's term. Each block is a square</p>
                 <fieldset>
                     <div>
                         <label for="numCols">Width:</label><input type="number" data-var="numCols" id="numCols">
@@ -77,7 +80,8 @@
                 </fieldset>
             </article>
             <article class="types">
-                <header>Blocks Types</header>
+                <h3>Blocks Types</h3>
+                <p>Click on the blocks you wish to utilize.</p>
                 <div class="select-block-type">
                     <template id="bloc-type__tmpl">
                         <div class="block-type__cont">
@@ -89,7 +93,8 @@
                 </div>
             </article>
             <article class="weights">
-                <header>Blocks Weights</header>
+                <h3>Blocks Weights</h3>
+                <p>Determine the frequency of each type of block. Percentages represent the probability of being drawn and must add up to 100.</p>
                 <div class="block-weight__cont">
                     <template id="bloc-weight__tmpl">
                         <label>
@@ -123,7 +128,7 @@
                             </svg>
                             <span class="btn__text">Randomize</span>
                         </button>
-                        <div id="random-weights-tt" class="tooltip" role="tooltip">Assign random value for each weight
+                        <div id="random-weights-tt" class="tooltip" role="tooltip">Assign random value to each weight
                         </div>
                         <span>Total:</span>
                         <output></output>
@@ -131,7 +136,8 @@
                 </div>
             </article>
             <article class="palette">
-                <header>Color Palette</header>
+                <h3>Color Palette</h3>
+                <p>Click on a color swatch to adjust its value, or the button to choose a random palette.</p>
                 <div>
                     <div class="clr__inputs">
                         <input type="color" data-idx="0">
@@ -164,13 +170,21 @@
                         <circle cx="11" cy="11" r="2"></circle>
                     </svg>
                 </button>
-                <div id="drawSVG__v-tt" class="tooltip" role="tooltip">Draw SVG</div>
+                <div id="drawSVG__v-tt" class="tooltip" role="tooltip">Generate a new image</div>
             </div>
             <div>
                 <button id="newPalette__v" class="btn btn__round" aria-describedby="newPalette__v-tt">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="svg-icon">
-                        <polyline points="23 4 23 10 17 10"></polyline>
-                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" class="svg-icon" id="palette">
+                        <g>
+                            <path
+                                d="M11.79,1.33C7.23,1.33,1.32,5.26,1.32,11.82c0,5.53,4.4,10.85,10.22,10.85,2.39,0,2.49-.64,2.88-1.41.84-1.65-1.69-4.65-.32-6,1.92-1.88,8.4,1.17,8.58-3.3A10.71,10.71,0,0,0,11.79,1.33Z" />
+                            <g class="spots">
+                                <ellipse cx="6.9" cy="15.4" rx="1.44" ry="1.44" />
+                                <ellipse cx="6.14" cy="9.38" rx="1.59" ry="1.59" />
+                                <ellipse cx="11.95" cy="5.35" rx="1.7" ry="1.7" />
+                                <ellipse cx="17.35" cy="8.1" rx="1.49" ry="1.49" />
+                            </g>
+                        </g>
                     </svg>
                 </button>
                 <div id="newPalette__v-tt" class="tooltip" role="tooltip">Load a new palette</div>
