@@ -12,17 +12,23 @@ import { random } from "https://cdn.skypack.dev/@georgedoescode/generative-utils
 export const fn = (group, x, y, w, foreground, background, randomize = false) => { }
 
 * Functions:
-*   - drawRect
-*   - drawCircle
-*   - drawOppositeCircles
-*   - drawFacingCircles
-*   - drawSemiCircle
-*   - drawDisc
-*   - drawOppositeTriangles
-*   - drawTriangles
-*   - drawLeaf
-*   - drawRoundedBar
 *   - drawArc
+*   - drawCircle
+*   - drawDiamond
+*   - drawDisc
+*   - drawDroplet
+*   - drawFacingCircles
+*   - drawLeaf
+*   - drawOppositeCircles
+*   - drawOppositeTriangles
+*   - drawPoints
+*   - drawQuarterRing
+*   - drawRect
+*   - drawRoundedBar
+*   - drawRoundedBarSemiCircle
+*   - drawSemiCircle
+*   - drawTriangles
+*   - drawWave
 */
 
 export const drawRect = (group, x, y, w, foreground, background, randomize = false) => {
@@ -164,5 +170,75 @@ export const drawRoundedBarSemiCircle = (group, x, y, w, foreground, background,
     if (randomize) {
         const dir = random(0, 3, true);
         group.rotate(dir * 90);
+    }
+}
+
+export const drawDroplet = (group, x, y, w, foreground, background, randomize = false) => {
+    group.addClass('block droplet');
+    group.rect(w, w).fill(background).move(x, y);
+    // group for the drop
+    const droplet = group.group();
+    droplet.path(`m${x} ${y + w / 2} a${w / 2} ${w / 2} 0 1 1 ${w / 2} ${w / 2} h${-w / 2} v${-w / 2}  z`).fill(foreground);
+    if (randomize) {
+        const dir = random(0, 3, true);
+        group.rotate(dir * 90);
+    }
+}
+
+export const drawQuarterRing = (group, x, y, w, foreground, background, randomize = false) => {
+    group.addClass('block quarter-ring');
+    group.rect(w, w).fill(background).move(x, y);
+    // group for the drop
+    const ring = group.group();
+    ring.path(`m${x} ${y + w} a${w} ${w} 0 0 1 ${w} ${-w} v${w / 2} a${w / 2} ${w / 2} 0 0 0 ${-w / 2} ${w / 2} h${-w / 2} z`).fill(foreground);
+    if (randomize) {
+        const dir = random(0, 3, true);
+        group.rotate(dir * 90);
+    }
+}
+
+export const drawDiamond = (group, x, y, w, foreground, background, randomize = false) => {
+    group.addClass('block diamond');
+    group.rect(w, w).fill(background).move(x, y);
+    const points = [x, y + w / 2, x + w / 2, y, x + w, y + w / 2, x + w / 2, y + w];
+    group.polygon(points).fill(foreground);
+}
+
+export const drawPoints = (group, x, y, w, foreground, background, randomize = false) => {
+    group.addClass('block points');
+    group.rect(w, w).fill(background).move(x, y);
+    const circles = group.group();
+    let u = w / 6;
+    let v = w / 6;
+    for (let i = 1; i < 4; i++) {
+        for (let j = 1; j < 4; j++) {
+            circles.circle(w / 6).fill(foreground).center(x + u, y + v);
+            u += 2 * w / 6;
+        }
+        u = w / 6;
+        v += 2 * w / 6;
+    }
+}
+
+export const drawWave = (group, x, y, w, foreground, background, randomize = false) => {
+    group.addClass('block points');
+    group.rect(w, w).fill(background).move(x, y);
+    const wave = group.group();
+    wave.path(`m${x} ${y + w} q0 -${w/3} ${w/3} -${w/3} q ${w/3} 0 ${w/3} -${w/3} q0 -${w/3} ${w/3} -${w/3} v ${w} z`).fill(foreground);
+    if (randomize) {
+        const dir = random(0, 3, true);
+        group.rotate(dir * 90);
+    }
+}
+
+export const drawStripes = (group, x, y, w, foreground, background, randomize = false) => {
+    group.addClass('block stripes');
+    group.rect(w, w).fill(background).move(x, y);
+    const stripes = group.group();
+    stripes.rect(w, w/6).fill(foreground).move(x, y+w/12);
+    stripes.rect(w, w/6).fill(foreground).move(x, y+(5*w/12));
+    stripes.rect(w, w/6).fill(foreground).move(x, y+(9*w/12));
+    if (randomize) {
+        group.rotate(random(0, 1, true) * 90);
     }
 }

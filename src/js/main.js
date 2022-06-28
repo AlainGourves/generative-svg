@@ -189,19 +189,17 @@ const updateTotalWeight = () => {
 }
 
 const randomizeWeights = () => {
-    let tot = 0;
-    let result = [];
-    activeBlocksWeigths.forEach((_, idx) => {
-        result[idx] = random(0, (1 - tot));
-        tot += result[idx];
-    });
-    // Pour que le total soit bien 1, on calcule le reste et on l'attribue à un des poids
-    const diff = 1 - sumArray(result);
-    result[random(0, result.length - 1, true)] += diff
-    result = shuffleArray(result);
-    activeBlocksWeigths = result;
+    // Les poids sont distribués aléatoirement entre les différents types de blocs
+    // En tirant un index au hasard pour ajouter 1 (répété 100 fois)
+    let myArray = new Array(activeBlocksWeigths.length);
+    myArray.fill(0);
+    for (let i = 0; i < 100; i++) {
+        myArray[random(0,activeBlocksWeigths.length-1, true)] += 1;
+    }
+    // divise par 100 pour ramener à l'intervale [0,1]
+    activeBlocksWeigths = myArray.map(v => v/100);
     weigthSliders.forEach((s, idx) => {
-        s.value = result[idx];
+        s.value = activeBlocksWeigths[idx];
     });
     updateTotalWeight();
     drawSVG();
