@@ -53,8 +53,11 @@ const drawSVG = () => {
     const svg = document.querySelector('main svg');
     if (svg) svg.remove();
 
-    const draw = SVG() // create the svg
-        .addTo('main')
+    const draw = SVG(); // create the svg
+    const style = draw.style();
+    colorPalette.forEach((c, idx) => style.rule(`.clr${idx}`, { fill: c }))
+
+    draw.addTo('main')
         .size('100%', '100%')
         .viewbox(`0 0 ${numCols * squareSize} ${numRows * squareSize}`);
 
@@ -194,10 +197,10 @@ const randomizeWeights = () => {
     let myArray = new Array(activeBlocksWeigths.length);
     myArray.fill(0);
     for (let i = 0; i < 100; i++) {
-        myArray[random(0,activeBlocksWeigths.length-1, true)] += 1;
+        myArray[random(0, activeBlocksWeigths.length - 1, true)] += 1;
     }
     // divise par 100 pour ramener à l'intervale [0,1]
-    activeBlocksWeigths = myArray.map(v => v/100);
+    activeBlocksWeigths = myArray.map(v => v / 100);
     weigthSliders.forEach((s, idx) => {
         s.value = activeBlocksWeigths[idx];
     });

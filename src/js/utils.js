@@ -68,13 +68,16 @@ const setRootColors = (clrs) => {
     })
 }
 
-export const getTwoColors = (colors) => {
-    let colorList = [...colors];
-    const colIdx = random(0, colorList.length - 1, true); // true: gives an integer
-    const background = colorList[colIdx];
-    // remove this color from the list
-    colorList.splice(colIdx, 1);
-    const foreground = random(colorList);
+export const getTwoColors = (colorPalette) => {
+    // la fonction renvoie l'index des 2 couleurs dans colorPalette pour pouvoir utiliser des classes ensuite pour colorier les blocs
+    let colIdx = random(0, colorPalette.length - 1, true); // true: gives an integer
+    const background = colIdx;
+    let foreground = undefined;
+    while (foreground === undefined) {
+        // fait en sorte que les 2 couleurs soient différentes
+        let idx = random(0, colorPalette.length - 1, true);
+        if (idx !== background) foreground = idx;
+    }
     return { foreground, background };
 }
 

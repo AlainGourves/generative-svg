@@ -15,7 +15,7 @@ $title-colors: ("#9dc9ac", "#fffec7", "#f56218", "#ff9d2e", "#919167");
 :root {
     @for $i from 1 through length($title-defaults) {
         --clr#{$i}: #{unquote(nth($title-defaults, $i))};
-      }
+    }
 
     --clr-primary: #eecb11;
     --bg-inner: white;
@@ -27,8 +27,6 @@ $title-colors: ("#9dc9ac", "#fffec7", "#f56218", "#ff9d2e", "#919167");
     --block-w: 3.5rem; // width of block type
     --bdr-rad: .25rem;
 
-    --clr-block-sample-bg: #3a6f06;
-    --clr-block-sample-fg: var(--clr-primary);
 }
 
 html {

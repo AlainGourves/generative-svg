@@ -7,9 +7,20 @@ svg {
     shape-rendering: crispEdges;
 }
 
-aside svg {
-    shape-rendering: geometricPrecision;
+svg {
+    // Ces classes servent à colorier les icônes des blocs (cf. createSVGLibrary() dans init.js)
+    & .clr8 {
+        fill: #3a6f06;
+    }
+
+    & .clr9 {
+        fill: var(--clr-primary);
+    }
 }
+
+aside svg {
+        shape-rendering: geometricPrecision;
+    }
 
 .svg-icon {
     width: 1.5rem;
@@ -29,7 +40,7 @@ aside svg {
     fill: #fff;
 }
 
-#palette .spots{
+#palette .spots {
     stroke: none;
     fill: #fff;
 }

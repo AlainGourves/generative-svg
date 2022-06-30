@@ -21,15 +21,15 @@ const createSVGLibrary = () => {
         .attr('preserveAspectRatio', 'xMidYMid meet')
         .viewbox(`0 0 20 20`);
 
-    const bg = window.getComputedStyle(document.documentElement).getPropertyValue('--clr-block-sample-bg');
-    const fg = window.getComputedStyle(document.documentElement).getPropertyValue('--clr-block-sample-fg');
+    // const bg = window.getComputedStyle(document.documentElement).getPropertyValue('--clr-block-sample-bg');
+    // const fg = window.getComputedStyle(document.documentElement).getPropertyValue('--clr-block-sample-fg');
     const defs = library.defs()
     for (let i = 0; i < drawFunctions.length; i++) {
         const group = defs.group();
         let id = getBlockId(drawFunctions[i]);
         group.attr('id', id);
         group.element('desc').words(id);
-        blockFn[drawFunctions[i]](group, 0, 0, 20, fg, bg);
+        blockFn[drawFunctions[i]](group, 0, 0, 20, 9, 8);
     }
 }
 
