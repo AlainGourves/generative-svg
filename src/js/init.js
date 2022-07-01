@@ -25,10 +25,10 @@ const createSVGLibrary = () => {
     // const fg = window.getComputedStyle(document.documentElement).getPropertyValue('--clr-block-sample-fg');
     const defs = library.defs()
     for (let i = 0; i < drawFunctions.length; i++) {
-        const group = defs.group();
+        const group = defs.symbol();
         let id = getBlockId(drawFunctions[i]);
         group.attr('id', id);
-        group.element('desc').words(id);
+        group.element('desc').words(`${id} icon`);
         blockFn[drawFunctions[i]](group, 0, 0, 20, 9, 8);
     }
 }
@@ -41,6 +41,7 @@ export const init = () => {
         const clone = blockTypeTemplate.content.cloneNode(true);
         const check = clone.querySelector('input[type=checkbox]');
         const label = clone.querySelector('label');
+        label.tabIndex="0"
         const block = clone.querySelector('.block-type');
         const name = `type${idx}`
         check.id = name;

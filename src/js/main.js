@@ -26,14 +26,16 @@ let numRows = 6; // height
 const squareSize = 40;
 
 const btnMenu = document.querySelector('#btnMenu');
-const settings = document.querySelector('aside');
+const settings = document.querySelector('.aside__cont');
 const btnDraw = settings.querySelector('#drawSVG');
 const btnExport = settings.querySelector('#exportSVG');
 const btnNewPalette = settings.querySelector('#newPalette');
-const btnDrawV = settings.querySelector('#drawSVG__v');
-const btnExportV = settings.querySelector('#exportSVG__v');
-const btnNewPaletteV = settings.querySelector('#newPalette__v');
 const btnRandomWeights = settings.querySelector('#random-weights');
+
+const btnsVert = document.querySelectorAll('.btns__vert button');
+const btnDrawV = btnsVert[0];
+const btnNewPaletteV = btnsVert[1];
+const btnExportV = btnsVert[2];
 
 
 let colorPalette = [];
@@ -212,22 +214,32 @@ const newPalette = (ev) => {
     getColorPalette()
         .then(result => colorPalette = result)
         .then(colorPalette => {
+            // update SVG's style element with new colors
+            colorPalette.forEach((c,idx)=> {
+                SVG('main svg').style(`.clr${idx}`, {fill:c})
+            })
             updateSwatches(colorPalette);
-            drawSVG();
         });
 }
 
 const toggleMenu = () => {
-    const btns = settings.querySelectorAll('.btns button');
-    if (settings.classList.contains('open')) {
+    // list all focusable elements in .aside__cont
+    const focusable = settings.querySelectorAll('[tabindex], button, input');
+    if (settings.parentElement.classList.contains('open')) {
+        // Hiding settings
+        focusable.forEach(el => el.tabIndex='-1'); // makes element not focusable when settings are hidden
+        btnsVert.forEach(el => el.tabIndex='0'); // makes vertical buttons focusable when settings are hidden
         btnMenuClose(prefersReducedMotion)
-        settings.classList.remove('open')
+        settings.parentElement.classList.remove('open')
     } else {
+        // Showing settings
+        focusable.forEach(el => el.tabIndex='0'); // makes element focusable when settings are visible
+        btnsVert.forEach(el => el.tabIndex='-1'); // makes vertical buttons not focusable when settings are visible
         btnMenuOpen(prefersReducedMotion)
         if (!prefersReducedMotion) {
             articleSlideIn()
         }
-        settings.classList.add('open')
+        settings.parentElement.classList.add('open')
     }
 }
 
@@ -239,7 +251,6 @@ window.addEventListener("load", e => {
         prefersReducedMotion = !ev.target.matches;
         console.log("prefersReducedMotion change", prefersReducedMotion)
     });
-    console.log("reduced motion", prefersReducedMotion); // TODO: à virer
 
     const paletteContainer = document.querySelector('.clr__inputs');
     paletteContainer.addEventListener('change', ev => {
@@ -270,6 +281,18 @@ window.addEventListener("load", e => {
         }
     });
 
+    // being able to select a block type by focusing it and hitting 'Enter' key
+    typesContainer?.addEventListener('keydown', (ev) => {
+        if(ev.key === 'Enter' && settings.parentElement.classList.contains('open')) {
+            const target = ev.target;
+            if (target?.control) {
+                // ev.target === label & target.control === checkbox
+                target.control.checked = !target.control.checked;
+                target.control.dispatchEvent(new Event('change', {bubbles: true}));
+            }
+        }
+    });
+
     // event listener for weights change
     weightsContainer.addEventListener('input', (ev) => {
         if (ev.target.dataset.function) {
@@ -279,7 +302,7 @@ window.addEventListener("load", e => {
 
     // Event listener for ESC key
     window.addEventListener('keydown', (ev) => {
-        if (ev.key === 'Escape' && settings.classList.contains('open')) {
+        if (ev.key === 'Escape' && settings.parentElement.classList.contains('open')) {
             toggleMenu();
         }
     });
@@ -297,7 +320,6 @@ window.addEventListener("load", e => {
 
     btnRandomWeights?.addEventListener('mouseenter', randomWeightsAnim);
     btnRandomWeights?.addEventListener('mouseleave', randomWeightsAnim);
-    // btnRandomWeights?.addEventListener('focusout', TODO);
     btnNewPaletteV?.addEventListener('mouseenter', ev => animPalette(colorPalette));
 
 
@@ -309,6 +331,8 @@ window.addEventListener("load", e => {
     const slider = weightsContainer.querySelector(`[data-function='${defaultType}']`);
     slider.value = 1;
     slider.dispatchEvent(new Event('input', { bubbles: true }));
+
+    toggleMenu();
 
     // Color palette
     getColorPalette()

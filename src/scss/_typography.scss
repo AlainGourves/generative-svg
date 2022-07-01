@@ -14,6 +14,11 @@ h3 {
     color: var(--clr-primary);
 }
 
+main h1,
+h2 {
+    font-variant: small-caps;
+}
+
 h1 {
     font-size: 6vw;
     line-height: 1;

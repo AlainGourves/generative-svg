@@ -111,22 +111,17 @@ export const randomWeightsAnim = (ev) => {
 }
 
 export const blockWeightSlideIn = (el) => {
-    const tl = gsap.timeline({
-        ease: 'power2.out'
-    })
+    const tl = gsap.timeline()
     .to(el, {
         duration: 0.2,
         height: '3.5rem'
     })
     .to(el, {
-        duration: 0.35,
-        xPercent: -100
-    }, '-=0.1')
-    .to(el, {
-        duration: 0.2,
+        duration: 0.352,
+        ease: 'back.out(1.2)',
         opacity: 1,
         xPercent: -100
-    }, '-=0.25')
+    },)
 }
 
 export const animPalette = (colorPalette) => {
