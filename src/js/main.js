@@ -268,10 +268,14 @@ window.addEventListener("load", e => {
     inputs[1].value = numRows;
     gridSize.addEventListener('change', ev => {
         // add .alert class if input is not valid
-        ev.target.classList.toggle('alert', ev.target.validity.badInput);
+        if (ev.target.validity.badInput){
+            ev.target.classList.toggle('alert', ev.target.validity.badInput);
+            return;
+        }
         const newVal = parseInt(ev.target.value);
         if (ev.target.dataset.var == 'numCols') numCols = newVal;
         if (ev.target.dataset.var == 'numRows') numRows = newVal;
+        drawSVG();
     });
 
     // event listener for clicks on checkboxes -> select block type
@@ -346,6 +350,7 @@ window.addEventListener("load", e => {
                 document.documentElement.style.setProperty('--bg-outer', bgOuter);
             }
             updateSwatches(colorPalette);
+            document.querySelector('#loading').remove();
             drawSVG();
         });
 

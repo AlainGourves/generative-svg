@@ -8,6 +8,7 @@ svg {
 }
 
 svg {
+
     // Ces classes servent à colorier les icônes des blocs (cf. createSVGLibrary() dans init.js)
     & .clr8 {
         fill: #3a6f06;
@@ -18,9 +19,10 @@ svg {
     }
 }
 
-aside svg {
-        shape-rendering: geometricPrecision;
-    }
+aside svg,
+main svg path {
+    shape-rendering: geometricPrecision;
+}
 
 .svg-icon {
     width: 1.5rem;
@@ -28,7 +30,7 @@ aside svg {
     max-width: fit-content;
     fill: none;
     stroke: #fff;
-    stroke-width: 2;
+    stroke-width: 1.5;
     stroke-linecap: round;
     stroke-linejoin: round;
     stroke-miterlimit: 1;

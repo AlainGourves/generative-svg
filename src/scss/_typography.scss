@@ -6,7 +6,7 @@ body {
     text-rendering: optimizeLegibility;
 }
 
-main h1,
+h1,
 h2,
 h3 {
     font-family: 'Titan One';
@@ -14,7 +14,7 @@ h3 {
     color: var(--clr-primary);
 }
 
-main h1,
+h1,
 h2 {
     font-variant: small-caps;
 }
@@ -44,6 +44,16 @@ button {
 .btn__small,
 .tooltip {
     font-size: .75rem;
+}
+
+.block-weight__cont {
+    & output {
+        font-variant-numeric: tabular-nums;
+    }
+
+    & :not(.block-weight__total) output {
+        font-size: .75rem;
+    }
 }
 
 .block-weight__total {

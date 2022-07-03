@@ -36,7 +36,7 @@ export const getColorPalette = async () => {
     let palettes = JSON.parse(localStorage.getItem('palettes'));
     if (!palettes) {
         try {
-            const res = await fetch("https://unpkg.com/nice-color-palettes@3.0.0/100.json");
+            const res = await fetch("https://unpkg.com/nice-color-palettes@3.0.0/200.json");
             const data = await res.json();
             localStorage.setItem('palettes', JSON.stringify(data));
             const result = await random(data);
@@ -88,14 +88,22 @@ export const updateSwatches = (clrs) => {
 }
 
 export const setBgColors = (palette) => {
+    // tri sur les couleurs (en les convertissant en HSL) pour avoir les 2 dont le S est plus proche de 50% 
+    let clrs = [];
+    palette.forEach((c,idx) => {
+        const obj =tinycolor(c).toHsl();
+        obj.idx = idx;
+        clrs.push(obj);
+    })
+    clrs.sort((a,b)=> Math.abs(a.l - 0.5) - Math.abs(b.l - 0.5))
     // Sets page's background gradient
     const bg = tinycolor
-        .mix(palette[0], palette[1], 50)
+        .mix(clrs[0], clrs[1], 50)
         .desaturate(10)
         .toString();
     // lighter version
     const bgInner = tinycolor(bg)
-        .lighten(10)
+        .lighten(20)
         .toString();
     // darker version
     const bgOuter = tinycolor(bg)

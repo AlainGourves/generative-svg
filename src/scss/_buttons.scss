@@ -38,9 +38,23 @@
         padding: 0;
         display: grid;
         place-content: center;
-        border: none;
+        border: 1px solid hsl(0deg 0% 100% / 75%);
         border-radius: 50%;
-        background-color: #fff2;
+        position: relative;
+        &::after{
+            position: absolute;
+            inset: 0;
+            content: '';
+            border-radius: 50%;
+            background: hsl(0deg 0% 100% / 20%);
+            clip-path: circle(0% at 50% 50%);
+            transition: clip-path .125s ease-out;
+        }
+        &:hover::after{
+            clip-path: circle(100% at 50% 50%);
+            transition: clip-path .25s ease-in;
+        }
+
 
         &:focus-visible {
             outline-offset: 4px;

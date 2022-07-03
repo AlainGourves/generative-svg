@@ -120,7 +120,7 @@ export const blockWeightSlideIn = (el) => {
         duration: 0.352,
         ease: 'back.out(1.2)',
         opacity: 1,
-        xPercent: -100
+        x: 0
     },)
 }
 
