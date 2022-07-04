@@ -34,6 +34,10 @@ button {
     color: inherit;
 }
 
+output {
+    font-variant-numeric: tabular-nums;
+}
+
 .btn,
 .tooltip {
     font-weight: 400;
@@ -47,10 +51,6 @@ button {
 }
 
 .block-weight__cont {
-    & output {
-        font-variant-numeric: tabular-nums;
-    }
-
     & :not(.block-weight__total) output {
         font-size: .75rem;
     }

@@ -20,6 +20,7 @@ svg {
 }
 
 aside svg,
+main svg circle,
 main svg path {
     shape-rendering: geometricPrecision;
 }
@@ -35,6 +36,12 @@ main svg path {
     stroke-linejoin: round;
     stroke-miterlimit: 1;
     vector-effect: non-scaling-stroke; // keeps stroke-weight while scaling
+    pointer-events: none;
+}
+
+.block-weight__cont svg:not(.svg-icon) {
+    width: 2rem;
+    height: 2rem;
 }
 
 #random-weights .tracks rect {

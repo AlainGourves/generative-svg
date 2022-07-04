@@ -3,6 +3,7 @@ import { getColorPalette, getTwoColors, setBgColors, updateSwatches, saveSVGFile
 import { animBgColors, btnMenuOpen, btnMenuClose, randomWeightsAnim, articleSlideIn, blockWeightSlideIn, animPalette } from './animations.js';
 import * as blockFn from './blocks.js';
 import { getBlockId, init } from "./init.js";
+import { createTree } from './tree.js';
 import weightedRandom from './weightedRandom.js';
 
 /*
@@ -27,11 +28,12 @@ const squareSize = 40;
 
 const btnMenu = document.querySelector('#btnMenu');
 const settings = document.querySelector('.aside__cont');
+// Buttons
 const btnDraw = settings.querySelector('#drawSVG');
 const btnExport = settings.querySelector('#exportSVG');
 const btnNewPalette = settings.querySelector('#newPalette');
 const btnRandomWeights = settings.querySelector('#random-weights');
-
+// Vertical Buttons
 const btnsVert = document.querySelectorAll('.btns__vert button');
 const btnDrawV = btnsVert[0];
 const btnNewPaletteV = btnsVert[1];
@@ -42,6 +44,10 @@ let colorPalette = [];
 let activeBlocksTypes = [];
 let activeBlocksWeigths = [];
 
+const gridSize = document.querySelector('.grid');
+// Grid subdivision
+const divideSlider = gridSize.querySelector('.divide-slider');
+let isSubdivision = false;
 const typesContainer = settings.querySelector('.select-block-type');
 const weightsContainer = settings.querySelector('.block-weight__cont');
 const weightsTotal = weightsContainer.querySelector('.block-weight__total');
@@ -63,19 +69,27 @@ const drawSVG = () => {
         .size('100%', '100%')
         .viewbox(`0 0 ${numCols * squareSize} ${numRows * squareSize}`);
 
-    for (let i = 0; i < numCols; i++) {
-        for (let j = 0; j < numRows; j++) {
-            generateLittleBox(draw, i, j);
+    // create the tree
+    const p = (isSubdivision) ? divideSlider.value : 0;
+    const tree = createTree(numCols, numRows, squareSize, p)
+    tree.forEach(block => {
+        if (block.children.length > 0) {
+            const group = draw.group();
+            block.children.forEach(b => {
+                generateLittleBox(group, b.x, b.y, b.w);
+            })
+        } else {
+            generateLittleBox(draw, block.x, block.y, block.w);
         }
-    }
+    })
 }
 
-const generateLittleBox = (root, x, y) => {
+const generateLittleBox = (root, x, y, w) => {
     // get 2 colors
     const { foreground, background } = getTwoColors(colorPalette);
     const blockFunction = weightedRandom(activeBlocksTypes, activeBlocksWeigths);
     const group = root.group();
-    blockFunction(group, x * squareSize, y * squareSize, squareSize, foreground, background, true);
+    blockFunction(group, x, y, w, foreground, background, true);
 }
 
 const updateActiveBlocks = (fn, isActive) => {
@@ -215,8 +229,8 @@ const newPalette = (ev) => {
         .then(result => colorPalette = result)
         .then(colorPalette => {
             // update SVG's style element with new colors
-            colorPalette.forEach((c,idx)=> {
-                SVG('main svg').style(`.clr${idx}`, {fill:c})
+            colorPalette.forEach((c, idx) => {
+                SVG('main svg').style(`.clr${idx}`, { fill: c })
             })
             updateSwatches(colorPalette);
         });
@@ -227,14 +241,14 @@ const toggleMenu = () => {
     const focusable = settings.querySelectorAll('[tabindex], button, input');
     if (settings.parentElement.classList.contains('open')) {
         // Hiding settings
-        focusable.forEach(el => el.tabIndex='-1'); // makes element not focusable when settings are hidden
-        btnsVert.forEach(el => el.tabIndex='0'); // makes vertical buttons focusable when settings are hidden
+        focusable.forEach(el => el.tabIndex = '-1'); // makes element not focusable when settings are hidden
+        btnsVert.forEach(el => el.tabIndex = '0'); // makes vertical buttons focusable when settings are hidden
         btnMenuClose(prefersReducedMotion)
         settings.parentElement.classList.remove('open')
     } else {
         // Showing settings
-        focusable.forEach(el => el.tabIndex='0'); // makes element focusable when settings are visible
-        btnsVert.forEach(el => el.tabIndex='-1'); // makes vertical buttons not focusable when settings are visible
+        focusable.forEach(el => el.tabIndex = '0'); // makes element focusable when settings are visible
+        btnsVert.forEach(el => el.tabIndex = '-1'); // makes vertical buttons not focusable when settings are visible
         btnMenuOpen(prefersReducedMotion)
         if (!prefersReducedMotion) {
             articleSlideIn()
@@ -262,21 +276,35 @@ window.addEventListener("load", e => {
     init();
 
     // Grid dimensions
-    const gridSize = document.querySelector('.grid__size');
-    const inputs = gridSize.querySelectorAll('input[type="number"]');
+    const inputs = gridSize?.querySelectorAll('input[type="number"]');
     inputs[0].value = numCols;
     inputs[1].value = numRows;
     gridSize.addEventListener('change', ev => {
-        // add .alert class if input is not valid
-        if (ev.target.validity.badInput){
-            ev.target.classList.toggle('alert', ev.target.validity.badInput);
-            return;
+        if (ev.target.type === 'number') {
+            // add .alert class if input is not valid
+            if (ev.target.validity.badInput) {
+                ev.target.classList.toggle('alert', ev.target.validity.badInput);
+                return;
+            }
+            const newVal = parseInt(ev.target.value);
+            if (ev.target.dataset.var == 'numCols') numCols = newVal;
+            if (ev.target.dataset.var == 'numRows') numRows = newVal;
+            drawSVG();
         }
-        const newVal = parseInt(ev.target.value);
-        if (ev.target.dataset.var == 'numCols') numCols = newVal;
-        if (ev.target.dataset.var == 'numRows') numRows = newVal;
-        drawSVG();
+
+        if (ev.target.type === 'checkbox') {
+            // Checkbox 'Subdivide'
+            isSubdivision = ev.target.checked;
+            const div = document.querySelector('.divide-slider__cont')
+            div.classList.toggle('open', isSubdivision);
+        }
     });
+
+    divideSlider.addEventListener('input', e => {
+        const output = divideSlider.nextElementSibling;
+        output.textContent = `${divideSlider.value}%`;
+    });
+    divideSlider.addEventListener('change', drawSVG);
 
     // event listener for clicks on checkboxes -> select block type
     typesContainer?.addEventListener('change', (ev) => {
@@ -287,12 +315,12 @@ window.addEventListener("load", e => {
 
     // being able to select a block type by focusing it and hitting 'Enter' key
     typesContainer?.addEventListener('keydown', (ev) => {
-        if(ev.key === 'Enter' && settings.parentElement.classList.contains('open')) {
+        if (ev.key === 'Enter' && settings.parentElement.classList.contains('open')) {
             const target = ev.target;
             if (target?.control) {
                 // ev.target === label & target.control === checkbox
                 target.control.checked = !target.control.checked;
-                target.control.dispatchEvent(new Event('change', {bubbles: true}));
+                target.control.dispatchEvent(new Event('change', { bubbles: true }));
             }
         }
     });

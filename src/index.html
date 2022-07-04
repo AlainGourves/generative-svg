@@ -68,8 +68,8 @@
                     <div id="exportSVG-tt" class="tooltip" role="tooltip">Save to SVG file</div>
                 </div>
             </article>
-            <article class="grid__size">
-                <h3>Grid's Dimensions</h3>
+            <article class="grid">
+                <h3>The grid</h3>
                 <p>Set the grid dimensions in blocks's terms.</p>
                 <fieldset>
                     <div>
@@ -79,6 +79,19 @@
                         <label for="numRows">Height:</label><input type="number" data-var="numRows" id="numRows">
                     </div>
                 </fieldset>
+                <div class="divide">
+                    <div>
+                        <label for="is-divided" class="gui-switch">
+                            Subdivide
+                            <input type="checkbox" role="switch" id="is-divided">
+                        </label>
+                    </div>
+                    <div class="divide-slider__cont slider__parent">
+                        Frequency of division:
+                        <input type="range" class="slider divide-slider" min="0" max="100" step="1" value="0">
+                        <output>0%</output>
+                    </div>
+                </div>
             </article>
             <article class="types">
                 <h3>Blocks Types</h3>
@@ -98,7 +111,7 @@
                 <p>Determine the frequency of each type of block. Percentages represent the probability of being drawn and must add up to 100.</p>
                 <div class="block-weight__cont">
                     <template id="bloc-weight__tmpl">
-                        <label>
+                        <label class="slider__parent">
                             <div class="block-type"></div>
                             <input type="range" class="slider" min="0" max="1" step="0.01">
                             <output></output>

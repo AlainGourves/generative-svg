@@ -10,10 +10,10 @@ $clr-tooltip: hsl(188deg, 10%, 14%);
 
     padding: .5rem;
     // border-radius: .25rem;
-    pointer-events: none;
     z-index: 1;
     opacity: 0;
     transition: opacity .5s linear 2s;
+    pointer-events: none;
     user-select: none;
   }
 

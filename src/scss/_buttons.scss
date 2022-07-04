@@ -22,6 +22,11 @@
     font-weight: 600;
     white-space: nowrap;
     text-overflow: ellipsis;
+    transition: transform .25s ease-in-out;
+
+    &:active{
+        transform: scale(1.5);
+    }
 
     &__small {
         padding: .25em .5em;
@@ -55,12 +60,13 @@
             transition: clip-path .25s ease-in;
         }
 
-
         &:focus-visible {
             outline-offset: 4px;
             outline: thin solid #fff;
         }
+
     }
+
 }
 
 
