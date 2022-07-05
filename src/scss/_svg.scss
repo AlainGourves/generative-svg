@@ -7,16 +7,16 @@ svg {
     shape-rendering: crispEdges;
 }
 
-svg {
 
-    // Ces classes servent à colorier les icônes des blocs (cf. createSVGLibrary() dans init.js)
-    & .clr8 {
-        fill: #3a6f06;
-    }
-
-    & .clr9 {
-        fill: var(--clr-primary);
-    }
+// Ces classes servent à colorier les icônes des blocs (cf. createSVGLibrary() dans init.js)
+// Attention au sélecteur !!! On ne peut pas mélanger un sélecteur pour le DOM avec un sléecteur pour le Shadow DOM (utilisé par les <symbol>)
+// cf : https://stackoverflow.com/questions/48367069/why-is-style-not-applied-to-svg-element-in-firefox
+// ex : avec `svg .clr8`, ça bugue avec Firefox
+.clr8 {
+    fill: #3a6f06;
+}
+.clr9 {
+    fill: var(--clr-primary);
 }
 
 aside svg,

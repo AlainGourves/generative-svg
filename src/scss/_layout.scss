@@ -4,7 +4,6 @@ main {
 }
 
 aside {
-    --menu-w: 4rem;
     position: fixed;
     top: 0;
     right: 0;
@@ -84,9 +83,9 @@ article {
 
     &.btns {
         display: flex;
-        justify-content: space-around;
-        gap: 1rem;
         flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: space-around;
     }
 }
 

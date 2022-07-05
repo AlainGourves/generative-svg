@@ -57,6 +57,7 @@ const blockWeightTemplate = settings.querySelector('#bloc-weight__tmpl');
 let weigthSliders = []; // stores the sliders values
 
 const drawSVG = () => {
+    if (!activeBlocksTypes.length) return;
     // if a previous SVG exists, remove it
     const svg = document.querySelector('main svg');
     if (svg) svg.remove();
@@ -70,10 +71,12 @@ const drawSVG = () => {
         .viewbox(`0 0 ${numCols * squareSize} ${numRows * squareSize}`);
 
     // create the tree
+    // @param p : probability of subdivision [0%,100%]
     const p = (isSubdivision) ? divideSlider.value : 0;
     const tree = createTree(numCols, numRows, squareSize, p)
     tree.forEach(block => {
         if (block.children.length > 0) {
+            // group for subdivised block
             const group = draw.group();
             block.children.forEach(b => {
                 generateLittleBox(group, b.x, b.y, b.w);
@@ -96,7 +99,7 @@ const updateActiveBlocks = (fn, isActive) => {
     if (isActive) {
         // Ajoute fn à activeBlocksTypes (et activeBlocksWeigths)
         activeBlocksTypes.push(blockFn[fn]);
-        activeBlocksWeigths.push(0);
+        activeBlocksWeigths.push((activeBlocksTypes.length === 1) ? 1 : 0); // if there is only 1 block type, its weight is 1
         // et génère le HTML correspondant
         const clone = blockWeightTemplate.content.cloneNode(true);
         const label = clone.querySelector('label');
@@ -107,8 +110,9 @@ const updateActiveBlocks = (fn, isActive) => {
         label.htmlFor = name;
         input.id = name;
         input.dataset.function = fn;
-        input.value = 0;
-        output.textContent = '0%';
+        const v = activeBlocksWeigths[activeBlocksWeigths.length - 1];
+        input.value = v;
+        output.textContent = `${Math.floor(v * 100)}%`
         const draw = SVG().addTo(block).viewbox('0 0 20 20');
         draw.use(getBlockId(fn));
         if (!prefersReducedMotion && activeBlocksTypes.length > 1) {
@@ -230,7 +234,7 @@ const newPalette = (ev) => {
         .then(colorPalette => {
             // update SVG's style element with new colors
             colorPalette.forEach((c, idx) => {
-                SVG('main svg').style(`.clr${idx}`, { fill: c })
+                SVG('main svg').style(`.clr${idx}`, { fill: c });
             })
             updateSwatches(colorPalette);
         });
@@ -271,6 +275,7 @@ window.addEventListener("load", e => {
         const idx = ev.target.dataset.idx;
         const newVal = ev.target.value;
         colorPalette[idx] = newVal;
+        SVG('main svg').style(`.clr${idx}`, { fill: newVal })
     });
 
     init();
@@ -295,6 +300,10 @@ window.addEventListener("load", e => {
         if (ev.target.type === 'checkbox') {
             // Checkbox 'Subdivide'
             isSubdivision = ev.target.checked;
+            if (!isSubdivision) {
+                divideSlider.value = 0;
+                drawSVG();
+            }
             const div = document.querySelector('.divide-slider__cont')
             div.classList.toggle('open', isSubdivision);
         }
@@ -361,7 +370,6 @@ window.addEventListener("load", e => {
     checkbox.checked = true;
     checkbox.dispatchEvent(new Event('change', { bubbles: true }));
     const slider = weightsContainer.querySelector(`[data-function='${defaultType}']`);
-    slider.value = 1;
     slider.dispatchEvent(new Event('input', { bubbles: true }));
 
     toggleMenu();

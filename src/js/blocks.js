@@ -131,18 +131,14 @@ export const drawTriangles = (group, x, y, w, foreground, background, randomize 
 export const drawLeaf = (group, x, y, w, foreground, background, randomize = false) => {
     // group.addClass('block leaf');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
-    // group for the leaf
-    const leafGroup = group.group();
-    leafGroup.path(`m${x} ${y} h${w / 2} a${w / 2} ${w / 2} 0 0 1 ${w / 2} ${w / 2} v${w / 2} h${-w / 2} a${w / 2} ${w / 2} 0 0 1 ${-w / 2} ${-w / 2} v${-w / 2}  z`).addClass(`clr${foreground}`);
-    if (randomize && random(0, 1, true)) leafGroup.rotate(90)
+    group.path(`m${x} ${y} h${w / 2} a${w / 2} ${w / 2} 0 0 1 ${w / 2} ${w / 2} v${w / 2} h${-w / 2} a${w / 2} ${w / 2} 0 0 1 ${-w / 2} ${-w / 2} v${-w / 2}  z`).addClass(`clr${foreground}`);
+    if (randomize && random(0, 1, true)) group.rotate(90)
 }
 
 export const drawRoundedBar = (group, x, y, w, foreground, background, randomize = false) => {
     // group.addClass('block rounded-bar');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
-    // group for the leaf
-    const roundedBarGroup = group.group();
-    roundedBarGroup.path(`m${x} ${y} a${w / 2} ${w / 2} 0 0 1 ${w / 2} ${w / 2} v${w / 2} h${-w / 2} v${-w}  z`).addClass(`clr${foreground}`);
+    group.path(`m${x} ${y} a${w / 2} ${w / 2} 0 0 1 ${w / 2} ${w / 2} v${w / 2} h${-w / 2} v${-w}  z`).addClass(`clr${foreground}`);
     if (randomize) {
         const dir = random(0, 3, true);
         group.rotate(dir * 90);
@@ -176,9 +172,7 @@ export const drawRoundedBarSemiCircle = (group, x, y, w, foreground, background,
 export const drawDroplet = (group, x, y, w, foreground, background, randomize = false) => {
     // group.addClass('block droplet');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
-    // group for the drop
-    const droplet = group.group();
-    droplet.path(`m${x} ${y + w / 2} a${w / 2} ${w / 2} 0 1 1 ${w / 2} ${w / 2} h${-w / 2} v${-w / 2}  z`).addClass(`clr${foreground}`);
+    group.path(`m${x} ${y + w / 2} a${w / 2} ${w / 2} 0 1 1 ${w / 2} ${w / 2} h${-w / 2} v${-w / 2}  z`).addClass(`clr${foreground}`);
     if (randomize) {
         const dir = random(0, 3, true);
         group.rotate(dir * 90);
@@ -188,9 +182,7 @@ export const drawDroplet = (group, x, y, w, foreground, background, randomize = 
 export const drawQuarterRing = (group, x, y, w, foreground, background, randomize = false) => {
     // group.addClass('block quarter-ring');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
-    // group for the drop
-    const ring = group.group();
-    ring.path(`m${x} ${y + w} a${w} ${w} 0 0 1 ${w} ${-w} v${w / 2} a${w / 2} ${w / 2} 0 0 0 ${-w / 2} ${w / 2} h${-w / 2} z`).addClass(`clr${foreground}`);
+    group.path(`m${x} ${y + w} a${w} ${w} 0 0 1 ${w} ${-w} v${w / 2} a${w / 2} ${w / 2} 0 0 0 ${-w / 2} ${w / 2} h${-w / 2} z`).addClass(`clr${foreground}`);
     if (randomize) {
         const dir = random(0, 3, true);
         group.rotate(dir * 90);
@@ -223,8 +215,7 @@ export const drawPoints = (group, x, y, w, foreground, background, randomize = f
 export const drawWave = (group, x, y, w, foreground, background, randomize = false) => {
     // group.addClass('block points');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
-    const wave = group.group();
-    wave.path(`m${x} ${y + w} q0 -${w/3} ${w/3} -${w/3} q ${w/3} 0 ${w/3} -${w/3} q0 -${w/3} ${w/3} -${w/3} v ${w} z`).addClass(`clr${foreground}`);
+    group.path(`m${x} ${y + w} q0 -${w/3} ${w/3} -${w/3} q ${w/3} 0 ${w/3} -${w/3} q0 -${w/3} ${w/3} -${w/3} v ${w} z`).addClass(`clr${foreground}`);
     if (randomize) {
         const dir = random(0, 3, true);
         group.rotate(dir * 90);
