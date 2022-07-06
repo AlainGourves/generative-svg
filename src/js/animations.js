@@ -16,25 +16,22 @@ export const btnMenuOpen = (prefersReducedMotion) => {
             ease: 'power2.out'
         }
     })
-    .to('#btnMenu', { rotate: 180 })
-    .to(lines[0], {
-        transformOrigin: '0 0',
-        // svgOrigin: '2px 2px',
-        rotate: 45,
-        scaleX: Math.sqrt(2)
-    }, 0)
-    .to(lines[1], {
-        transformOrigin: '50% 50%',
-        // svgOrigin: '12px 12px',
-        scale: 0,
-        ease: 'back.out(1.5)'
-    }, 0)
-    .to(lines[2], {
-        transformOrigin: '0 100%',
-        // svgOrigin: '2px 22px',
-        rotate: -45,
-        scaleX: Math.sqrt(2)
-    }, 0)
+        .to('#btnMenu', { rotate: 180 })
+        .to(lines[0], {
+            transformOrigin: '0 0',
+            rotate: 45,
+            scaleX: Math.sqrt(2)
+        }, 0)
+        .to(lines[1], {
+            transformOrigin: '50% 50%',
+            scale: 0,
+            ease: 'back.out(1.5)'
+        }, 0)
+        .to(lines[2], {
+            transformOrigin: '0 100%',
+            rotate: -45,
+            scaleX: Math.sqrt(2)
+        }, 0)
     return tl;
 }
 export const btnMenuClose = (prefersReducedMotion) => {
@@ -93,11 +90,11 @@ export const randomWeightsAnim = (ev) => {
             }
         }
     })
-    .to(circles, {
-        attr: {
-            cx: (idx) => pos[idx],
-        }
-    })
+        .to(circles, {
+            attr: {
+                cx: (idx) => pos[idx],
+            }
+        })
         .to(circlesMask, {
             attr: {
                 cx: (idx) => pos[idx],
@@ -112,16 +109,16 @@ export const randomWeightsAnim = (ev) => {
 
 export const blockWeightSlideIn = (el) => {
     const tl = gsap.timeline()
-    .to(el, {
-        duration: 0.2,
-        height: '3.5rem'
-    })
-    .to(el, {
-        duration: 0.352,
-        ease: 'back.out(1.2)',
-        opacity: 1,
-        x: 0
-    },)
+        .to(el, {
+            duration: 0.2,
+            height: '3.5rem'
+        })
+        .to(el, {
+            duration: 0.352,
+            ease: 'back.out(1.2)',
+            opacity: 1,
+            x: 0
+        })
 }
 
 export const animPalette = (colorPalette) => {
@@ -143,4 +140,34 @@ export const animPalette = (colorPalette) => {
             fill: idx => colorPalette[idx],
             duration: 1.5
         });
+}
+
+export const animArrow = (arrow) => {
+    const tl = gsap.timeline({
+        ease: "power2.in",
+        id: "arrowYoyo" // anim UUID (allows to target the animation with `gsap.getById(id)`)
+    })
+        .to(arrow, {
+            opacity: 1,
+            duration: 2.5,
+        })
+        .fromTo(arrow, {
+            y: "-=16"
+        }, {
+            yoyoEase: "power2.out",
+            repeat: -1,
+            duration: 1,
+            y: "+=72",
+        }, "-0.2")
+}
+
+export const animArrowFadeOut = (arrow)=>{
+    const tl = gsap.timeline()
+    tl.to(arrow, {
+        opacity: 0,
+        onComplete: function() {
+            const anim = gsap.getById('arrowYoyo');
+            anim.kill();
+        }
+    }, 0.5);
 }

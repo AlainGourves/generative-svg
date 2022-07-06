@@ -88,7 +88,7 @@ export const updateSwatches = (clrs) => {
 }
 
 export const setBgColors = (palette) => {
-    // tri sur les couleurs (en les convertissant en HSL) pour avoir les 2 dont le S est plus proche de 50% 
+    // tri sur les couleurs (en les convertissant en HSL) pour avoir les 2 dont le S est plus proche de 50%
     let clrs = [];
     palette.forEach((c,idx) => {
         const obj =tinycolor(c).toHsl();
@@ -110,4 +110,24 @@ export const setBgColors = (palette) => {
         .darken(10)
         .toString();
     return [bgInner, bgOuter];
+}
+
+// Draw & insert a SVG arrow to draw attention on blocks' weights
+export const drawArrow = () => {
+    const weightsContainer = document.querySelector('.weights');
+    const rectCont = weightsContainer.getBoundingClientRect();
+    const h3 = weightsContainer.querySelector('h3');
+    const rectH3 = h3.getBoundingClientRect();
+    const x = (rectCont.width / 2);
+    const y = Math.floor((rectH3.y - rectCont.y) + (rectH3.height / 2));
+
+    const draw = SVG()
+        .addTo(weightsContainer)
+        .viewbox(`0 0 40 40`)
+        .attr('id', 'arrow-weights')
+    const icon = draw.use('big-arrow')
+
+    icon.size(40, 40)
+    draw.css('left', x)
+        .css('top', y);
 }

@@ -23,8 +23,9 @@ $title-colors: ("#9dc9ac", "#fffec7", "#f56218", "#ff9d2e", "#919167");
     --clr-primary-h: 50;
     --clr-primary-s: 87%;
     --clr-primary-l: 50%;
-    --bg-inner: white;
-    --bg-outer: white;
+    --clr-alert: hsl(23, 80%, 50%);
+    --bg-inner: #c2c2c2;
+    --bg-outer: #2b2b2b;
     --hue-aside: 188deg;
     --bg-aside: hsl(var(--hue-aside), 10%, 30%);
     --bg-aside-lighter: hsl(var(--hue-aside), 10%, 40%);
@@ -43,12 +44,7 @@ body {
     min-height: 100vh;
     min-height: -webkit-fill-available;
     @include grid-center;
-    background-image:
-    url('/bg.svg'),
-    radial-gradient(var(--bg-inner) 0%, var(--bg-outer) 100%);
-    background-position: bottom left, 50% 50%;
-    background-repeat: no-repeat;
-    background-blend-mode: overlay;
+    background-image: radial-gradient(var(--bg-inner) 0%, var(--bg-outer) 100%);
 }
 
 
@@ -58,6 +54,6 @@ output {
 }
 
 .alert {
-    color: darkorange;
+    color: var(--clr-alert);
     transition: color .25s linear;
 }

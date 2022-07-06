@@ -16,13 +16,10 @@ const createSVGLibrary = () => {
     // Create a SVG with defs for all blocks types
     const library = SVG()
         .addTo('body')
-        .width(20)
-        .height(20)
+        .size(40, 40)
         .attr('preserveAspectRatio', 'xMidYMid meet')
-        .viewbox(`0 0 20 20`);
+        .viewbox(`0 0 40 40`);
 
-    // const bg = window.getComputedStyle(document.documentElement).getPropertyValue('--clr-block-sample-bg');
-    // const fg = window.getComputedStyle(document.documentElement).getPropertyValue('--clr-block-sample-fg');
     const defs = library.defs()
     for (let i = 0; i < drawFunctions.length; i++) {
         const group = defs.symbol();
@@ -31,6 +28,11 @@ const createSVGLibrary = () => {
         group.element('desc').words(`${id} icon`);
         blockFn[drawFunctions[i]](group, 0, 0, 20, 9, 8);
     }
+
+    // Big arrow
+    const arrow = defs.symbol();
+    arrow.attr('id', 'big-arrow');
+    arrow.path('m 39.5 9 l -12.5 2 l 1 -10 h -16 l 1 10 l -12.5 -2 l -0.5 0.5 c 6 6.5 19.5 28 20 28 s 14 -21.5 20 -28 l -0.5 -0.5 z').addClass('bobby');
 }
 
 export const init = () => {
@@ -41,7 +43,7 @@ export const init = () => {
         const clone = blockTypeTemplate.content.cloneNode(true);
         const check = clone.querySelector('input[type=checkbox]');
         const label = clone.querySelector('label');
-        label.tabIndex="0"
+        label.tabIndex = "0"
         const block = clone.querySelector('.block-type');
         const name = `type${idx}`
         check.id = name;
