@@ -1,6 +1,6 @@
 import { random } from "https://cdn.skypack.dev/@georgedoescode/generative-utils@1.0.38";
-import { getColorPalette, getTwoColors, setBgColors, updateSwatches, saveSVGFile, sumArray, shuffleArray } from './utils.js';
-import { animBgColors, btnMenuOpen, btnMenuClose, randomWeightsAnim, articleSlideIn, blockWeightSlideIn, animPalette } from './animations.js';
+import { getColorPalette, getTwoColors, setBgColors, updateSwatches, saveSVGFile, sumArray, drawArrow } from './utils.js';
+import { animBgColors, btnMenuOpen, btnMenuClose, randomWeightsAnim, articleSlideIn, blockWeightSlideIn, animPalette, animArrow, animArrowFadeOut } from './animations.js';
 import * as blockFn from './blocks.js';
 import { getBlockId, init } from "./init.js";
 import { createTree } from './tree.js';
@@ -263,7 +263,7 @@ const toggleMenu = () => {
 }
 
 window.addEventListener("load", e => {
-
+    // Prefers Reduced Motion ********************************************
     const mediaQueryMotion = window.matchMedia('(prefers-reduced-motion: no-preference)');
     prefersReducedMotion = !mediaQueryMotion.matches;
     mediaQueryMotion.addEventListener('change', ev => {
@@ -271,6 +271,7 @@ window.addEventListener("load", e => {
         console.log("prefersReducedMotion change", prefersReducedMotion)
     });
 
+    // Palette listener ********************************************
     const paletteContainer = document.querySelector('.clr__inputs');
     paletteContainer.addEventListener('change', ev => {
         const idx = ev.target.dataset.idx;
@@ -281,7 +282,7 @@ window.addEventListener("load", e => {
 
     init();
 
-    // Grid dimensions
+    // Grid dimensions & listeners  ********************************************
     const inputs = gridSize?.querySelectorAll('input[type="number"]');
     inputs[0].value = numCols;
     inputs[1].value = numRows;
@@ -316,6 +317,8 @@ window.addEventListener("load", e => {
     });
     divideSlider.addEventListener('change', drawSVG);
 
+    // Blocks' Types ********************************************
+
     // event listener for clicks on checkboxes -> select block type
     typesContainer?.addEventListener('change', (ev) => {
         if (ev.target.dataset.function) {
@@ -335,6 +338,7 @@ window.addEventListener("load", e => {
         }
     });
 
+    // Blocks' Weight ********************************************
     // event listener for weights change
     weightsContainer.addEventListener('input', (ev) => {
         if (ev.target.dataset.function) {
@@ -342,6 +346,47 @@ window.addEventListener("load", e => {
         }
     });
 
+    // GLobal ********************************************
+
+    // Intersection Observer on Weights ********************************************
+    const intersectOptions = {
+        root: null, // viewport
+        rootMargin: '48px',
+        threshold: [0.01, 0.75, 1.0]
+    };
+
+    const intersectTarget = document.querySelector('.weights');
+
+    const intersectCallback = (entries, observerWeights) => {
+        entries.forEach(entry => {
+            const ratio = entry.intersectionRatio;
+            if (ratio > observerWeights.thresholds[0] && ratio < observerWeights.thresholds[1]) {
+                // first step : display & animate the arrow
+                if (!intersectTarget.querySelector('#arrow-weights')) {
+                    drawArrow();
+                    const arrow = intersectTarget.querySelector('#arrow-weights');
+                    animArrow(arrow);
+                }
+            }
+            if (ratio > observerWeights.thresholds[1] && ratio < observerWeights.thresholds[2]) {
+                // second step : fade out the arrow & stops the animation
+                const arrow = intersectTarget.querySelector('#arrow-weights')
+                animArrowFadeOut(arrow);
+            }
+            if (ratio >= observerWeights.thresholds[2]) {
+                // third step : remove the arrow & the intersectionObserver (the arrow is displayed only once)
+                observerWeights.unobserve(intersectTarget);
+                // remove the arrow
+                const arrow = intersectTarget.querySelector('#arrow-weights');
+                arrow.remove();
+            }
+        })
+    }
+
+    const observerWeights = new IntersectionObserver(intersectCallback, intersectOptions);
+    observerWeights.observe(intersectTarget);
+
+    
     // Event listener for ESC key
     window.addEventListener('keydown', (ev) => {
         if (ev.key === 'Escape' && settings.parentElement.classList.contains('open')) {
@@ -349,6 +394,7 @@ window.addEventListener("load", e => {
         }
     });
 
+    // Buttons
     [
         [btnDraw, drawSVG],
         [btnDrawV, drawSVG],
