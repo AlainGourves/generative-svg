@@ -7,13 +7,27 @@ import { shuffleArray } from './utils.js';
  * @param {number} p probability for a block to be subdivised [0-100]
  * @returns {number[]} array of 100 items, p 1s and the rest is 0s
  */
-const fillProbabilities = (p) => {
+export const fillProbabilities = (p) => {
     let probabilities = new Array(100);
     probabilities.fill(0)
     for (let i = 0; i < p; i++) {
         probabilities[i] = 1
     }
     return shuffleArray(probabilities);
+}
+
+export const makeChildren = (x, y, w) => {
+    let children = [];
+    for (let i = 0; i < 4; i++) {
+        let x_pos = x + (i % 2) * w / 2;
+        let y_pos = y + (Math.floor(i / 2) * w / 2);
+        children.push({
+            x: x_pos,
+            y: y_pos,
+            w: w / 2
+        });
+    }
+    return children;
 }
 
 /**
@@ -46,17 +60,7 @@ export const createTree = (w, h, squareSize, p = 0) => {
         if (p > 0) {
             // decide if there are children : 1 = yes | 0 = no
             if (possibles[random(0, 100, true)]) {
-                let children = [];
-                for (let j = 0; j < 4; j++) {
-                    let x = x_pos + (j % 2) * squareSize / 2;
-                    let y = y_pos + (Math.floor(j / 2) * squareSize / 2);
-                    children.push({
-                        x: x,
-                        y: y,
-                        w: squareSize / 2
-                    })
-                }
-                obj.children = children;
+                obj.children = makeChildren(x_pos, y_pos, squareSize);
             }
         }
         tree.push(obj)

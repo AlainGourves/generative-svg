@@ -1,9 +1,12 @@
+import {drawBg} from './bg.js';
+
+
 export const animBgColors = (bgInner, bgOuter) => {
     gsap.to('body', {
         '--bg-inner': bgInner,
         '--bg-outer': bgOuter,
         duration: 0.5
-    });
+    }).then(drawBg);
 }
 
 export const btnMenuOpen = (prefersReducedMotion) => {

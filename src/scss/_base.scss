@@ -43,12 +43,14 @@ body {
     min-height: 100vh;
     min-height: -webkit-fill-available;
     @include grid-center;
-    background-image:
-    url('/bg.svg'),
-    radial-gradient(var(--bg-inner) 0%, var(--bg-outer) 100%);
-    background-position: bottom left, 50% 50%;
-    background-repeat: no-repeat;
-    background-blend-mode: overlay;
+    background-image: radial-gradient(var(--bg-inner) 0%, var(--bg-outer) 100%);
+
+    &.svg{
+        background-position: top left, bottom right 4rem, 50% 50%;
+        background-repeat: no-repeat;
+        background-blend-mode: overlay, overlay, normal;
+        background-size: 45vw, 45vw, auto;
+    }
 }
 
 

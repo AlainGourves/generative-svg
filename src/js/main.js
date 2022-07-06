@@ -5,6 +5,7 @@ import * as blockFn from './blocks.js';
 import { getBlockId, init } from "./init.js";
 import { createTree } from './tree.js';
 import weightedRandom from './weightedRandom.js';
+import {drawBg} from './bg.js';
 
 /*
 Functions :
@@ -384,10 +385,10 @@ window.addEventListener("load", e => {
             } else {
                 document.documentElement.style.setProperty('--bg-inner', bgInner);
                 document.documentElement.style.setProperty('--bg-outer', bgOuter);
+                drawBg();
             }
             updateSwatches(colorPalette);
             document.querySelector('#loading').remove();
             drawSVG();
         });
-
 });
