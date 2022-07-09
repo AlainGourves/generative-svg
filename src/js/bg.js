@@ -132,7 +132,6 @@ export const drawBg = () => {
     });
 
     let bgImg = window.getComputedStyle(document.body).backgroundImage;
-    console.log(bgImg)
     bgImg = [...images,bgImg].join(',');
     document.body.style.backgroundImage = bgImg;
     document.body.classList.add('svg');

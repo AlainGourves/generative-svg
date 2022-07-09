@@ -5,7 +5,7 @@ import * as blockFn from './blocks.js';
 import { getBlockId, init } from "./init.js";
 import { createTree } from './tree.js';
 import weightedRandom from './weightedRandom.js';
-import {drawBg} from './bg.js';
+import { drawBg } from './bg.js';
 
 /*
 Functions :
@@ -20,6 +20,7 @@ Functions :
 */
 
 window.random = random; // TODO enlever ça
+const log = console.log;
 
 let prefersReducedMotion = true; // @media(prefers-reduced-motion: reduce) => animations disabled by default
 
@@ -148,8 +149,10 @@ const updateActiveBlocks = (fn, isActive) => {
     }
     // Affiche le total des poids
     if (activeBlocksTypes.length > 1) {
+        btnRandomWeights.tabIndex = 0;
         weightsTotal.dataset.display = true;
     } else {
+        btnRandomWeights.tabIndex = -1;
         weightsTotal.dataset.display = false;
     }
 }
@@ -243,7 +246,7 @@ const newPalette = (ev) => {
 
 const toggleMenu = () => {
     // list all focusable elements in .aside__cont
-    const focusable = settings.querySelectorAll('[tabindex], button, input');
+    const focusable = settings.querySelectorAll('[tabindex]:not(.divide-slider, #random-weights), button:not(#random-weights), input:not(.divide-slider)');
     if (settings.parentElement.classList.contains('open')) {
         // Hiding settings
         focusable.forEach(el => el.tabIndex = '-1'); // makes element not focusable when settings are hidden
@@ -268,7 +271,6 @@ window.addEventListener("load", e => {
     prefersReducedMotion = !mediaQueryMotion.matches;
     mediaQueryMotion.addEventListener('change', ev => {
         prefersReducedMotion = !ev.target.matches;
-        console.log("prefersReducedMotion change", prefersReducedMotion)
     });
 
     // Palette listener ********************************************
@@ -302,12 +304,20 @@ window.addEventListener("load", e => {
         if (ev.target.type === 'checkbox') {
             // Checkbox 'Subdivide'
             isSubdivision = ev.target.checked;
-            if (!isSubdivision) {
+            if (!isSubdivision && divideSlider.value > 0) {
                 divideSlider.value = 0;
                 drawSVG();
             }
+            divideSlider.tabIndex = (isSubdivision) ? 0 : -1; // slider focusable only if visible
             const div = document.querySelector('.divide-slider__cont')
             div.classList.toggle('open', isSubdivision);
+        }
+    });
+    gridSize.addEventListener('keydown', ev => {
+        if (ev.key === 'Enter' && ev.target.type === 'checkbox') {
+            // toggle the checked on Enter
+            ev.target.checked = !ev.target.checked;
+            ev.target.dispatchEvent(new Event('change', { bubbles: true }));
         }
     });
 
@@ -386,7 +396,7 @@ window.addEventListener("load", e => {
     const observerWeights = new IntersectionObserver(intersectCallback, intersectOptions);
     observerWeights.observe(intersectTarget);
 
-    
+
     // Event listener for ESC key
     window.addEventListener('keydown', (ev) => {
         if (ev.key === 'Escape' && settings.parentElement.classList.contains('open')) {

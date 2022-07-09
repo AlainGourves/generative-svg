@@ -128,6 +128,6 @@ export const drawArrow = () => {
     const icon = draw.use('big-arrow')
 
     icon.size(40, 40)
-    draw.css('left', x)
-        .css('top', y);
+    draw.css('left', `${x}px`)
+        .css('top', `${y}px`);
 }

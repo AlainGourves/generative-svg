@@ -26,7 +26,7 @@
         <div id="loading">Loading...</div>
     </main>
     <div id="btnMenu__cont">
-        <button id="btnMenu" class="btn__round" aria-describedby="btnMenu-tt">
+        <button id="btnMenu" class="btn__round focused" aria-describedby="btnMenu-tt">
             <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" class="svg-icon">
                 <g>
                     <rect width="24" height="24" stroke="none"></rect>
@@ -43,7 +43,7 @@
             <h2>Settings</h2>
             <article class="btns">
                 <div>
-                    <button class="btn" id="drawSVG" aria-describedby="drawSVG-tt">
+                    <button class="btn focused" id="drawSVG" aria-describedby="drawSVG-tt">
                         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"
                             class="svg-icon">
                             <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
@@ -56,7 +56,7 @@
                     <div id="drawSVG-tt" class="tooltip" role="tooltip">Generate a new random image</div>
                 </div>
                 <div>
-                    <button class="btn" id="exportSVG" aria-describedby="exportSVG-tt">
+                    <button class="btn focused" id="exportSVG" aria-describedby="exportSVG-tt">
                         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"
                             class="svg-icon">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -73,22 +73,22 @@
                 <p>Set the grid dimensions in blocks's terms.</p>
                 <fieldset>
                     <div>
-                        <label for="numCols">Width:</label><input type="number" data-var="numCols" id="numCols">
+                        <label for="numCols">Width:</label><input type="number" data-var="numCols" id="numCols" class="focused">
                     </div>
                     <div>
-                        <label for="numRows">Height:</label><input type="number" data-var="numRows" id="numRows">
+                        <label for="numRows">Height:</label><input type="number" data-var="numRows" id="numRows" class="focused">
                     </div>
                 </fieldset>
                 <div class="divide">
                     <div>
                         <label for="is-divided" class="gui-switch">
                             Subdivide
-                            <input type="checkbox" role="switch" id="is-divided">
+                            <input type="checkbox" role="switch" id="is-divided" class="focused">
                         </label>
                     </div>
                     <div class="divide-slider__cont slider__parent">
                         Frequency of division:
-                        <input type="range" class="slider divide-slider" min="0" max="100" step="1" value="0">
+                        <input type="range" class="slider divide-slider" min="0" max="100" step="1" value="0" tabindex="-1">
                         <output>0%</output>
                     </div>
                 </div>
@@ -101,7 +101,7 @@
                         <div class="block-type__cont">
                             <input type="checkbox" tabindex="0">
                             <div class="block-type"></div>
-                            <label for="type1"></label>
+                            <label for="type1" class="focused"></label>
                         </div>
                     </template>
                 </div>
@@ -118,7 +118,7 @@
                         </label>
                     </template>
                     <div class="block-weight__total" data-display="false">
-                        <button id="random-weights" class="btn btn__small">
+                        <button id="random-weights" class="btn btn__small focused" tabindex="-1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"
                                 class="svg-icon" id="random-weights">
                                 <mask id="myMask">
@@ -161,7 +161,7 @@
                         <input type="color" data-idx="4">
                     </div>
                     <div>
-                        <button id="newPalette" class="btn btn__small" aria-describedby="newPalette-tt">
+                        <button id="newPalette" class="btn btn__small focused" aria-describedby="newPalette-tt">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 class="svg-icon">
                                 <polyline points="23 4 23 10 17 10"></polyline>
@@ -176,7 +176,7 @@
         </div>
         <article class="btns__vert">
             <div>
-                <button class="btn__round" id="drawSVG__v" aria-describedby="drawSVG__v-tt">
+                <button class="btn__round focused" id="drawSVG__v" aria-describedby="drawSVG__v-tt">
                     <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" class="svg-icon">
                         <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
                         <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
@@ -187,7 +187,7 @@
                 <div id="drawSVG__v-tt" class="tooltip" role="tooltip">Generate a new image</div>
             </div>
             <div>
-                <button id="newPalette__v" class="btn__round" aria-describedby="newPalette__v-tt">
+                <button id="newPalette__v" class="btn__round focused" aria-describedby="newPalette__v-tt">
                     <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" class="svg-icon" id="palette">
                         <g>
                             <path
@@ -204,7 +204,7 @@
                 <div id="newPalette__v-tt" class="tooltip" role="tooltip">Load a new palette</div>
             </div>
             <div>
-                <button class="btn__round" id="exportSVG__v" aria-describedby="exportSVG__v-tt">
+                <button class="btn__round focused" id="exportSVG__v" aria-describedby="exportSVG__v-tt">
                     <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" class="svg-icon">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>
