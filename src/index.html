@@ -26,8 +26,9 @@
         <div id="loading">Loading...</div>
     </main>
     <div id="btnMenu__cont">
-        <button id="btnMenu" class="btn__round focused" aria-describedby="btnMenu-tt">
-            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" class="svg-icon">
+        <button id="btnMenu" class="btn__round focused" aria-label="Settings" aria-describedby="btnMenu-tt">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" class="svg-icon"
+                aria-hidden="true">
                 <g>
                     <rect width="24" height="24" stroke="none"></rect>
                     <line x1="2" y1="2" x2="22" y2="2"></line>
@@ -39,13 +40,13 @@
         <div id="btnMenu-tt" class="tooltip" role="tooltip">Settings</div>
     </div>
     <aside class="">
-        <div class="aside__cont">
+        <div class="aside__cont" aria-hidden="false">
             <h2>Settings</h2>
             <article class="btns">
                 <div>
                     <button class="btn focused" id="drawSVG" aria-describedby="drawSVG-tt">
                         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"
-                            class="svg-icon">
+                            class="svg-icon" aria-hidden="true">
                             <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
                             <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
                             <path d="M2 2l7.586 7.586"></path>
@@ -58,7 +59,7 @@
                 <div>
                     <button class="btn focused" id="exportSVG" aria-describedby="exportSVG-tt">
                         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"
-                            class="svg-icon">
+                            class="svg-icon" aria-hidden="true">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                             <polyline points="7 10 12 15 17 10"></polyline>
                             <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -73,23 +74,27 @@
                 <p>Set the grid dimensions in blocks's terms.</p>
                 <fieldset>
                     <div>
-                        <label for="numCols">Width:</label><input type="number" data-var="numCols" id="numCols" class="focused">
+                        <label for="numCols">Width:</label><input type="number" data-var="numCols" id="numCols"
+                            class="focused">
                     </div>
                     <div>
-                        <label for="numRows">Height:</label><input type="number" data-var="numRows" id="numRows" class="focused">
+                        <label for="numRows">Height:</label><input type="number" data-var="numRows" id="numRows"
+                            class="focused">
                     </div>
                 </fieldset>
                 <div class="divide">
                     <div>
                         <label for="is-divided" class="gui-switch">
                             Subdivide
-                            <input type="checkbox" role="switch" id="is-divided" class="focused">
+                            <input type="checkbox" role="switch" id="is-divided" class="focused" aria-checked="false">
                         </label>
                     </div>
                     <div class="divide-slider__cont slider__parent">
-                        Frequency of division:
-                        <input type="range" class="slider divide-slider" min="0" max="100" step="1" value="0" tabindex="-1">
-                        <output>0%</output>
+                        <label>Frequency of division:
+                            <input type="range" class="slider divide-slider" min="0" max="100" step="1" value="0"
+                                tabindex="-1" role="slider" aria-valuemin="0" aria-valuemax="100">
+                            <output>0%</output>
+                        </label>
                     </div>
                 </div>
             </article>
@@ -99,7 +104,7 @@
                 <div class="select-block-type">
                     <template id="bloc-type__tmpl">
                         <div class="block-type__cont">
-                            <input type="checkbox" tabindex="0">
+                            <input type="checkbox" tabindex="0" role="switch" aria-checked="false">
                             <div class="block-type"></div>
                             <label for="type1" class="focused"></label>
                         </div>
@@ -108,19 +113,21 @@
             </article>
             <article class="weights">
                 <h3>Blocks Weights</h3>
-                <p>Determine the frequency of each type of block. Percentages represent the probability of being drawn and must add up to 100.</p>
+                <p>Determine the frequency of each type of block. Percentages represent the probability of being drawn
+                    and must add up to 100.</p>
                 <div class="block-weight__cont">
                     <template id="bloc-weight__tmpl">
                         <label class="slider__parent">
                             <div class="block-type"></div>
-                            <input type="range" class="slider" min="0" max="1" step="0.01">
+                            <input type="range" class="slider" min="0" max="1" step="0.01" role="slider"
+                                aria-valuemin="0.0" aria-valuemax="1.0" aria-label="Probability of this type of block">
                             <output></output>
                         </label>
                     </template>
                     <div class="block-weight__total" data-display="false">
-                        <button id="random-weights" class="btn btn__small focused" tabindex="-1">
+                        <button id="randomize-weights" class="btn btn__small focused" tabindex="-1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"
-                                class="svg-icon" id="random-weights">
+                                class="svg-icon" id="random-weights" aria-hidden="true">
                                 <mask id="myMask">
                                     <rect x="0" y="0" width="24" height="24" fill="#fff" />
                                     <circle cx="20" cy="4" r="3" fill="#000" />
@@ -154,16 +161,16 @@
                 <p>Click on a color swatch to adjust its value, or the button to choose a random palette.</p>
                 <div>
                     <div class="clr__inputs">
-                        <input type="color" data-idx="0">
-                        <input type="color" data-idx="1">
-                        <input type="color" data-idx="2">
-                        <input type="color" data-idx="3">
-                        <input type="color" data-idx="4">
+                        <input type="color" data-idx="0" aria-label="color input for color 1">
+                        <input type="color" data-idx="1" aria-label="color input for color 2">
+                        <input type="color" data-idx="2" aria-label="color input for color 3">
+                        <input type="color" data-idx="3" aria-label="color input for color 4">
+                        <input type="color" data-idx="4" aria-label="color input for color 5">
                     </div>
                     <div>
                         <button id="newPalette" class="btn btn__small focused" aria-describedby="newPalette-tt">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                class="svg-icon">
+                                class="svg-icon" aria-hidden="true">
                                 <polyline points="23 4 23 10 17 10"></polyline>
                                 <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
                             </svg>
@@ -176,8 +183,10 @@
         </div>
         <article class="btns__vert">
             <div>
-                <button class="btn__round focused" id="drawSVG__v" aria-describedby="drawSVG__v-tt">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" class="svg-icon">
+                <button class="btn__round focused" id="drawSVG__v" aria-describedby="drawSVG__v-tt"
+                    aria-label="Generate new image">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"
+                        class="svg-icon" aria-hidden="true">
                         <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
                         <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
                         <path d="M2 2l7.586 7.586"></path>
@@ -187,8 +196,10 @@
                 <div id="drawSVG__v-tt" class="tooltip" role="tooltip">Generate a new image</div>
             </div>
             <div>
-                <button id="newPalette__v" class="btn__round focused" aria-describedby="newPalette__v-tt">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" class="svg-icon" id="palette">
+                <button id="newPalette__v" class="btn__round focused" aria-describedby="newPalette__v-tt"
+                    aria-label="Change palette">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"
+                        class="svg-icon" id="palette" aria-hidden="true">
                         <g>
                             <path
                                 d="M11.79,1.33C7.23,1.33,1.32,5.26,1.32,11.82c0,5.53,4.4,10.85,10.22,10.85,2.39,0,2.49-.64,2.88-1.41.84-1.65-1.69-4.65-.32-6,1.92-1.88,8.4,1.17,8.58-3.3A10.71,10.71,0,0,0,11.79,1.33Z" />
@@ -204,8 +215,10 @@
                 <div id="newPalette__v-tt" class="tooltip" role="tooltip">Load a new palette</div>
             </div>
             <div>
-                <button class="btn__round focused" id="exportSVG__v" aria-describedby="exportSVG__v-tt">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" class="svg-icon">
+                <button class="btn__round focused" id="exportSVG__v" aria-describedby="exportSVG__v-tt"
+                    aria-label="Export image">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"
+                        class="svg-icon" aria-hidden="true">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>
                         <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -215,6 +228,8 @@
             </div>
         </article>
     </aside>
+    <a target="_blank" href="https://github.com/AlainGourves/generative-svg" id="github" aria-label="View source on GitHub" title="View source on GitHub">
+    <svg viewBox="0 0 250 250" fill="#151513" xmlns="http://www.w3.org/2000/svg"><circle style="fill:#fff;" cx="125" cy="125" r="120"/><g style="display:inline"><path style="display:inline;fill:#000;fill-opacity:1" class="octo-body" d="M57.708 41.138c-1.598.048-2.365.24-2.365.24-6.196 18.579-3.11 30.967-.015 34.063-9.288 9.29-13.925 20.121-13.925 35.601 0 49.544 30.948 61.935 60.364 66.579-4.644 4.644-9.288 12.377-9.288 24.763l1.564 35.614.255 3.008c10.077 2.768 20.262 4.104 30.693 4.112 11.554-.135 23.048-1.573 34.157-5.08l-.09-45.392c-1.548-7.742-4.642-13.93-7.738-17.025 29.416-4.644 60.376-13.939 60.376-66.579 0-15.48-4.636-26.311-13.926-35.601-16.484-13.684-26.383-17.685-37.162-21.676-9.29-3.096-20.128-4.635-32.514-4.635-12.386 0-23.224 1.539-32.514 4.637-20.901-11.613-33.084-12.773-37.872-12.629z"/><path fill="currentColor" class="octo-arm" d="M94.442 214.531c-37.157 9.29-43.35-15.482-43.35-15.482-6.193-15.482-13.934-20.127-13.934-20.127-12.386-9.29 1.548-7.741 1.548-7.741 13.934 1.548 20.127 13.934 20.127 13.934 10.838 20.127 30.964 15.482 38.705 10.837" style="display:inline"/><path fill="currentColor" class="octo-ear" d="M194.825 38.31s-12.383-3.102-35.606 13.928c-.068-.022.033.011 0 0s-5.451 6.904-5.451 6.904l39.081 22.218 3.544-7.52c1.567-4.675 6.142-15.483-1.568-35.53z" style="display:inline"/><path fill="#fff" class="octo-face" d="M96.565 103.3c-11.5-.056-20.765 3.734-26.781 10.964-6.195 7.44-6.633 15.476-6.622 17.763.111 22.021 16.762 34.814 46.883 36.023 5.648.23 11.681.364 17.931.397 6.086.033 12.172-.035 18.255-.203 35.135-.975 42.42-19.147 42.342-34.22-.073-14.626-8.859-30.305-33.322-30.427-.6-.003-1.542.056-3.869.215-4.97.338-14.219.966-23.37.921-10.105-.05-20.317-.732-26.416-1.142-2.845-.19-4.248-.285-5.03-.29z"/><ellipse fill="currentColor" class="octo-left-eye" cx="91" cy="133" rx="13.5" ry="19" style="display:inline"/><ellipse fill="currentColor" class="octo-eye"  cx="163.5" cy="133" rx="13.5" ry="19" style="display:inline"/></g></svg></a>
     <script src="./js/tooltips.js" type="module"></script>
     <script src="./js/main.js" type="module"></script>
 </body>
