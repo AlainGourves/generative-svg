@@ -1,4 +1,4 @@
-import {drawBg} from './bg.js';
+import { drawBg } from './bg.js';
 
 
 export const animBgColors = (bgInner, bgOuter) => {
@@ -7,6 +7,27 @@ export const animBgColors = (bgInner, bgOuter) => {
         '--bg-outer': bgOuter,
         duration: 0.5
     }).then(drawBg);
+}
+
+export const animSVGIn = (svg) => {
+    return gsap.fromTo(svg, {
+        opacity: 0,
+        scale: 0.8,
+    }, {
+        opacity: 1,
+        scale: 1,
+        ease: "back.out(1.5)",
+        duration: 0.25
+    });
+}
+
+export const animSVGOut = (svg) => {
+    return gsap.to(svg, {
+        opacity: 0,
+        scale: 0.8,
+        ease: "power2.in",
+        duration: 0.25,
+    });
 }
 
 export const btnMenuOpen = (prefersReducedMotion) => {
@@ -65,19 +86,19 @@ export const btnMenuClose = (prefersReducedMotion) => {
 
 export const articleSlideIn = () => {
     const tl = gsap.timeline()
-    tl.fromTo('aside article', {
-        autoAlpha: 0,
-        x: "100%"
-    }, {
-        autoAlpha: 1,
-        x: 0,
-        stagger: 0.1,
-        ease: "power2.out"
-    });
+        .fromTo('aside article', {
+            autoAlpha: 0,
+            x: "100%"
+        }, {
+            autoAlpha: 1,
+            x: 0,
+            stagger: 0.1,
+            ease: "power2.out"
+        });
 }
 
 export const randomWeightsAnim = (ev) => {
-    const mySvg = document.querySelector('#random-weights');
+    const mySvg = document.querySelector('svg#random-weights');
     const circles = mySvg.querySelectorAll('g circle');
     const circlesMask = mySvg.querySelectorAll('mask circle');
     let pos = [];
@@ -117,11 +138,25 @@ export const blockWeightSlideIn = (el) => {
             height: '3.5rem'
         })
         .to(el, {
-            duration: 0.352,
+            duration: 0.35,
             ease: 'back.out(1.2)',
             opacity: 1,
             x: 0
-        })
+        }, "-=25%");
+}
+
+export const blockWeightSlideOut = (el) => {
+    const tl = gsap.timeline();
+    return tl.to(el, {
+        autoAlpha: 0,
+        x: "100%",
+        ease: "power2.in",
+        duration: 0.35,
+    })
+        .to(el, {
+            height: 0,
+            duration: 0.2,
+        }, "-=25%")
 }
 
 export const animPalette = (colorPalette) => {
@@ -164,11 +199,11 @@ export const animArrow = (arrow) => {
         }, "-0.2")
 }
 
-export const animArrowFadeOut = (arrow)=>{
+export const animArrowFadeOut = (arrow) => {
     const tl = gsap.timeline()
     tl.to(arrow, {
         opacity: 0,
-        onComplete: function() {
+        onComplete: function () {
             const anim = gsap.getById('arrowYoyo');
             anim.kill();
         }

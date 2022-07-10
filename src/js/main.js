@@ -1,6 +1,6 @@
 import { random } from "https://cdn.skypack.dev/@georgedoescode/generative-utils@1.0.38";
 import { getColorPalette, getTwoColors, setBgColors, updateSwatches, saveSVGFile, sumArray, drawArrow } from './utils.js';
-import { animBgColors, btnMenuOpen, btnMenuClose, randomWeightsAnim, articleSlideIn, blockWeightSlideIn, animPalette, animArrow, animArrowFadeOut } from './animations.js';
+import { animBgColors, animSVGIn, animSVGOut, btnMenuOpen, btnMenuClose, randomWeightsAnim, articleSlideIn, blockWeightSlideIn, blockWeightSlideOut, animPalette, animArrow, animArrowFadeOut } from './animations.js';
 import * as blockFn from './blocks.js';
 import { getBlockId, init } from "./init.js";
 import { createTree } from './tree.js';
@@ -9,6 +9,7 @@ import { drawBg } from './bg.js';
 
 /*
 Functions :
+- prepareDraw
 - drawSVG
 - generateLittleBox
 - updateActiveBlocks
@@ -34,7 +35,7 @@ const settings = document.querySelector('.aside__cont');
 const btnDraw = settings.querySelector('#drawSVG');
 const btnExport = settings.querySelector('#exportSVG');
 const btnNewPalette = settings.querySelector('#newPalette');
-const btnRandomWeights = settings.querySelector('#random-weights');
+const btnRandomWeights = settings.querySelector('#randomize-weights');
 // Vertical Buttons
 const btnsVert = document.querySelectorAll('.btns__vert button');
 const btnDrawV = btnsVert[0];
@@ -58,11 +59,23 @@ const blockWeightTemplate = settings.querySelector('#bloc-weight__tmpl');
 
 let weigthSliders = []; // stores the sliders values
 
+const prepareDraw = () => {
+    // Animate the exit of the previous drawing (if it exists) and then calls the drawSVG function
+    const svg = document.querySelector('main svg');
+    if (svg && !prefersReducedMotion) {
+        animSVGOut(svg)
+            .then(() => {
+                // if a previous SVG exists, remove it
+                svg.remove()
+            })
+            .then(() => drawSVG())
+    } else {
+        drawSVG();
+    }
+}
+
 const drawSVG = () => {
     if (!activeBlocksTypes.length) return;
-    // if a previous SVG exists, remove it
-    const svg = document.querySelector('main svg');
-    if (svg) svg.remove();
 
     const draw = SVG(); // create the svg
     const style = draw.style();
@@ -86,7 +99,10 @@ const drawSVG = () => {
         } else {
             generateLittleBox(draw, block.x, block.y, block.w);
         }
-    })
+    });
+    if (!prefersReducedMotion) {
+        animSVGIn(document.querySelector('main svg'));
+    }
 }
 
 const generateLittleBox = (root, x, y, w) => {
@@ -116,6 +132,7 @@ const updateActiveBlocks = (fn, isActive) => {
         input.value = v;
         output.textContent = `${Math.floor(v * 100)}%`
         const draw = SVG().addTo(block).viewbox('0 0 20 20');
+        draw.attr('role', 'img');
         draw.use(getBlockId(fn));
         if (!prefersReducedMotion && activeBlocksTypes.length > 1) {
             // Pas d'animation pour le premier block type (qui est masqué au moment de sa création)
@@ -130,22 +147,29 @@ const updateActiveBlocks = (fn, isActive) => {
     } else {
         // Supprime le HTML correspondant
         const label = weightsContainer?.querySelector(`[data-function='${fn}']`).parentElement;
-        if (label) label.remove();
-        // Enlève fn de activeBlocksTypes (et activeBlocksWeigths)
-        const idx = activeBlocksTypes.findIndex(f => f.name === fn);
-        activeBlocksTypes.splice(idx, 1);
-        activeBlocksWeigths.splice(idx, 1);
-        // update le array des sliders
-        // NB: il faut que ça soit fait là pour la suite
-        weigthSliders = weightsContainer?.querySelectorAll('input[type=range]');
-        if (activeBlocksTypes.length === 1) {
-            // 1 seul bloc activé => son poids doit être 1 !!
-            const b = weightsContainer.querySelector(`[data-function='${activeBlocksTypes[0].name}']`)
-            b.value = 1;
-            activeBlocksWeigths[0] = 1;
+        if (label) {
+            blockWeightSlideOut(label)
+            .then(() => {
+                label.remove();
+                // Enlève fn de activeBlocksTypes (et activeBlocksWeigths)
+                const idx = activeBlocksTypes.findIndex(f => f.name === fn);
+                activeBlocksTypes.splice(idx, 1);
+                activeBlocksWeigths.splice(idx, 1);
+                // update le array des sliders
+                // NB: il faut que ça soit fait là pour la suite
+                weigthSliders = weightsContainer?.querySelectorAll('input[type=range]');
+                if (activeBlocksTypes.length === 1) {
+                    // 1 seul bloc activé => son poids doit être 1 !!
+                    const b = weightsContainer.querySelector(`[data-function='${activeBlocksTypes[0].name}']`)
+                    b.value = 1;
+                    activeBlocksWeigths[0] = 1;
+                }
+            })
+            .then(() => {
+                // MàJ total poids
+                updateTotalWeight();
+            });
         }
-        // MàJ total poids
-        updateTotalWeight();
     }
     // Affiche le total des poids
     if (activeBlocksTypes.length > 1) {
@@ -229,7 +253,7 @@ const randomizeWeights = () => {
         s.value = activeBlocksWeigths[idx];
     });
     updateTotalWeight();
-    drawSVG();
+    prepareDraw();
 }
 
 const newPalette = (ev) => {
@@ -246,13 +270,14 @@ const newPalette = (ev) => {
 
 const toggleMenu = () => {
     // list all focusable elements in .aside__cont
-    const focusable = settings.querySelectorAll('[tabindex]:not(.divide-slider, #random-weights), button:not(#random-weights), input:not(.divide-slider)');
+    const focusable = settings.querySelectorAll('[tabindex]:not(.divide-slider, #randomize-weights), button:not(#random-weights), input:not(.divide-slider)');
     if (settings.parentElement.classList.contains('open')) {
         // Hiding settings
         focusable.forEach(el => el.tabIndex = '-1'); // makes element not focusable when settings are hidden
         btnsVert.forEach(el => el.tabIndex = '0'); // makes vertical buttons focusable when settings are hidden
         btnMenuClose(prefersReducedMotion)
-        settings.parentElement.classList.remove('open')
+        settings.parentElement.classList.remove('open');
+        settings.ariaHidden = true;
     } else {
         // Showing settings
         focusable.forEach(el => el.tabIndex = '0'); // makes element focusable when settings are visible
@@ -262,6 +287,7 @@ const toggleMenu = () => {
             articleSlideIn()
         }
         settings.parentElement.classList.add('open')
+        settings.ariaHidden = false;
     }
 }
 
@@ -298,7 +324,7 @@ window.addEventListener("load", e => {
             const newVal = parseInt(ev.target.value);
             if (ev.target.dataset.var == 'numCols') numCols = newVal;
             if (ev.target.dataset.var == 'numRows') numRows = newVal;
-            drawSVG();
+            prepareDraw();
         }
 
         if (ev.target.type === 'checkbox') {
@@ -306,11 +332,12 @@ window.addEventListener("load", e => {
             isSubdivision = ev.target.checked;
             if (!isSubdivision && divideSlider.value > 0) {
                 divideSlider.value = 0;
-                drawSVG();
+                prepareDraw();
             }
             divideSlider.tabIndex = (isSubdivision) ? 0 : -1; // slider focusable only if visible
             const div = document.querySelector('.divide-slider__cont')
             div.classList.toggle('open', isSubdivision);
+            ev.target.ariaChecked = isSubdivision;
         }
     });
     gridSize.addEventListener('keydown', ev => {
@@ -325,13 +352,14 @@ window.addEventListener("load", e => {
         const output = divideSlider.nextElementSibling;
         output.textContent = `${divideSlider.value}%`;
     });
-    divideSlider.addEventListener('change', drawSVG);
+    divideSlider.addEventListener('change', prepareDraw);
 
     // Blocks' Types ********************************************
 
     // event listener for clicks on checkboxes -> select block type
     typesContainer?.addEventListener('change', (ev) => {
         if (ev.target.dataset.function) {
+            ev.target.ariaChecked = ev.target.checked;
             updateActiveBlocks(ev.target.dataset.function, ev.target.checked)
         }
     });
@@ -406,8 +434,8 @@ window.addEventListener("load", e => {
 
     // Buttons
     [
-        [btnDraw, drawSVG],
-        [btnDrawV, drawSVG],
+        [btnDraw, prepareDraw],
+        [btnDrawV, prepareDraw],
         [btnMenu, toggleMenu],
         [btnExport, saveSVGFile],
         [btnExportV, saveSVGFile],
@@ -445,6 +473,6 @@ window.addEventListener("load", e => {
             }
             updateSwatches(colorPalette);
             document.querySelector('#loading').remove();
-            drawSVG();
+            prepareDraw();
         });
 });

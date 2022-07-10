@@ -25,7 +25,7 @@ const createSVGLibrary = () => {
         const group = defs.symbol();
         let id = getBlockId(drawFunctions[i]);
         group.attr('id', id);
-        group.element('desc').words(`${id} icon`);
+        group.element('title').words(`Icon for ${id} block`);
         blockFn[drawFunctions[i]](group, 0, 0, 20, 9, 8);
     }
 
