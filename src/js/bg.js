@@ -1,5 +1,5 @@
 import * as blockFn from './blocks.js';
-import { random } from "https://cdn.skypack.dev/@georgedoescode/generative-utils@1.0.38";
+import { random } from '@georgedoescode/generative-utils';
 import weightedRandom from './weightedRandom.js';
 import {fillProbabilities, makeChildren} from './tree.js';
 

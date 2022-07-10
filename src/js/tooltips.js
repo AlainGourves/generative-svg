@@ -4,7 +4,7 @@ import {
     shift,
     offset,
     arrow,
-} from 'https://cdn.skypack.dev/@floating-ui/dom@latest';
+} from '@floating-ui/dom';
 
 // TODO: sélection plus fine des éléments !!!
 const btns = document.querySelectorAll('button');

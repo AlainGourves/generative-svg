@@ -1,4 +1,4 @@
-import { random } from "https://cdn.skypack.dev/@georgedoescode/generative-utils@1.0.38";
+import { random } from '@georgedoescode/generative-utils';
 import { shuffleArray } from './utils.js';
 
 
