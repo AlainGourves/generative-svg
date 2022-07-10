@@ -89,22 +89,25 @@ output {
 
     & .octo-face {
         display: none;
-
-        &:hover .octo-face {
-            display: inline;
-        }
     }
 
     & .octo-eye {
         transform-origin: 163px 138px;
+    }
 
-        &:hover .octo-eye {
+    &:hover {
+        & .octo-eye {
             animation: octocat-blink 560ms ease-in-out;
+        }
+
+        & .octo-face {
+            display: inline;
         }
     }
 }
 
 @keyframes octocat-blink {
+
     0%,
     25%,
     100% {

@@ -1,7 +1,9 @@
 .DS_Store
 .vscode/
+.parcel-cache/
 node_modules/
 public/
+dist/
 test.html
 test.js
 test.scss
