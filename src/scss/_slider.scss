@@ -38,10 +38,9 @@
   }
 
   padding: 0;
-  margin: 0 1rem;
   width: auto;
   height: $thumb-d;
-  flex-grow: 1;
+  flex: auto;
   border-radius: var(--bdr-rad);
   background: transparent;
   font: 1em/1 sans-serif;
