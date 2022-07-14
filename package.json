@@ -4,6 +4,7 @@
   "description": "SASS compile|autoprefix|minimize and live-reload dev server using Browsersync for static HTML",
   "author": "AlainGourves",
   "source": "src/index.html",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
     "start": "parcel",
     "build": "parcel build"
@@ -14,7 +15,9 @@
     "svg.js": "^2.7.1"
   },
   "devDependencies": {
+    "@parcel/reporter-bundle-analyzer": "^2.6.2",
     "@parcel/transformer-sass": "^2.6.2",
-    "parcel": "latest"
+    "parcel": "latest",
+    "parcel-namer-rewrite": "^2.0.0-rc.2"
   }
 }
