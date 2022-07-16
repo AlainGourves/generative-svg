@@ -39,6 +39,10 @@ html {
     font-size: 16px;
     height: 100%;
     height: -webkit-fill-available; // cf. https://css-tricks.com/css-fix-for-100vh-in-mobile-webkit/
+    scroll-behavior: smooth;
+    @media (prefers-reduced-motion: reduce) {
+      scroll-behavior: auto;
+    }
 }
 
 body {

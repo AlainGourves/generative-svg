@@ -12,21 +12,21 @@ export const animBgColors = (bgInner, bgOuter) => {
 export const animSVGIn = (svg) => {
     return gsap.fromTo(svg, {
         opacity: 0,
-        scale: 0.8,
+        scale: 0.75,
     }, {
         opacity: 1,
         scale: 1,
         ease: "back.out(1.5)",
-        duration: 0.25
+        duration: 0.5
     });
 }
 
 export const animSVGOut = (svg) => {
     return gsap.to(svg, {
         opacity: 0,
-        scale: 0.8,
+        scale: 0.75,
         ease: "power2.in",
-        duration: 0.25,
+        duration: 0.5,
     });
 }
 

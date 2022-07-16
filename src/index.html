@@ -8,22 +8,40 @@
     <link rel="stylesheet" href="./css/style.css">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <title>Document</title>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.1.2/svg.min.js"
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.1.2/svg.min.js"
         integrity="sha512-I+rKw3hArzZIHzrkdELbKqrXfkSvw/h0lW/GgB8FThaBVz2e5ZUlSW8kY8v3q6wq37eybIwyufkEZxe4qSlGcg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tinycolor/1.4.2/tinycolor.min.js"
         integrity="sha512-+aXA9mgbUvFe0ToTlbt8/3vT7+nOgUmFw29wfFCsGoh8AZMRSU0p4WtOvC1vkF2JBrndPN2TuNZsHPAKPPxe8Q=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script> -->
-    <script src="./js/lib/gsap.min.js"></script>
-    <script src="./js/lib/svg.min.js"></script>
-    <script src="./js/lib/tinycolor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
+    <style>
+        :root {
+            --loading-clr: #ffa516
+        }
+
+        #loading {
+            width: 3rem;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: radial-gradient(farthest-side, var(--loading-clr) 94%, #0000) top/8px 8px no-repeat,
+                conic-gradient(#0000 30%, var(--loading-clr));
+            -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 8px), #000 0);
+            animation: spin 1s infinite linear;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(1turn);
+            }
+        }
+    </style>
 </head>
 
 <body>
     <h1>Generative Art !</h1>
     <main>
-        <div id="loading">Loading...</div>
+        <div id="loading"></div>
     </main>
     <div id="btnMenu__cont">
         <button id="btnMenu" class="btn__round focused" aria-label="Settings" aria-describedby="btnMenu-tt">
@@ -92,15 +110,16 @@
                     <div class="divide-slider__cont slider__parent">
                         <label>
                             <span>Frequency of division:</span>
-                            <input type="range" class="slider divide-slider" min="0" max="100" step="1" value="0"
-                                tabindex="-1" role="slider" aria-valuemin="0" aria-valuemax="100">
-                            <output>0%</output>
+                            <div><input type="range" class="slider divide-slider" min="0" max="100" step="1" value="0"
+                                    tabindex="-1" role="slider" aria-valuemin="0" aria-valuemax="100">
+                                <output>0%</output>
+                            </div>
                         </label>
                     </div>
                 </div>
             </article>
             <article class="types">
-                <h3>Blocks Types</h3>
+                <h3>Types of blocks</h3>
                 <p>Click on the blocks you wish to utilize.</p>
                 <div class="select-block-type">
                     <template id="bloc-type__tmpl">
@@ -113,7 +132,7 @@
                 </div>
             </article>
             <article class="weights">
-                <h3>Blocks Weights</h3>
+                <h3>Block weight</h3>
                 <p>Determine the frequency of each type of block. Percentages represent the probability of being drawn
                     and must add up to 100.</p>
                 <div class="block-weight__cont">
@@ -158,7 +177,7 @@
                 </div>
             </article>
             <article class="palette">
-                <h3>Color Palette</h3>
+                <h3>Color palette</h3>
                 <p>Click on a color swatch to adjust its value, or the button to choose a random palette.</p>
                 <div>
                     <div class="clr__inputs">
@@ -229,9 +248,29 @@
             </div>
         </article>
     </aside>
-    <a target="_blank" href="https://github.com/AlainGourves/generative-svg" id="github" aria-label="View source on GitHub" title="View source on GitHub">
-    <svg viewBox="0 0 250 250" fill="#151513" xmlns="http://www.w3.org/2000/svg"><circle style="fill:#fff;" cx="125" cy="125" r="120"/><g style="display:inline"><path style="display:inline;fill:#000;fill-opacity:1" class="octo-body" d="M57.708 41.138c-1.598.048-2.365.24-2.365.24-6.196 18.579-3.11 30.967-.015 34.063-9.288 9.29-13.925 20.121-13.925 35.601 0 49.544 30.948 61.935 60.364 66.579-4.644 4.644-9.288 12.377-9.288 24.763l1.564 35.614.255 3.008c10.077 2.768 20.262 4.104 30.693 4.112 11.554-.135 23.048-1.573 34.157-5.08l-.09-45.392c-1.548-7.742-4.642-13.93-7.738-17.025 29.416-4.644 60.376-13.939 60.376-66.579 0-15.48-4.636-26.311-13.926-35.601-16.484-13.684-26.383-17.685-37.162-21.676-9.29-3.096-20.128-4.635-32.514-4.635-12.386 0-23.224 1.539-32.514 4.637-20.901-11.613-33.084-12.773-37.872-12.629z"/><path fill="currentColor" class="octo-arm" d="M94.442 214.531c-37.157 9.29-43.35-15.482-43.35-15.482-6.193-15.482-13.934-20.127-13.934-20.127-12.386-9.29 1.548-7.741 1.548-7.741 13.934 1.548 20.127 13.934 20.127 13.934 10.838 20.127 30.964 15.482 38.705 10.837" style="display:inline"/><path fill="currentColor" class="octo-ear" d="M194.825 38.31s-12.383-3.102-35.606 13.928c-.068-.022.033.011 0 0s-5.451 6.904-5.451 6.904l39.081 22.218 3.544-7.52c1.567-4.675 6.142-15.483-1.568-35.53z" style="display:inline"/><path fill="#fff" class="octo-face" d="M96.565 103.3c-11.5-.056-20.765 3.734-26.781 10.964-6.195 7.44-6.633 15.476-6.622 17.763.111 22.021 16.762 34.814 46.883 36.023 5.648.23 11.681.364 17.931.397 6.086.033 12.172-.035 18.255-.203 35.135-.975 42.42-19.147 42.342-34.22-.073-14.626-8.859-30.305-33.322-30.427-.6-.003-1.542.056-3.869.215-4.97.338-14.219.966-23.37.921-10.105-.05-20.317-.732-26.416-1.142-2.845-.19-4.248-.285-5.03-.29z"/><ellipse fill="currentColor" class="octo-left-eye" cx="91" cy="133" rx="13.5" ry="19" style="display:inline"/><ellipse fill="currentColor" class="octo-eye"  cx="163.5" cy="133" rx="13.5" ry="19" style="display:inline"/></g></svg></a>
+    <a target="_blank" href="https://github.com/AlainGourves/generative-svg" id="github"
+        aria-label="View source on GitHub" title="View source on GitHub">
+        <svg viewBox="0 0 250 250" fill="#151513" xmlns="http://www.w3.org/2000/svg">
+            <circle style="fill:#fff;" cx="125" cy="125" r="120" />
+            <g style="display:inline">
+                <path style="display:inline;fill:#000;fill-opacity:1" class="octo-body"
+                    d="M57.708 41.138c-1.598.048-2.365.24-2.365.24-6.196 18.579-3.11 30.967-.015 34.063-9.288 9.29-13.925 20.121-13.925 35.601 0 49.544 30.948 61.935 60.364 66.579-4.644 4.644-9.288 12.377-9.288 24.763l1.564 35.614.255 3.008c10.077 2.768 20.262 4.104 30.693 4.112 11.554-.135 23.048-1.573 34.157-5.08l-.09-45.392c-1.548-7.742-4.642-13.93-7.738-17.025 29.416-4.644 60.376-13.939 60.376-66.579 0-15.48-4.636-26.311-13.926-35.601-16.484-13.684-26.383-17.685-37.162-21.676-9.29-3.096-20.128-4.635-32.514-4.635-12.386 0-23.224 1.539-32.514 4.637-20.901-11.613-33.084-12.773-37.872-12.629z" />
+                <path fill="currentColor" class="octo-arm"
+                    d="M94.442 214.531c-37.157 9.29-43.35-15.482-43.35-15.482-6.193-15.482-13.934-20.127-13.934-20.127-12.386-9.29 1.548-7.741 1.548-7.741 13.934 1.548 20.127 13.934 20.127 13.934 10.838 20.127 30.964 15.482 38.705 10.837"
+                    style="display:inline" />
+                <path fill="currentColor" class="octo-ear"
+                    d="M194.825 38.31s-12.383-3.102-35.606 13.928c-.068-.022.033.011 0 0s-5.451 6.904-5.451 6.904l39.081 22.218 3.544-7.52c1.567-4.675 6.142-15.483-1.568-35.53z"
+                    style="display:inline" />
+                <path fill="#fff" class="octo-face"
+                    d="M96.565 103.3c-11.5-.056-20.765 3.734-26.781 10.964-6.195 7.44-6.633 15.476-6.622 17.763.111 22.021 16.762 34.814 46.883 36.023 5.648.23 11.681.364 17.931.397 6.086.033 12.172-.035 18.255-.203 35.135-.975 42.42-19.147 42.342-34.22-.073-14.626-8.859-30.305-33.322-30.427-.6-.003-1.542.056-3.869.215-4.97.338-14.219.966-23.37.921-10.105-.05-20.317-.732-26.416-1.142-2.845-.19-4.248-.285-5.03-.29z" />
+                <ellipse fill="currentColor" class="octo-left-eye" cx="91" cy="133" rx="13.5" ry="19"
+                    style="display:inline" />
+                <ellipse fill="currentColor" class="octo-eye" cx="163.5" cy="133" rx="13.5" ry="19"
+                    style="display:inline" />
+            </g>
+        </svg></a>
     <script src="./js/tooltips.js" type="module"></script>
     <script src="./js/main.js" type="module"></script>
 </body>
+
 </html>
