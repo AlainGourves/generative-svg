@@ -1,4 +1,5 @@
 import { random } from '@georgedoescode/generative-utils';
+import Color from 'colorjs.io';
 
 export const saveSVGFile = () => {
     const mySvg = document.querySelector('main > svg').outerHTML;
@@ -55,10 +56,10 @@ export const getColorPalette = async () => {
 const setRootColors = (clrs) => {
     // assign colors to CSS custom properties
     // First color is the one with greatest difference in luminance compared to primary color (as defined in CSS)
-    let primaryColor = window.getComputedStyle(document.documentElement).getPropertyValue('--clr-primary');
-    let primaryLuminance = tinycolor(primaryColor).getLuminance();
+    let primaryColor = new Color(window.getComputedStyle(document.documentElement).getPropertyValue('--clr-primary').trim());
+    let primaryLuminance = primaryColor.luminance;
     let clrsLumi = [];
-    clrs.forEach((c, idx) => clrsLumi[idx] = tinycolor(c).getLuminance(c));
+    clrs.forEach((c, idx) => clrsLumi[idx] = new Color(c).luminance);
     // difference of luminance with primary color
     const differences = clrsLumi.map(x => Math.abs(x - primaryLuminance));
     // array.sort() modify the orignal array => create a copy
@@ -90,26 +91,22 @@ export const updateSwatches = (clrs) => {
 export const setBgColors = (palette) => {
     // tri sur les couleurs (en les convertissant en HSL) pour avoir les 2 dont le S est plus proche de 50%
     let clrs = [];
-    palette.forEach((c,idx) => {
-        const obj =tinycolor(c).toHsl();
+    palette.forEach((c, idx) => {
+        const obj = new Color(c);
         obj.idx = idx;
         clrs.push(obj);
     })
-    clrs.sort((a,b)=> Math.abs(a.l - 0.5) - Math.abs(b.l - 0.5))
+    clrs.sort((a, b) => Math.abs(a.hsl.s - 50) - Math.abs(b.hsl.s - 50))
     // Sets page's background gradient
-    const bg = tinycolor
-        .mix(clrs[0], clrs[1], 50)
-        .desaturate(10)
-        .toString();
+    const bg = Color.mix(clrs[0], clrs[1], .5).to('hsl');
+    bg.s -= 10;
     // lighter version
-    const bgInner = tinycolor(bg)
-        .lighten(20)
-        .toString();
+    const bgInner = bg.to('hsl');
+    bgInner.l += 20;
     // darker version
-    const bgOuter = tinycolor(bg)
-        .darken(10)
-        .toString();
-    return [bgInner, bgOuter];
+    const bgOuter = bg.to('hsl');
+    bgOuter.l -= 10;
+    return [bgInner.toString({ format: "hex",precision: 3 }), bgOuter.toString({ format: "hex",precision: 3 })];
 }
 
 // Draw & insert a SVG arrow to draw attention on blocks' weights
