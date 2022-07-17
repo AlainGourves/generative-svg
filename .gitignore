@@ -2,6 +2,7 @@
 .vscode/
 .parcel-cache/
 node_modules/
+parcel-bundle-reports/
 public/
 dist/
 test.html

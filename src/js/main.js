@@ -1,4 +1,4 @@
-import { random } from "https://cdn.skypack.dev/@georgedoescode/generative-utils@1.0.38";
+import { random } from '@georgedoescode/generative-utils';
 import { getColorPalette, getTwoColors, setBgColors, updateSwatches, saveSVGFile, sumArray, drawArrow } from './utils.js';
 import { animBgColors, animSVGIn, animSVGOut, btnMenuOpen, btnMenuClose, randomWeightsAnim, articleSlideIn, blockWeightSlideIn, blockWeightSlideOut, animPalette, animArrow, animArrowFadeOut } from './animations.js';
 import * as blockFn from './blocks.js';

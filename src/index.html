@@ -5,43 +5,32 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./scss/style.scss">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <title>Document</title>
+    <title>Generative SVG Art</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.1.2/svg.min.js"
         integrity="sha512-I+rKw3hArzZIHzrkdELbKqrXfkSvw/h0lW/GgB8FThaBVz2e5ZUlSW8kY8v3q6wq37eybIwyufkEZxe4qSlGcg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinycolor/1.4.2/tinycolor.min.js"
-        integrity="sha512-+aXA9mgbUvFe0ToTlbt8/3vT7+nOgUmFw29wfFCsGoh8AZMRSU0p4WtOvC1vkF2JBrndPN2TuNZsHPAKPPxe8Q=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
-    <style>
-        :root {
-            --loading-clr: #ffa516
-        }
 
-        #loading {
-            width: 3rem;
-            aspect-ratio: 1;
-            border-radius: 50%;
-            background: radial-gradient(farthest-side, var(--loading-clr) 94%, #0000) top/8px 8px no-repeat,
-                conic-gradient(#0000 30%, var(--loading-clr));
-            -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 8px), #000 0);
-            animation: spin 1s infinite linear;
-        }
-
-        @keyframes spin {
-            100% {
-                transform: rotate(1turn);
-            }
-        }
-    </style>
+    <!-- https://dev.to/masakudamatsu/loading-google-fonts-and-any-other-web-fonts-as-fast-as-possible-in-early-2021-4f5o -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;1,100&family=Plaster&display=swap" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;1,100&family=Plaster&display=swap"
+        media="print" onload="this.media='all'" />
+    <noscript>
+        <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;1,100&family=Plaster&display=swap" />
+    </noscript>
 </head>
 
 <body>
     <h1>Generative Art !</h1>
     <main>
-        <div id="loading"></div>
+        <div id="loading">Loading...</div>
     </main>
     <div id="btnMenu__cont">
         <button id="btnMenu" class="btn__round focused" aria-label="Settings" aria-describedby="btnMenu-tt">
@@ -108,18 +97,16 @@
                         </label>
                     </div>
                     <div class="divide-slider__cont slider__parent">
-                        <label>
-                            <span>Frequency of division:</span>
-                            <div><input type="range" class="slider divide-slider" min="0" max="100" step="1" value="0"
-                                    tabindex="-1" role="slider" aria-valuemin="0" aria-valuemax="100">
-                                <output>0%</output>
-                            </div>
+                        <label>Frequency of division:
+                            <input type="range" class="slider divide-slider" min="0" max="100" step="1" value="0"
+                                tabindex="-1" role="slider" aria-valuemin="0" aria-valuemax="100">
+                            <output>0%</output>
                         </label>
                     </div>
                 </div>
             </article>
             <article class="types">
-                <h3>Types of blocks</h3>
+                <h3>Blocks Types</h3>
                 <p>Click on the blocks you wish to utilize.</p>
                 <div class="select-block-type">
                     <template id="bloc-type__tmpl">
@@ -132,7 +119,7 @@
                 </div>
             </article>
             <article class="weights">
-                <h3>Block weight</h3>
+                <h3>Blocks Weights</h3>
                 <p>Determine the frequency of each type of block. Percentages represent the probability of being drawn
                     and must add up to 100.</p>
                 <div class="block-weight__cont">
@@ -177,7 +164,7 @@
                 </div>
             </article>
             <article class="palette">
-                <h3>Color palette</h3>
+                <h3>Color Palette</h3>
                 <p>Click on a color swatch to adjust its value, or the button to choose a random palette.</p>
                 <div>
                     <div class="clr__inputs">
