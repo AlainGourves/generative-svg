@@ -106,7 +106,7 @@ export const setBgColors = (palette) => {
     // darker version
     const bgOuter = bg.to('hsl');
     bgOuter.l -= 10;
-    return [bgInner.toString({ format: "hex",precision: 3 }), bgOuter.toString({ format: "hex",precision: 3 })];
+    return [bgInner.toString({ format: "hex", precision: 3 }), bgOuter.toString({ format: "hex", precision: 3 })];
 }
 
 // Draw & insert a SVG arrow to draw attention on blocks' weights
@@ -127,4 +127,26 @@ export const drawArrow = () => {
     icon.size(40, 40)
     draw.css('left', `${x}px`)
         .css('top', `${y}px`);
+}
+
+// To debounce the draw() function (if triggered too rapidly, the fade-in/out animation doesn't have time to finish and the former SVG is not removed)
+// cf. https://redd.one/blog/debounce-vs-throttle
+export const debounce = (func, duration) => {
+    let timeout
+    return function (...args) {
+        const effect = () => {
+            timeout = null
+            return func.apply(this, args)
+        }
+        clearTimeout(timeout)
+        timeout = setTimeout(effect, duration)
+    }
+}
+
+export const clearSVG = () => {
+    // Supprime tous les SVGs de <main>
+    let svgs = document.querySelectorAll('main svg');
+    if (svgs.length) {
+        svgs.forEach(svg => svg.remove());
+    }
 }

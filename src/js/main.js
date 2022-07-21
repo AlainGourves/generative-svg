@@ -1,8 +1,34 @@
 import { random } from '@georgedoescode/generative-utils';
-import { getColorPalette, getTwoColors, setBgColors, updateSwatches, saveSVGFile, sumArray, drawArrow } from './utils.js';
-import { animBgColors, animSVGIn, animSVGOut, btnMenuOpen, btnMenuClose, randomWeightsAnim, articleSlideIn, blockWeightSlideIn, blockWeightSlideOut, animPalette, animArrow, animArrowFadeOut } from './animations.js';
+import {
+    getColorPalette,
+    getTwoColors,
+    setBgColors,
+    updateSwatches,
+    saveSVGFile,
+    sumArray,
+    drawArrow,
+    debounce,
+    clearSVG,
+} from './utils.js';
+import {
+    animBgColors,
+    animSVGIn,
+    animSVGOut,
+    btnMenuOpen,
+    btnMenuClose,
+    randomWeightsAnim,
+    articleSlideIn,
+    blockWeightSlideIn,
+    blockWeightSlideOut,
+    animPalette,
+    animArrow,
+    animArrowFadeOut,
+} from './animations.js';
 import * as blockFn from './blocks.js';
-import { getBlockId, init } from "./init.js";
+import {
+    getBlockId,
+    init
+} from "./init.js";
 import { createTree } from './tree.js';
 import weightedRandom from './weightedRandom.js';
 import { drawBg } from './bg.js';
@@ -13,6 +39,7 @@ Functions :
 - drawSVG
 - generateLittleBox
 - updateActiveBlocks
+- removeFromActiveBlocks
 - updateWeights
 - updateTotalWeight
 - randomizeWeights
@@ -59,17 +86,19 @@ const blockWeightTemplate = settings.querySelector('#bloc-weight__tmpl');
 
 let weigthSliders = []; // stores the sliders values
 
+const debounceTime = 250; // debounce time for draw function
+
 const prepareDraw = () => {
     // Animate the exit of the previous drawing (if it exists) and then calls the drawSVG function
     const svg = document.querySelector('main svg');
     if (svg && !prefersReducedMotion) {
-        animSVGOut(svg)
+        debounce(animSVGOut(svg)
             .then(() => {
-                // if a previous SVG exists, remove it
-                svg.remove()
-            })
-            .then(() => drawSVG())
+                clearSVG();
+                drawSVG();
+            }), debounceTime);
     } else {
+        clearSVG();
         drawSVG();
     }
 }
@@ -148,27 +177,20 @@ const updateActiveBlocks = (fn, isActive) => {
         // Supprime le HTML correspondant
         const label = weightsContainer?.querySelector(`[data-function='${fn}']`).parentElement;
         if (label) {
-            blockWeightSlideOut(label)
-            .then(() => {
-                label.remove();
-                // Enlève fn de activeBlocksTypes (et activeBlocksWeigths)
-                const idx = activeBlocksTypes.findIndex(f => f.name === fn);
-                activeBlocksTypes.splice(idx, 1);
-                activeBlocksWeigths.splice(idx, 1);
-                // update le array des sliders
-                // NB: il faut que ça soit fait là pour la suite
-                weigthSliders = weightsContainer?.querySelectorAll('input[type=range]');
-                if (activeBlocksTypes.length === 1) {
-                    // 1 seul bloc activé => son poids doit être 1 !!
-                    const b = weightsContainer.querySelector(`[data-function='${activeBlocksTypes[0].name}']`)
-                    b.value = 1;
-                    activeBlocksWeigths[0] = 1;
-                }
-            })
-            .then(() => {
+            if (!prefersReducedMotion) {
+                blockWeightSlideOut(label)
+                    .then(() => {
+                        removeFromActiveBlocks(label);
+                    })
+                    .then(() => {
+                        // MàJ total poids
+                        updateTotalWeight();
+                    });
+            } else {
+                removeFromActiveBlocks(label);
                 // MàJ total poids
                 updateTotalWeight();
-            });
+            }
         }
     }
     // Affiche le total des poids
@@ -178,6 +200,23 @@ const updateActiveBlocks = (fn, isActive) => {
     } else {
         btnRandomWeights.tabIndex = -1;
         weightsTotal.dataset.display = false;
+    }
+}
+
+const removeFromActiveBlocks = (label) => {
+    label.remove();
+    // Enlève fn de activeBlocksTypes (et activeBlocksWeigths)
+    const idx = activeBlocksTypes.findIndex(f => f.name === fn);
+    activeBlocksTypes.splice(idx, 1);
+    activeBlocksWeigths.splice(idx, 1);
+    // update le array des sliders
+    // NB: il faut que ça soit fait là pour la suite
+    weigthSliders = weightsContainer?.querySelectorAll('input[type=range]');
+    if (activeBlocksTypes.length === 1) {
+        // 1 seul bloc activé => son poids doit être 1 !!
+        const b = weightsContainer.querySelector(`[data-function='${activeBlocksTypes[0].name}']`)
+        b.value = 1;
+        activeBlocksWeigths[0] = 1;
     }
 }
 
@@ -314,12 +353,14 @@ window.addEventListener("load", e => {
     const inputs = gridSize?.querySelectorAll('input[type="number"]');
     inputs[0].value = numCols;
     inputs[1].value = numRows;
-    gridSize.addEventListener('change', ev => {
+    gridSize.addEventListener('change', debounce(ev => {
         if (ev.target.type === 'number') {
             // add .alert class if input is not valid
             if (ev.target.validity.badInput) {
-                ev.target.classList.toggle('alert', ev.target.validity.badInput);
+                ev.target.classList.add('alert');
                 return;
+            } else {
+                ev.target.classList.remove('alert');
             }
             const newVal = parseInt(ev.target.value);
             if (ev.target.dataset.var == 'numCols') numCols = newVal;
@@ -339,7 +380,7 @@ window.addEventListener("load", e => {
             div.classList.toggle('open', isSubdivision);
             ev.target.ariaChecked = isSubdivision;
         }
-    });
+    }, debounceTime));
     gridSize.addEventListener('keydown', ev => {
         if (ev.key === 'Enter' && ev.target.type === 'checkbox') {
             // toggle the checked on Enter
@@ -352,7 +393,7 @@ window.addEventListener("load", e => {
         const output = divideSlider.nextElementSibling;
         output.textContent = `${divideSlider.value}%`;
     });
-    divideSlider.addEventListener('change', prepareDraw);
+    divideSlider.addEventListener('change', debounce(() => prepareDraw(), debounceTime));
 
     // Blocks' Types ********************************************
 
@@ -434,8 +475,8 @@ window.addEventListener("load", e => {
 
     // Buttons
     [
-        [btnDraw, prepareDraw],
-        [btnDrawV, prepareDraw],
+        [btnDraw, debounce(prepareDraw, debounceTime)],
+        [btnDrawV, debounce(prepareDraw, debounceTime)],
         [btnMenu, toggleMenu],
         [btnExport, saveSVGFile],
         [btnExportV, saveSVGFile],

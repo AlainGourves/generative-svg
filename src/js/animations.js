@@ -205,7 +205,7 @@ export const animArrowFadeOut = (arrow) => {
         opacity: 0,
         onComplete: function () {
             const anim = gsap.getById('arrowYoyo');
-            anim.kill();
+            anim?.kill();
         }
     }, 0.5);
 }
