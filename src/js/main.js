@@ -193,6 +193,7 @@ const updateActiveBlocks = (fn, isActive) => {
             }
         }
     }
+    log(activeBlocksTypes)
     // Affiche le total des poids
     if (activeBlocksTypes.length > 1) {
         btnRandomWeights.tabIndex = 0;
