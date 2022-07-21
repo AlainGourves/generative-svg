@@ -193,7 +193,6 @@ const updateActiveBlocks = (fn, isActive) => {
             }
         }
     }
-    console.log(activeBlocksTypes)
     // Affiche le total des poids
     if (activeBlocksTypes.length > 1) {
         btnRandomWeights.tabIndex = 0;
@@ -205,8 +204,6 @@ const updateActiveBlocks = (fn, isActive) => {
 }
 
 const removeFromActiveBlocks = (label, fn) => {
-    console.log('nom fn', fn)
-    console.log('fns', activeBlocksTypes)
     label.remove();
     // Enlève fn de activeBlocksTypes (et activeBlocksWeigths)
     const idx = activeBlocksTypes.findIndex(f => f.name === fn);
