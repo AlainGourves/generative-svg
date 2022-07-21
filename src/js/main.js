@@ -180,14 +180,14 @@ const updateActiveBlocks = (fn, isActive) => {
             if (!prefersReducedMotion) {
                 blockWeightSlideOut(label)
                     .then(() => {
-                        removeFromActiveBlocks(label);
+                        removeFromActiveBlocks(label, fn);
                     })
                     .then(() => {
                         // MàJ total poids
                         updateTotalWeight();
                     });
             } else {
-                removeFromActiveBlocks(label);
+                removeFromActiveBlocks(label, fn);
                 // MàJ total poids
                 updateTotalWeight();
             }
@@ -203,7 +203,7 @@ const updateActiveBlocks = (fn, isActive) => {
     }
 }
 
-const removeFromActiveBlocks = (label) => {
+const removeFromActiveBlocks = (label, fn) => {
     label.remove();
     // Enlève fn de activeBlocksTypes (et activeBlocksWeigths)
     const idx = activeBlocksTypes.findIndex(f => f.name === fn);
