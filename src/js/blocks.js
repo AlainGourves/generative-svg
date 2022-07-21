@@ -33,13 +33,13 @@ export const fn = (group, x, y, w, foreground, background, randomize = false) =>
 
 export const drawRect = (group, x, y, w, foreground, background, randomize = false) => {
     // Create group element
-    // group.addClass('block draw-rect');
+    group.addClass('block draw-rect');
     // Draw block
     group.rect(w, w).addClass(`clr${foreground}`).stroke('none').move(x, y);
 }
 
 export const drawCircle = (group, x, y, w, foreground, background, randomize = false) => {
-    // group.addClass('block draw-circle');
+    group.addClass('block draw-circle');
     // draw background
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
     // foreground
@@ -47,7 +47,7 @@ export const drawCircle = (group, x, y, w, foreground, background, randomize = f
 }
 
 export const drawOppositeCircles = (group, x, y, w, foreground, background, randomize = false) => {
-    // group.addClass('block opposite-circles');
+    group.addClass('block opposite-circles');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
     // group for the circles
     const circleGroup = group.group();
@@ -58,7 +58,7 @@ export const drawOppositeCircles = (group, x, y, w, foreground, background, rand
 }
 
 export const drawFacingCircles = (group, x, y, w, foreground, background, randomize = false) => {
-    // group.addClass('block facing-circles');
+    group.addClass('block facing-circles');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
     // group for the circles
     const circleGroup = group.group();
@@ -69,7 +69,7 @@ export const drawFacingCircles = (group, x, y, w, foreground, background, random
 }
 
 export const drawSemiCircle = (group, x, y, w, foreground, background, randomize = false) => {
-    // group.addClass('block semi-circles');
+    group.addClass('block semi-circles');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
     // group for the circles
     const circleGroup = group.group();
@@ -83,7 +83,7 @@ export const drawSemiCircle = (group, x, y, w, foreground, background, randomize
 }
 
 export const drawDisc = (group, x, y, w, foreground, background, randomize = false) => {
-    // group.addClass('block disc');
+    group.addClass('block disc');
     // group for the circles
     const circleGroup = group.group();
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
@@ -93,7 +93,7 @@ export const drawDisc = (group, x, y, w, foreground, background, randomize = fal
 }
 
 export const drawOppositeTriangles = (group, x, y, w, foreground, background, randomize = false) => {
-    // group.addClass('block opposite-triangles');
+    group.addClass('block opposite-triangles');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
     const points = [
         // top-left
@@ -111,7 +111,7 @@ export const drawOppositeTriangles = (group, x, y, w, foreground, background, ra
 }
 
 export const drawTriangles = (group, x, y, w, foreground, background, randomize = false) => {
-    // group.addClass('block triangles');
+    group.addClass('block triangles');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
     const points = [x, y, x + w, y + w, x, y + w];
     group.polygon(points).addClass(`clr${foreground}`);
@@ -122,14 +122,14 @@ export const drawTriangles = (group, x, y, w, foreground, background, randomize 
 }
 
 export const drawLeaf = (group, x, y, w, foreground, background, randomize = false) => {
-    // group.addClass('block leaf');
+    group.addClass('block leaf');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
     group.path(`m${x} ${y} h${w / 2} a${w / 2} ${w / 2} 0 0 1 ${w / 2} ${w / 2} v${w / 2} h${-w / 2} a${w / 2} ${w / 2} 0 0 1 ${-w / 2} ${-w / 2} v${-w / 2}  z`).addClass(`clr${foreground}`);
     if (randomize && random(0, 1, true)) group.rotate(90)
 }
 
 export const drawRoundedBar = (group, x, y, w, foreground, background, randomize = false) => {
-    // group.addClass('block rounded-bar');
+    group.addClass('block rounded-bar');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
     group.path(`m${x} ${y} a${w / 2} ${w / 2} 0 0 1 ${w / 2} ${w / 2} v${w / 2} h${-w / 2} v${-w}  z`).addClass(`clr${foreground}`);
     if (randomize) {
@@ -139,7 +139,7 @@ export const drawRoundedBar = (group, x, y, w, foreground, background, randomize
 }
 
 export const drawArc = (group, x, y, w, foreground, background, randomize = false) => {
-    // group.addClass('block arc');
+    group.addClass('block arc');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
     group.path(`m${x} ${y} a${w} ${w} 0 0 1 ${w} ${w} h${-w}  z`).addClass(`clr${foreground}`);
     if (randomize) {
@@ -150,7 +150,7 @@ export const drawArc = (group, x, y, w, foreground, background, randomize = fals
 }
 
 export const drawRoundedBarSemiCircle = (group, x, y, w, foreground, background, randomize = false) => {
-    // group.addClass('block rounded-bar');
+    group.addClass('block rounded-bar');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
     // group for the leaf
     const roundedBarGroup = group.group();
@@ -163,7 +163,7 @@ export const drawRoundedBarSemiCircle = (group, x, y, w, foreground, background,
 }
 
 export const drawDroplet = (group, x, y, w, foreground, background, randomize = false) => {
-    // group.addClass('block droplet');
+    group.addClass('block droplet');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
     group.path(`m${x} ${y + w / 2} a${w / 2} ${w / 2} 0 1 1 ${w / 2} ${w / 2} h${-w / 2} v${-w / 2}  z`).addClass(`clr${foreground}`);
     if (randomize) {
@@ -173,7 +173,7 @@ export const drawDroplet = (group, x, y, w, foreground, background, randomize = 
 }
 
 export const drawQuarterRing = (group, x, y, w, foreground, background, randomize = false) => {
-    // group.addClass('block quarter-ring');
+    group.addClass('block quarter-ring');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
     group.path(`m${x} ${y + w} a${w} ${w} 0 0 1 ${w} ${-w} v${w / 2} a${w / 2} ${w / 2} 0 0 0 ${-w / 2} ${w / 2} h${-w / 2} z`).addClass(`clr${foreground}`);
     if (randomize) {
@@ -183,14 +183,14 @@ export const drawQuarterRing = (group, x, y, w, foreground, background, randomiz
 }
 
 export const drawDiamond = (group, x, y, w, foreground, background, randomize = false) => {
-    // group.addClass('block diamond');
+    group.addClass('block diamond');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
     const points = [x, y + w / 2, x + w / 2, y, x + w, y + w / 2, x + w / 2, y + w];
     group.polygon(points).addClass(`clr${foreground}`);
 }
 
 export const drawPoints = (group, x, y, w, foreground, background, randomize = false) => {
-    // group.addClass('block points');
+    group.addClass('block points');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
     const circles = group.group();
     let u = w / 6;
@@ -206,7 +206,7 @@ export const drawPoints = (group, x, y, w, foreground, background, randomize = f
 }
 
 export const drawWave = (group, x, y, w, foreground, background, randomize = false) => {
-    // group.addClass('block points');
+    group.addClass('block points');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
     group.path(`m${x} ${y + w} q0 -${w/3} ${w/3} -${w/3} q ${w/3} 0 ${w/3} -${w/3} q0 -${w/3} ${w/3} -${w/3} v ${w} z`).addClass(`clr${foreground}`);
     if (randomize) {
@@ -216,7 +216,7 @@ export const drawWave = (group, x, y, w, foreground, background, randomize = fal
 }
 
 export const drawStripes = (group, x, y, w, foreground, background, randomize = false) => {
-    // group.addClass('block stripes');
+    group.addClass('block stripes');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
     const stripes = group.group();
     stripes.rect(w, w/6).addClass(`clr${foreground}`).move(x, y+w/12);
