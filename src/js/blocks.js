@@ -62,8 +62,8 @@ export const drawFacingCircles = (group, x, y, w, foreground, background, random
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
     // group for the circles
     const circleGroup = group.group();
-    circleGroup.path(`M${x} ${y} a${w/2} ${w/2} 0 0 1 0 ${w} z`).addClass(`clr${foreground}`);
-    circleGroup.path(`M${x+w/2} ${y} a${w/2} ${w/2} 0 0 1 0 ${w} v-${w} z`).addClass(`clr${foreground}`);
+    circleGroup.path(`M${x} ${y} a${w/2} ${w/2} 0 0 1 0 ${w} v-${w} z`).addClass(`clr${foreground}`);
+    circleGroup.path(`M${x+w} ${y} a${w/2} ${w/2} 0 0 0 0 ${w} v-${w} z`).addClass(`clr${foreground}`);
     if (randomize && random(0, 1, true)) circleGroup.rotate(90)
     // group.add(circleGroup);
 }
