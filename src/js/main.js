@@ -279,8 +279,7 @@ const randomizeWeights = () => {
     for (let i = 0; i < 100; i++) {
         myArray[random(0, activeBlocksWeigths.length - 1, true)] += 1;
     }
-    // divise par 100 pour ramener à l'intervale [0,1]
-    // activeBlocksWeigths = myArray.map(v => v / 100);
+    activeBlocksWeigths = myArray;
     weigthSliders.forEach((s, idx) => {
         s.value = activeBlocksWeigths[idx];
     });
