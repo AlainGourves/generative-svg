@@ -1,4 +1,3 @@
-// Primitives functions
 import { random } from '@georgedoescode/generative-utils';
 
 /*

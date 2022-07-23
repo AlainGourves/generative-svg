@@ -5,7 +5,7 @@
  *
  * For example:
  * - items = ['banana', 'orange', 'apple']
- * - weights = [0, 0.2, 0.8]
+ * - weights = [0, 100] 
  * - weightedRandom(items, weights) in 80% of cases will return 'apple', in 20% of cases will return
  * 'orange' and it will never return 'banana' (because probability of picking the banana is 0%)
  *

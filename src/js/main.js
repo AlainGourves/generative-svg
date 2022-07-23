@@ -47,7 +47,6 @@ Functions :
 - toggleMenu
 */
 
-window.random = random; // TODO enlever ça
 const log = console.log;
 
 let prefersReducedMotion = true; // @media(prefers-reduced-motion: reduce) => animations disabled by default
@@ -146,7 +145,7 @@ const updateActiveBlocks = (fn, isActive) => {
     if (isActive) {
         // Ajoute fn à activeBlocksTypes (et activeBlocksWeigths)
         activeBlocksTypes.push(blockFn[fn]);
-        activeBlocksWeigths.push((activeBlocksTypes.length === 1) ? 1 : 0); // if there is only 1 block type, its weight is 1
+        activeBlocksWeigths.push((activeBlocksTypes.length === 1) ? 100 : 0); // if there is only 1 block type, its weight is 100
         // et génère le HTML correspondant
         const clone = blockWeightTemplate.content.cloneNode(true);
         const label = clone.querySelector('label');
@@ -159,7 +158,7 @@ const updateActiveBlocks = (fn, isActive) => {
         input.dataset.function = fn;
         const v = activeBlocksWeigths[activeBlocksWeigths.length - 1];
         input.value = v;
-        output.textContent = `${Math.floor(v * 100)}%`
+        output.textContent = `${Math.floor(v)}%`
         const draw = SVG().addTo(block).viewbox('0 0 20 20');
         draw.attr('role', 'img');
         draw.use(getBlockId(fn));
@@ -215,8 +214,8 @@ const removeFromActiveBlocks = (label, fn) => {
     if (activeBlocksTypes.length === 1) {
         // 1 seul bloc activé => son poids doit être 1 !!
         const b = weightsContainer.querySelector(`[data-function='${activeBlocksTypes[0].name}']`)
-        b.value = 1;
-        activeBlocksWeigths[0] = 1;
+        b.value = 100;
+        activeBlocksWeigths[0] = 100;
     }
 }
 
@@ -226,40 +225,34 @@ const updateWeights = (ev) => {
     let diff = newVal - activeBlocksWeigths[idx];
     activeBlocksWeigths[idx] = newVal;
 
-    // TODO: couille en potage dans l'algo, on peut dépasser les 100% !!!
     // console.log(sumArray(activeBlocksWeigths))
-    if (activeBlocksWeigths.length > 1 && sumArray(activeBlocksWeigths) > 1) {
+    if (activeBlocksWeigths.length > 1 && sumArray(activeBlocksWeigths) > 100) {
+        // Sum of weights is > 1
         let newWeights = [];
         if (diff > 0) {
-            let n = activeBlocksWeigths.filter((v) => v > 0).length - 1;
+            let n = activeBlocksWeigths.filter((v) => v > 0).length - 1; // nombre de types dont le poids > 0 sur lesquels répartir la diff
+            // la nouvelle valeur est > à l'ancienne
+            // on distribue la différence sur les autres types > 0
+            //(-> ancienne valeur - (diff / n))
             newWeights = activeBlocksWeigths.map((v, i) => {
                 if (i === idx || v === 0) return v;
-                let res = v - diff / n;
-                if (res < 0) {
-                    // diff += Math.abs(res);
-                    diff = diff - v + Math.abs(res);
-                    res = 0;
+                let returnVal = v - (diff / n);
+                if (returnVal < 0) {
+                    // la valeur ne peut pas être négative => on met la valeur à 0 et l'excédent est intégré à diff
+                    diff = diff - v + Math.abs(returnVal);
+                    returnVal = 0;
                 }
-                return res;
-            });
-        } else {
-            let n = activeBlocksWeigths.length - 1;
-            newWeights = activeBlocksWeigths.map((v, i) => {
-                if (i === idx || v === 0) return v;
-                let res = v - diff / n;
-                if (res < 0) {
-                    diff += Math.abs(res);
-                    res = 0;
-                }
-                return res;
+                return returnVal;
             });
         }
-        // nettoyage
+        // nettoyage pour la forme
         newWeights.forEach((v, i) => {
             if (v < 0) newWeights[i] = 0;
-            if (v > 1) newWeights[i] = 1;
+            if (v > 100) newWeights[i] = 100;
         });
+        // Actualise les sliders
         weigthSliders.forEach((s, i) => (s.value = newWeights[i]));
+        // Applique les nouvelles valeurs calculées
         activeBlocksWeigths = newWeights;
     }
     updateTotalWeight();
@@ -268,7 +261,7 @@ const updateWeights = (ev) => {
 const updateTotalWeight = () => {
     let total = 0;
     activeBlocksWeigths.forEach((val, i) => {
-        const v = Math.round(val * 100);
+        const v = Math.round(val);
         total += v;
         weigthSliders[i].nextElementSibling.value = `${v}%`; // update <output> value
     });
@@ -287,7 +280,7 @@ const randomizeWeights = () => {
         myArray[random(0, activeBlocksWeigths.length - 1, true)] += 1;
     }
     // divise par 100 pour ramener à l'intervale [0,1]
-    activeBlocksWeigths = myArray.map(v => v / 100);
+    // activeBlocksWeigths = myArray.map(v => v / 100);
     weigthSliders.forEach((s, idx) => {
         s.value = activeBlocksWeigths[idx];
     });
@@ -356,7 +349,7 @@ window.addEventListener("load", e => {
     gridSize.addEventListener('change', debounce(ev => {
         if (ev.target.type === 'number') {
             // add .alert class if input is not valid
-            if (ev.target.validity.badInput) {
+            if (ev.target.validity.badInput || ev.target.value <= 0) {
                 ev.target.classList.add('alert');
                 return;
             } else {
@@ -498,7 +491,6 @@ window.addEventListener("load", e => {
     const slider = weightsContainer.querySelector(`[data-function='${defaultType}']`);
     slider.dispatchEvent(new Event('input', { bubbles: true }));
 
-    toggleMenu();
 
     // Color palette
     getColorPalette()
@@ -515,5 +507,6 @@ window.addEventListener("load", e => {
             updateSwatches(colorPalette);
             document.querySelector('#loading').remove();
             prepareDraw();
+            toggleMenu();
         });
 });

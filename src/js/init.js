@@ -1,7 +1,7 @@
 import * as blockFn from './blocks.js';
 
-// Array des noms des fonctions du module Blocks
-const drawFunctions = Object.keys(blockFn);
+// Array des noms des fonctions du module Blocks __triés__
+const drawFunctions = Object.keys(blockFn).sort();
 
 const typesContainer = document.querySelector('.select-block-type');
 const blockTypeTemplate = document.querySelector('#bloc-type__tmpl');
@@ -39,7 +39,7 @@ export const init = () => {
     createSVGLibrary();
 
     // Afficher les différents type de bloc
-    drawFunctions.forEach((obj, idx) => {
+    drawFunctions.forEach((_, idx) => {
         const clone = blockTypeTemplate.content.cloneNode(true);
         const check = clone.querySelector('input[type=checkbox]');
         const label = clone.querySelector('label');
