@@ -28,6 +28,10 @@ export const fn = (group, x, y, w, foreground, background, randomize = false) =>
 *   - drawSemiCircle
 *   - drawTriangles
 *   - drawWave
+*   - drawCross
+*   - drawPolkaDot
+*   - drawArch
+*   - drawCroissant
 */
 
 export const drawRect = (group, x, y, w, foreground, background, randomize = false) => {
@@ -50,8 +54,8 @@ export const drawOppositeCircles = (group, x, y, w, foreground, background, rand
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
     // group for the circles
     const circleGroup = group.group();
-    circleGroup.path(`M${x + w} ${y + w/2} a${w/2} ${w/2} 0 0 0 -${w/2} ${w/2} h${w/2} z`).addClass(`clr${foreground}`); //Bottom left
-    circleGroup.path(`M${x + w/2} ${y} a${w/2} ${w/2} 0 0 1 -${w/2} ${w/2} v-${w/2} z`).addClass(`clr${foreground}`); // top right
+    circleGroup.path(`M${x + w} ${y + w / 2} a${w / 2} ${w / 2} 0 0 0 -${w / 2} ${w / 2} h${w / 2} z`).addClass(`clr${foreground}`); //Bottom left
+    circleGroup.path(`M${x + w / 2} ${y} a${w / 2} ${w / 2} 0 0 1 -${w / 2} ${w / 2} v-${w / 2} z`).addClass(`clr${foreground}`); // top right
     if (randomize && random(0, 1, true)) circleGroup.rotate(90)
     // group.add(circleGroup);
 }
@@ -61,8 +65,8 @@ export const drawFacingCircles = (group, x, y, w, foreground, background, random
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
     // group for the circles
     const circleGroup = group.group();
-    circleGroup.path(`M${x} ${y} a${w/2} ${w/2} 0 0 1 0 ${w} v-${w} z`).addClass(`clr${foreground}`);
-    circleGroup.path(`M${x+w} ${y} a${w/2} ${w/2} 0 0 0 0 ${w} v-${w} z`).addClass(`clr${foreground}`);
+    circleGroup.path(`M${x} ${y} a${w / 2} ${w / 2} 0 0 1 0 ${w} v-${w} z`).addClass(`clr${foreground}`);
+    circleGroup.path(`M${x + w} ${y} a${w / 2} ${w / 2} 0 0 0 0 ${w} v-${w} z`).addClass(`clr${foreground}`);
     if (randomize && random(0, 1, true)) circleGroup.rotate(90)
     // group.add(circleGroup);
 }
@@ -207,7 +211,7 @@ export const drawPoints = (group, x, y, w, foreground, background, randomize = f
 export const drawWave = (group, x, y, w, foreground, background, randomize = false) => {
     group.addClass('block points');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
-    group.path(`m${x} ${y + w} q0 -${w/3} ${w/3} -${w/3} q ${w/3} 0 ${w/3} -${w/3} q0 -${w/3} ${w/3} -${w/3} v ${w} z`).addClass(`clr${foreground}`);
+    group.path(`m${x} ${y + w} q0 -${w / 3} ${w / 3} -${w / 3} q ${w / 3} 0 ${w / 3} -${w / 3} q0 -${w / 3} ${w / 3} -${w / 3} v ${w} z`).addClass(`clr${foreground}`);
     if (randomize) {
         const dir = random(0, 3, true);
         group.rotate(dir * 90);
@@ -218,10 +222,73 @@ export const drawStripes = (group, x, y, w, foreground, background, randomize = 
     group.addClass('block stripes');
     group.rect(w, w).addClass(`clr${background}`).move(x, y);
     const stripes = group.group();
-    stripes.rect(w, w/6).addClass(`clr${foreground}`).move(x, y+w/12);
-    stripes.rect(w, w/6).addClass(`clr${foreground}`).move(x, y+(5*w/12));
-    stripes.rect(w, w/6).addClass(`clr${foreground}`).move(x, y+(9*w/12));
+    stripes.rect(w, w / 6).addClass(`clr${foreground}`).move(x, y + w / 12);
+    stripes.rect(w, w / 6).addClass(`clr${foreground}`).move(x, y + (5 * w / 12));
+    stripes.rect(w, w / 6).addClass(`clr${foreground}`).move(x, y + (9 * w / 12));
     if (randomize) {
         group.rotate(random(0, 1, true) * 90);
+    }
+}
+
+export const drawCross = (group, x, y, w, foreground, background, randomize = false) => {
+    group.addClass('block cross');
+    group.rect(w, w).addClass(`clr${background}`).move(x, y);
+    group.path(`m${x} ${y} h${w / 4} l${w / 4} ${w / 4} l${w / 4} ${-w / 4} h${w / 4}  v${w / 4} l${-w / 4} ${w / 4} l${w / 4} ${w / 4}  v${w / 4}  h${-w / 4} l${-w / 4} ${-w / 4} l${-w / 4} ${w / 4} h${-w / 4} v${-w / 4} l${w / 4} ${-w / 4} l${-w / 4} ${-w / 4} z`).addClass(`clr${foreground}`);
+}
+
+export const drawPlus = (group, x, y, w, foreground, background, randomize = false) => {
+    group.addClass('block plus');
+    group.rect(w, w).addClass(`clr${background}`).move(x, y);
+    group.path(`m${x + w / 4} ${y} h${w / 2} v${w / 4} h${w / 4} v${w / 2} h${-w / 4} v${w / 4} h${-w / 2} v${-w / 4}  h${-w / 4} v${-w / 2} h${w / 4} z`).addClass(`clr${foreground}`);
+}
+
+export const drawPolkaDot = (group, x, y, w, foreground, background, randomize = false) => {
+    group.addClass('block polka');
+    group.rect(w, w).addClass(`clr${background}`).move(x, y);
+    const polkaGroup = group.group();
+    polkaGroup.addClass(`clr${foreground}`);
+    polkaGroup.path(`m${x + (w / 4)} ${y} a${w / 4} ${w / 4} 0 0 0 ${w / 2} 0  z`);
+    polkaGroup.path(`m${x + (w / 4)} ${y + w} a${w / 4} ${w / 4} 0 0 1 ${w / 2} 0  z`);
+    polkaGroup.path(`m${x} ${y + (w / 4)} a${w / 4} ${w / 4} 0 0 1 0 ${w / 2}  z`);
+    polkaGroup.path(`m${x + w} ${y + (w / 4)} a${w / 4} ${w / 4} 0 0 0 0 ${w / 2}  z`);
+}
+
+export const drawArch = (group, x, y, w, foreground, background, randomize = false) => {
+    group.addClass('block arch');
+    group.rect(w, w).addClass(`clr${background}`).move(x, y);
+    group.path(`m${x} ${y + w} a${w} ${w} 0 0 1 ${w / 2} ${-w * Math.sqrt(3) / 2} a${w} ${w} 0 0 1 ${w / 2} ${w * Math.sqrt(3) / 2}  z`).addClass(`clr${foreground}`);
+    if (randomize) {
+        const dir = random(0, 3, true);
+        group.rotate(dir * 90);
+    }
+}
+
+// export const drawParabola = (group, x, y, w, foreground, background, randomize = false) => {
+//     group.addClass('block parabola');
+//     group.rect(w, w).addClass(`clr${background}`).move(x, y);
+//     group.path(`m${x} ${y} q${w / 2} ${w * 2} ${w} 0 z`).addClass(`clr${foreground}`);
+//     if (randomize) {
+//         const dir = random(0, 3, true);
+//         group.rotate(dir * 90);
+//     }
+// }
+
+export const drawLotus = (group, x, y, w, foreground, background, randomize = false) => {
+    group.addClass('block lotus');
+    group.rect(w, w).addClass(`clr${background}`).move(x, y);
+    group.path(`m${x} ${y} a${w / 2} ${w / 2} 0 0 1 ${w / 2}  ${w / 2} a${w / 2} ${w / 2} 0 0 1 ${w / 2} ${-w / 2} v${w / 2} a${w / 2} ${w / 2} 0 0 1 ${-w} 0 z`).addClass(`clr${foreground}`);
+    if (randomize) {
+        group.rotate(random(0, 3, true) * 90);
+    }
+}
+
+export const drawCroissant = (group, x, y, w, foreground, background, randomize = false) => {
+    group.addClass('block croissant');
+    group.rect(w, w).addClass(`clr${background}`).move(x, y);
+    // group.path(`m${x} ${y  + w / 2} q${w / 2} ${-w} ${w} 0 q${-w / 2} ${w} ${-w} 0  z`).addClass(`clr${foreground}`);
+    // group.path(`m${x + w / 2} ${y} c0 0 ${-w / 2} 0 ${-w / 2} ${w} 0 ${-w / 2} ${w} ${-w / 2} ${w} 0 0 ${-w} ${-w / 2} ${-w} ${-w / 2} ${-w} z`).addClass(`clr${foreground}`);
+    group.path(`m${x + w / 2} ${y} c0 0 ${-w / 2} 0 ${-w / 2} ${w} a${w / 2} ${w / 2} 0 0 1 ${w} 0 c0 ${-w} ${-w / 2} ${-w} ${-w / 2} ${-w} z`).addClass(`clr${foreground}`);
+    if (randomize) {
+        group.rotate(random(0, 3, true) * 90);
     }
 }
