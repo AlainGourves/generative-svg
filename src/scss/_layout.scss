@@ -45,7 +45,7 @@ aside {
         & .btns__vert {
             display: flex;
             flex-direction: column;
-            gap: 2rem;
+            gap: clamp(1.5rem, 6vmax, 3rem);
             width: var(--menu-w);
             position: fixed;
             left: 0;

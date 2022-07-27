@@ -51,7 +51,7 @@ body {
     background-image: radial-gradient(var(--bg-inner) 0%, var(--bg-outer) 100%);
 
     &.svg {
-        background-position: top left, bottom right 4rem, 50% 50%;
+        background-position: top left, bottom right var(--menu-w, 4rem), 50% 50%;
         background-repeat: no-repeat;
         background-blend-mode: overlay, overlay, normal;
         background-size: 45vw, 45vw, auto;
