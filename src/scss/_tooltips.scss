@@ -1,26 +1,69 @@
-$clr-tooltip: hsl(188deg, 10%, 14%);
+// $clr-tooltip: hsl(188deg, 10%, 14%);
+$clr-tooltip: red;
+
+:root {
+  --tooltip-bg: red;
+  --tootltip-arrow: .5rem;
+  --tooltip-delay: 3s;
+}
+
+.tt__parent {
+  position: relative;
+
+  @media(hover: hover) and (pointer: fine) {
+    &>*:hover~.tooltip {
+      opacity: 1;
+      transform: translate(calc(-100% - var(--tootltip-arrow) * 1.25), -50%) scale(1);
+      transition: opacity 0.25s ease-in var(--tooltip-delay), transform 0.25s ease-in var(--tooltip-delay);
+
+      &.bottom{
+        transform: translate(-50%, calc(100% + var(--tootltip-arrow) * 1.25)) scale(1);
+      }
+    }
+  }
+}
 
 .tooltip {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    max-width: 12rem;
-    background: $clr-tooltip;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: fit-content;
+  padding: .5rem 0.75rem;
+  border-radius: 0.125rem;
+  background: var(--tooltip-bg);
+  opacity: 0;
+  transform-origin: right center;
+  transform: translate(calc(-80% - var(--tootltip-arrow) * 1.25), -50%) scale(0);
+  transition: opacity .125s ease-out, transform .125s ease-out;
+  pointer-events: none;
+  user-select: none;
 
-    padding: .5rem;
-    // border-radius: .25rem;
-    z-index: 1;
-    opacity: 0;
-    transition: opacity .5s linear 2s;
-    pointer-events: none;
-    user-select: none;
+  &:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: 50%;
+    right: calc(var(--tootltip-arrow) * -1 + 1px);
+    transform: translatey(-50%);
+    border-style: solid;
+    border-width: calc(var(--tootltip-arrow) * .75) 0 calc(var(--tootltip-arrow) * .75) var(--tootltip-arrow);
+    border-color: transparent transparent transparent var(--tooltip-bg);
   }
 
-//   .arrow {
-//       position: absolute;
-//       background-color: $clr-tooltip;
-//       width: .625rem;
-//       height: .625rem;
-//       transform: rotate(45deg);
-//   }
+  &.bottom {
+    left: 50%;
+    top: auto;
+    bottom: 0;
+    transform-origin: center bottom;
+    transform: translate(-50%, 0) scale(0);
+
+    &:after {
+      top: calc(var(--tootltip-arrow) * -1 + 1px);
+      right: 50%;
+      transform: translateX(50%);
+      border-width: 0 calc(var(--tootltip-arrow) * .75) var(--tootltip-arrow) calc(var(--tootltip-arrow) * .75);
+      border-color: transparent transparent var(--tooltip-bg) transparent;
+    }
+  }
+}

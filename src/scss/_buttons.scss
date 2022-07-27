@@ -48,6 +48,10 @@ button {
         place-content: center;
         border: 1px solid hsl(0deg 0% 100% / 75%);
         border-radius: 50%;
+
+        &:active {
+            transform: scale(1.1);
+        }
     }
 }
 

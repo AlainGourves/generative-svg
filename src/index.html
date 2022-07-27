@@ -53,7 +53,7 @@
     <main>
         <div id="loading"></div>
     </main>
-    <div id="btnMenu__cont">
+    <div id="btnMenu__cont" class="tt__parent">
         <button id="btnMenu" class="btn__round focused" aria-label="Settings" aria-describedby="btnMenu-tt">
             <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" class="svg-icon"
                 aria-hidden="true">
@@ -71,7 +71,7 @@
         <div class="aside__cont" aria-hidden="false">
             <h2>Settings</h2>
             <article class="btns">
-                <div>
+                <div class="tt__parent">
                     <button class="btn focused" id="drawSVG" aria-describedby="drawSVG-tt">
                         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"
                             class="svg-icon" aria-hidden="true">
@@ -82,9 +82,9 @@
                         </svg>
                         <span class="btn__text">Draw SVG</span>
                     </button>
-                    <div id="drawSVG-tt" class="tooltip" role="tooltip">Generate a new random image</div>
+                    <div id="drawSVG-tt" class="tooltip bottom" role="tooltip">Generate a new random image</div>
                 </div>
-                <div>
+                <div class="tt__parent">
                     <button class="btn focused" id="exportSVG" aria-describedby="exportSVG-tt">
                         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"
                             class="svg-icon" aria-hidden="true">
@@ -94,7 +94,7 @@
                         </svg>
                         <span class="btn__text">Export SVG</span>
                     </button>
-                    <div id="exportSVG-tt" class="tooltip" role="tooltip">Save to SVG file</div>
+                    <div id="exportSVG-tt" class="tooltip bottom" role="tooltip">Save to SVG file</div>
                 </div>
             </article>
             <article class="grid">
@@ -156,31 +156,34 @@
                         </label>
                     </template>
                     <div class="block-weight__total" data-display="false">
-                        <button id="randomize-weights" class="btn btn__small focused" tabindex="-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"
-                                class="svg-icon" id="random-weights" aria-hidden="true">
-                                <mask id="myMask">
-                                    <rect x="0" y="0" width="24" height="24" fill="#fff" />
-                                    <circle cx="20" cy="4" r="3" fill="#000" />
-                                    <circle cx="12" cy="12" r="3" fill="#000" />
-                                    <circle cx="18" cy="20" r="3" fill="#000" />
-                                </mask>
-                                <rect width="24" height="24" stroke="none" fill="transparent" />
-                                <g>
-                                    <circle cx="20" cy="4" r="2" />
-                                    <circle cx="12" cy="12" r="2" />
-                                    <circle cx="18" cy="20" r="2" />
-                                </g>
-                                <g mask="url(#myMask)" class="tracks">
-                                    <rect x="1" y="3" width="22" height="2" rx="1" />
-                                    <rect x="1" y="11" width="22" height="2" rx="1" />
-                                    <rect x="1" y="19" width="22" height="2" rx="1" />
-                                </g>
+                        <div class="tt__parent">
+                            <button id="randomize-weights" class="btn btn__small focused" tabindex="-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"
+                                    class="svg-icon" id="random-weights" aria-hidden="true">
+                                    <mask id="myMask">
+                                        <rect x="0" y="0" width="24" height="24" fill="#fff" />
+                                        <circle cx="20" cy="4" r="3" fill="#000" />
+                                        <circle cx="12" cy="12" r="3" fill="#000" />
+                                        <circle cx="18" cy="20" r="3" fill="#000" />
+                                    </mask>
+                                    <rect width="24" height="24" stroke="none" fill="transparent" />
+                                    <g>
+                                        <circle cx="20" cy="4" r="2" />
+                                        <circle cx="12" cy="12" r="2" />
+                                        <circle cx="18" cy="20" r="2" />
+                                    </g>
+                                    <g mask="url(#myMask)" class="tracks">
+                                        <rect x="1" y="3" width="22" height="2" rx="1" />
+                                        <rect x="1" y="11" width="22" height="2" rx="1" />
+                                        <rect x="1" y="19" width="22" height="2" rx="1" />
+                                    </g>
 
-                            </svg>
-                            <span class="btn__text">Random distribution</span>
-                        </button>
-                        <div id="random-weights-tt" class="tooltip" role="tooltip">Assign random value to each weight
+                                </svg>
+                                <span class="btn__text">Random distribution</span>
+                            </button>
+                            <div id="random-weights-tt" class="tooltip" role="tooltip">Assign random value to each
+                                weight
+                            </div>
                         </div>
                         <span>Total:</span>
                         <output></output>
@@ -198,7 +201,7 @@
                         <input type="color" data-idx="3" aria-label="color input for color 4">
                         <input type="color" data-idx="4" aria-label="color input for color 5">
                     </div>
-                    <div>
+                    <div class="tt__parent">
                         <button id="newPalette" class="btn btn__small focused" aria-describedby="newPalette-tt">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 class="svg-icon" aria-hidden="true">
@@ -213,7 +216,7 @@
             </article>
         </div>
         <article class="btns__vert">
-            <div>
+            <div class="tt__parent">
                 <button class="btn__round focused" id="drawSVG__v" aria-describedby="drawSVG__v-tt"
                     aria-label="Generate new image">
                     <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"
@@ -226,7 +229,7 @@
                 </button>
                 <div id="drawSVG__v-tt" class="tooltip" role="tooltip">Generate a new image</div>
             </div>
-            <div>
+            <div class="tt__parent">
                 <button id="newPalette__v" class="btn__round focused" aria-describedby="newPalette__v-tt"
                     aria-label="Change palette">
                     <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"
@@ -245,7 +248,7 @@
                 </button>
                 <div id="newPalette__v-tt" class="tooltip" role="tooltip">Load a new palette</div>
             </div>
-            <div>
+            <div class="tt__parent">
                 <button class="btn__round focused" id="exportSVG__v" aria-describedby="exportSVG__v-tt"
                     aria-label="Export image">
                     <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"
@@ -280,7 +283,6 @@
                     style="display:inline" />
             </g>
         </svg></a>
-    <script src="./js/tooltips.js" type="module"></script>
     <script src="./js/main.js" type="module"></script>
 </body>
 
